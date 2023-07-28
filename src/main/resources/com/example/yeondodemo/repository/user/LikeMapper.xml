@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.user.LikeMapper">
+
+    <insert id="save">
+        insert into LIKEPAPER (username,paperId, isValid)
+        values (#{username}, #{paperId}, #{isValid})
+    </insert>
+    <update id="update">
+        update LIKEPAPER
+        set isValid=#{isValid}
+        where username = #{username} AND paperId = #{paperId}
+    </update>
+    <select id="clear" >
+        TRUNCATE TABLE LIKEPAPER
+    </select>
+
+    <select id="findByUser" resultType="String">
+        SELECT paperId
+        FROM LIKEPAPER
+        WHERE username = #{username} and isValid = 1
+        ORDER BY id ASC
+    </select>
+
+    <select id="findAllByUser" resultType="String">
+        SELECT paperId
+        FROM LIKEPAPER
+        WHERE username = #{username}
+        ORDER BY id ASC
+    </select>
+</mapper>

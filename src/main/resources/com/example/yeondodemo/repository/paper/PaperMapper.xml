@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.paper.PaperMapper">
+    <insert id="save">
+        insert into PAPER (paperId, title, conference, cites, url, summary, likes, year)
+        values (#{paperId}, #{title}, #{conference},#{cites}, #{url}, #{summary}, #{likes}, #{year})
+    </insert>
+
+    <select id="clearStore">
+        TRUNCATE TABLE PAPER
+    </select>
+    <update id="update">
+        update PAPER
+        set cites=#{updateParam.cites},
+            likes=#{updateParam.likes},
+            summary = #{updateParam.summary}
+        where paperId = #{id}
+    </update>
+
+    <update id="updateSummary">
+        update PAPER
+        set summary = #{summary}
+        where paperId = #{id}
+    </update>
+
+    <select id="findById" resultType="com.example.yeondodemo.entity.Paper">
+        select paperId,title, conference, cites, url, summary, likes, year
+        from PAPER
+        where paperId = #{id}
+    </select>
+
+    <select id="findFullById" resultType="com.example.yeondodemo.entity.Paper">
+        select paperId,title, conference, cites, url, summary, likes, year
+        from PAPER
+        where paperId = #{id}
+    </select>
+
+    <select id="findSummaryById" resultType="String">
+        select summary
+        from PAPER
+        where paperId = #{id}
+    </select>
+</mapper>

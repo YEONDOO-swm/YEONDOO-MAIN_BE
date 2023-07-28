@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.paper.PaperInfoMapper">
+
+    <insert id="save">
+        insert into PAPERINFO (paperId, infotype, content)
+        values (#{paperId}, #{saveParam.infotype}, #{saveParam.content})
+    </insert>
+
+    <update id="update">
+        update PAPERINFO
+        set content=#{updateParam.content}
+        where id = #{id}
+    </update>
+
+    <select id="findByPaperIdAndType" resultType="String">
+        select content
+        from PAPERINFO
+        where paperId = #{paperid} and infotype = #{infotype}
+    </select>
+</mapper>
