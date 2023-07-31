@@ -19,7 +19,7 @@ public class DetailPaperInfo {
     private String summary;
     private List<String> insights;
     private List<String> questions;
-    private List<String> subjectrecommends;
+    private List<String> subjectRecommends;
     private List<String> references;
     public DetailPaperInfo(Paper paper, PythonPaperInfoDTO pythonPaperInfoDTO){
         this.title = paper.getTitle();
@@ -31,7 +31,7 @@ public class DetailPaperInfo {
         this.summary = pythonPaperInfoDTO.getSummary();
         this.insights = pythonPaperInfoDTO.getInsights();
         this.questions = pythonPaperInfoDTO.getQuestions();
-        this.subjectrecommends = pythonPaperInfoDTO.getSubjectRecommends();
+        this.subjectRecommends = pythonPaperInfoDTO.getSubjectRecommends();
         this.references = pythonPaperInfoDTO.getReferences();
     }
 }

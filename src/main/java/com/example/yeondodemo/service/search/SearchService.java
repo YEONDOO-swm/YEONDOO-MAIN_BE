@@ -41,7 +41,7 @@ public class SearchService {
             Paper paper = paperRepository.findById(tPaper.getPaperId());
             PaperDTO paperDTO = new PaperDTO(tPaper, paper);
             if (userSet != null && userSet.contains(paper.getPaperId())){ //userSEt null인부분 생각
-                paperDTO.setIslike(true);
+                paperDTO.setIsLike(true);
             }
             paperList.add(new PaperSimpleIdTitleDTO(paper));
             searchResultDTO.getPapers().add(paperDTO);

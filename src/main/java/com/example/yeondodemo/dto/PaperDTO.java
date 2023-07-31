@@ -19,11 +19,14 @@ public class PaperDTO {
     private String conference;
     private int cites;
     private String url;
-    public boolean getIslike(){
+    public boolean getIslLike(){
         return isLike;
     }
-    public void setIslike(boolean isLike){
+    public void setIsLike(boolean isLike){
         this.isLike = isLike;
+    }
+    public boolean getIsLike(){
+        return this.isLike;
     }
     public PaperDTO(Paper paper){
         this.paperId = paper.getPaperId();
