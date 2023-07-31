@@ -1,7 +1,6 @@
 package com.example.yeondodemo.dto;
 
-import com.example.yeondodemo.validation.LoginValidator;
-import jakarta.validation.Valid;
+import com.example.yeondodemo.validation.UserValidator;
 import jakarta.validation.constraints.AssertFalse;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
@@ -25,6 +24,10 @@ public class UserProfileDTO {
     @Size(min=1,max=3)
     private List<String> keywords;
     @AssertTrue
+    public boolean isFirst(){
+        return UserValidator.isFirst(username);
+    }
+    @AssertTrue
     public boolean isAppropriateKeyword(){
         for (String keyword : keywords) {
             if(!keyword.matches("^[A-Za-z0-9]{1,30}")){
@@ -35,6 +38,6 @@ public class UserProfileDTO {
     }
     @AssertFalse
     public boolean isNotValidUsername(){
-        return LoginValidator.isNotValidName(username);
+        return UserValidator.isNotValidName(username);
     }
 }

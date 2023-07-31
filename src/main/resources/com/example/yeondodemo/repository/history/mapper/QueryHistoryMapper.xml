@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.history.mapper.QueryHistoryMapper">
+
+    <insert id="save">
+        insert into QUERYHISTORY (username,paperId, idx, content, who)
+        values (#{username}, #{paperid}, #{idx}, #{content}, #{who})
+    </insert>
+
+    <select id="findByUsernameAndPaperid" resultType="com.example.yeondodemo.dto.PaperHistory">
+        select content, who
+        from QUERYHISTORY
+        where paperId = #{paperid} and username= #{username}
+        order by id ASC
+    </select>
+
+
+    <select id="getLastIdx" resultType="Integer">
+        select idx
+        from QUERYHISTORY
+        where paperId = #{paperid} and username= #{username}
+        order by id DESC LIMIT 1
+    </select>
+    <select id="findByUsername" resultType="com.example.yeondodemo.dto.history.PaperHistoryDTO">
+        select content, who, p.paperId, p.title
+        from QUERYHISTORY as q
+            INNER JOIN PAPER as p
+            ON q.paperId = p.paperId
+        where q.username= #{username}
+        order by id ASC
+    </select>
+
+
+</mapper>

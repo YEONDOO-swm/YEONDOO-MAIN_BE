@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.history.mapper.SearchHistoryMapper">
+
+    <insert id="save">
+        insert into SearchHistory (username,query, answer)
+        values (#{username}, #{query}, #{answer})
+    </insert>
+
+    <insert id="savePapers">
+        insert into SearchHistoryPaper (paperId, rid)
+        VALUES
+        <foreach collection="papers" index="paper" item="paper" separator=",">
+            (#{paper.paperId},  ${rid})
+        </foreach>
+    </insert>
+
+    <select id="findByUsername" resultType="com.example.yeondodemo.dto.history.SearchHistoryResponseDTO">
+        select rid, query
+        from SearchHistory
+        where username= #{username}
+        order by rid ASC
+    </select>
+
+    <select id="findAnswerById" resultType="String">
+        select answer
+        from SearchHistory
+        where rid = #{rid}
+    </select>
+
+
+    <select id="getLastId" resultType="Long">
+        SELECT LAST_INSERT_ID()
+    </select>
+
+    <select id="findPapersById" resultType="com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO">
+        select p.paperId, p.title
+        from PAPER AS p
+        where paperId in (
+            SELECT s.paperId
+            FROM SearchHistoryPaper as s
+            WHERE s.rid  = #{id}
+            order by rid ASC
+            )
+    </select>
+    <select id="findQueryById" resultType="String">
+        select query
+        from SearchHistory
+        where rid = #{rid}
+    </select>
+    <select id="findByRidAndUsername" resultType="Long">
+        select rid
+        from SearchHistory
+        where rid = #{rid} AND username = #{username}
+    </select>
+</mapper>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.studyfield.mapper.StudyFieldMapper">
+
+    <insert id="save" >
+        insert into STUDYFIELD (studyfield)
+        values (#{studyField})
+    </insert>
+
+    <insert id="saveAll" >
+        insert into STUDYFIELD (studyfield)
+        VALUES
+        <foreach collection="studyFields" index="field" item="field" separator=",">
+            (#{field})
+        </foreach>
+    </insert>
+
+    <select id="findAll" resultType="String">
+        select studyfield
+        from STUDYFIELD
+    </select>
+    <select id="clear" >
+        TRUNCATE TABLE STUDYFIELD
+    </select>
+</mapper>

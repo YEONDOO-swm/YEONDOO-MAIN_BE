@@ -5,7 +5,7 @@ import com.example.yeondodemo.dto.PythonResultDTO;
 import com.example.yeondodemo.dto.SearchResultDTO;
 import com.example.yeondodemo.service.search.SearchService;
 import com.example.yeondodemo.utils.ConnectPythonServer;
-import com.example.yeondodemo.validation.LoginValidator;
+import com.example.yeondodemo.validation.UserValidator;
 import com.example.yeondodemo.validation.SearchValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class SearchController {
         if(SearchValidator.isNotValidateSearchQuery(query)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
         PythonResultDTO response = ConnectPythonServer.request(query, pythonapi);
         log.info("response {}", response.toString());
-        SearchResultDTO searchResultDTO = searchService.search(new SearchResultDTO(), response,username);
+        SearchResultDTO searchResultDTO = searchService.search(new SearchResultDTO(query), response,username);
         log.info("python search: {}",searchResultDTO.toString());
         return new ResponseEntity<>(searchResultDTO, HttpStatus.OK);
     }
@@ -51,12 +51,13 @@ public class SearchController {
             }
             return new ResponseEntity<>(status);
         }
-        return new ResponseEntity<>(searchService.likeonoff(likeOnOffDTO), HttpStatus.OK);
+        searchService.likeonoff(likeOnOffDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
     @GetMapping("/container")
     public ResponseEntity paperContainer(@RequestParam String username){
-        if(LoginValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
+        if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
         return new ResponseEntity<>(searchService.getPaperContainer(username), HttpStatus.OK);
     }
 

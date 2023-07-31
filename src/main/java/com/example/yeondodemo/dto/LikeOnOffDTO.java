@@ -1,6 +1,6 @@
 package com.example.yeondodemo.dto;
 
-import com.example.yeondodemo.validation.LoginValidator;
+import com.example.yeondodemo.validation.UserValidator;
 import com.example.yeondodemo.validation.PaperValidator;
 import jakarta.validation.constraints.AssertFalse;
 import jakarta.validation.constraints.AssertTrue;
@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 public class LikeOnOffDTO {
     private String username;
     private String paperId;
-    private boolean onoff;
+    private boolean on;
     @AssertFalse
     public boolean isNotValidUsername(){
-        return LoginValidator.isNotValidName(username);
+        return UserValidator.isNotValidName(username);
     }
     @AssertTrue
     public boolean isValidPaperId(){
@@ -24,6 +24,6 @@ public class LikeOnOffDTO {
     }
     @AssertTrue
     public boolean isValidOnOff(){
-        return PaperValidator.isValidOnOff(username, paperId, onoff);
+        return PaperValidator.isValidOnOff(username, paperId, on);
     }
 }

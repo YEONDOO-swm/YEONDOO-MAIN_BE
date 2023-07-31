@@ -1,5 +1,5 @@
 package com.example.yeondodemo.dto;
-import com.example.yeondodemo.validation.LoginValidator;
+import com.example.yeondodemo.validation.UserValidator;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ public class LoginUserDTO {
     private String password;
     @AssertTrue
     public boolean isValidUsername(){
-        log.info("isValid? {} ",LoginValidator.isValid(username, password) );
-        return LoginValidator.isValid(username, password);
+        log.info("isValid? {} ", UserValidator.isValid(username, password) );
+        return UserValidator.isValid(username, password);
     }
 }

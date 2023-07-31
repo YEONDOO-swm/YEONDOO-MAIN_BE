@@ -11,7 +11,7 @@ public class IntegrationValidator {
     if((!PaperValidator.isValidPaper(paperid))){
         log.info("Invalid Paper : {}", paperid);
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }else if(LoginValidator.isNotValidName(username)){
+    }else if(UserValidator.isNotValidName(username)){
         log.info("Invalid User : {}", username);
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
@@ -21,7 +21,7 @@ public class IntegrationValidator {
         if((!PaperValidator.isValidPaper(paperid) || bindingResult.hasErrors())){
             log.info("Invalid Paper : {}", paperid);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }else if(LoginValidator.isNotValidName(username)){
+        }else if(UserValidator.isNotValidName(username)){
             log.info("Invalid User : {}", username);
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.etc.mapper.KeywordMapper">
+
+    <insert id="save">
+        insert into KEYWORD (username,keyword)
+        VALUES
+        <foreach collection="keywords" index="keyword" item="keyword" separator=",">
+            (#{username}, #{keyword})
+        </foreach>
+    </insert>
+
+    <select id="findByUsername" resultType="String">
+        select keyword
+        from KEYWORD
+        where username = #{username}
+    </select>
+</mapper>

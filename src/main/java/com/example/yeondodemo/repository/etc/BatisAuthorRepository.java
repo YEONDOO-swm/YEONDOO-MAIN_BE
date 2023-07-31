@@ -1,5 +1,6 @@
 package com.example.yeondodemo.repository.etc;
 
+import com.example.yeondodemo.repository.etc.mapper.AuthorMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

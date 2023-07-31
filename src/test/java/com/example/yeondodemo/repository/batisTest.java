@@ -1,13 +1,10 @@
 package com.example.yeondodemo.repository;
 
-import com.example.yeondodemo.dto.PaperBuffer;
 import com.example.yeondodemo.dto.PaperHistory;
-import com.example.yeondodemo.dto.QueryHistory;
-import com.example.yeondodemo.repository.paper.BatisPaperBufferRepository;
-import com.example.yeondodemo.repository.paper.BatisPaperInfoRepository;
-import com.example.yeondodemo.repository.paper.BatisQueryHistoryRepository;
+import com.example.yeondodemo.repository.paper.batis.BatisPaperBufferRepository;
+import com.example.yeondodemo.repository.paper.batis.BatisPaperInfoRepository;
+import com.example.yeondodemo.repository.paper.batis.BatisQueryHistoryRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

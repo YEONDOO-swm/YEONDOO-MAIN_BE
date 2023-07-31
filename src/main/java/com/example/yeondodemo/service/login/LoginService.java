@@ -1,5 +1,6 @@
 package com.example.yeondodemo.service.login;
 
+import com.example.yeondodemo.repository.etc.KeywordRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.dto.LoginUserDTO;
@@ -15,6 +16,7 @@ import java.util.*;
 public class LoginService {
     private final StudyFieldRepository studyFieldRepository;
     private final UserRepository userRepository;
+    private final KeywordRepository keywordRepository;
     public static Map<User, Date> loginUsers = new HashMap<>();//@1Login기능
     public User join(LoginUserDTO loginUserDTO){
         User user = userRepository.findByName(loginUserDTO.getUsername());
@@ -28,7 +30,7 @@ public class LoginService {
         user.setIsFirst(false);
         //loginUsers.put(user, new Date());//@1Login기능\
         userRepository.update(user);
-
+        keywordRepository.save(user.getUsername(), user.getKeywords());
     }
     public boolean isValidUser(String username){
         User user = userRepository.findByName(username);

@@ -13,7 +13,9 @@ public class opensearchTest {
     @Value("${opensearch.id}") private String id;
     @Value ("${opensearch.pw}") private String pw;
     @Value ("${opensearch.url}") private String url;
+    @Value("${serpapi.key}") private String key;
+    @Test
     void aa() throws IOException {
-        ConnectScholar.getScholarInfo();
+        ConnectScholar.getScholarInfo("Attention is all you need", key);
     }
 }

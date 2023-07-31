@@ -31,7 +31,7 @@ public class DetailPaperInfo {
         this.summary = pythonPaperInfoDTO.getSummary();
         this.insights = pythonPaperInfoDTO.getInsights();
         this.questions = pythonPaperInfoDTO.getQuestions();
-        this.subjectrecommends = pythonPaperInfoDTO.getSubjectrecommends();
+        this.subjectrecommends = pythonPaperInfoDTO.getSubjectRecommends();
         this.references = pythonPaperInfoDTO.getReferences();
     }
 }

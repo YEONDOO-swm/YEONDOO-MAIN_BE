@@ -34,19 +34,15 @@ public class MemoryPaperRepository implements PaperRepository {
         log.info("save Paper : {}", paper);
         store.put(paper.getPaperId(), paper);
     }
+
     @Override
-    public void updateSummary(String id, String summary){
+    public void add(String id) {
 
     }
 
     @Override
-    public Paper findFullById(String id) {
-        return null;
-    }
+    public void sub(String id) {
 
-    @Override
-    public String findSummaryById(String id) {
-        return null;
     }
 
 

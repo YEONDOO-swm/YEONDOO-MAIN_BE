@@ -1,6 +1,6 @@
 package com.example.yeondodemo;
 
-import com.example.yeondodemo.validation.LoginValidator;
+import com.example.yeondodemo.validation.UserValidator;
 import com.example.yeondodemo.validation.PaperValidator;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class YeondoDemoApplication {
     }
     @PostConstruct
     public void init(){
-        LoginValidator.init(context);
+        UserValidator.init(context);
         PaperValidator.init(context);
     }
 

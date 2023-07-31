@@ -2,8 +2,6 @@ package com.example.yeondodemo.Controller;
 
 import com.example.yeondodemo.dto.QuestionDTO;
 import com.example.yeondodemo.service.search.PaperService;
-import com.example.yeondodemo.service.search.SearchService;
-import com.example.yeondodemo.validation.LoginValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

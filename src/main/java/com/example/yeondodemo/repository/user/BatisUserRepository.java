@@ -1,6 +1,7 @@
 package com.example.yeondodemo.repository.user;
 
 import com.example.yeondodemo.entity.User;
+import com.example.yeondodemo.repository.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

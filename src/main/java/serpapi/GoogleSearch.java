@@ -26,14 +26,14 @@ public class GoogleSearch extends SerpApiSearch {
   * @param apiKey secret API key
   */
   public GoogleSearch(Map<String, String> parameter, String apiKey) {
-    super(parameter, apiKey, "google");
+    super(parameter, apiKey, "google_scholar");
   }
 
  /**
   * Constructor
   */
   public GoogleSearch() {
-    super("google");
+    super("google_scholar");
   }
 
  /**
@@ -41,7 +41,7 @@ public class GoogleSearch extends SerpApiSearch {
   * @param parameter search parameter
   */
   public GoogleSearch(Map<String, String> parameter) {
-    super(parameter, "google");
+    super(parameter, "google_scholar");
   }
 
 // end

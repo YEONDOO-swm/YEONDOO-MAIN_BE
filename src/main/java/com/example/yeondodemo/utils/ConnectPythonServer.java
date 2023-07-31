@@ -62,11 +62,11 @@ public class ConnectPythonServer {
         return (String) response.getBody().get("answer");
     }
 
-    public TestPython getMeta(String paperId, String pythonApiServer){
+    public static TestPython getMeta(String paperId, String pythonApiServer){
         HttpHeaders httpHeaders = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<TestPython > response = restTemplate.exchange(
-                pythonApiServer + "/metadata?" + paperId,
+                pythonApiServer + "/db/paper/metadata?paperId=" + paperId,
                 HttpMethod.GET,
                 new HttpEntity<>(httpHeaders),
                 TestPython.class

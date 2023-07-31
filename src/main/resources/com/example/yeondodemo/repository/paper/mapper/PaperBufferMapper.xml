@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.paper.mapper.PaperBufferMapper">
+
+    <insert id="save" >
+        insert into PAPERBUFFER (paperId, ishit, uddate)
+        values (#{id}, #{ishit}, #{uddate})
+    </insert>
+
+    <update id="update">
+        update PAPERBUFFER
+        set ishit=#{updateParam.ishit},
+            uddate=#{updateParam.uddate}
+        where paperId = #{id}
+    </update>
+
+    <select id="findById" resultType="PaperBuffer">
+        select paperId, ishit, uddate
+        from PAPERBUFFER
+        where paperId = #{id}
+    </select>
+
+    <select id="isHit" resultType="Boolean">
+        select ishit
+        from PAPERBUFFER
+        where paperId = #{id}
+    </select>
+</mapper>

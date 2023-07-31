@@ -1,11 +1,13 @@
 package com.example.yeondodemo.validation;
 
 import com.example.yeondodemo.entity.Paper;
+import com.example.yeondodemo.repository.history.SearchHistoryRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.entity.PaperWithOutMeta;
 import com.example.yeondodemo.entity.User;
+import com.example.yeondodemo.service.search.HistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 
@@ -18,10 +20,12 @@ public class PaperValidator {
     private static PaperRepository paperRepository;
     private static UserRepository userRepository;
     private  static LikePaperRepository likePaperRepository;
+    private static SearchHistoryRepository searchHistoryRepository;
     public static void init(ApplicationContext context){
         paperRepository = context.getBean(PaperRepository.class);
         userRepository = context.getBean(UserRepository.class);
         likePaperRepository = context.getBean(LikePaperRepository.class);
+        searchHistoryRepository = context.getBean(SearchHistoryRepository.class);
     }
     public static boolean isValidPaper(String id){
         boolean valid = Optional.ofNullable(paperRepository.findById(id)).isPresent();
@@ -43,5 +47,16 @@ public class PaperValidator {
             }
             return false;
         }
+    }
+    public static boolean isNotValidRid(String username, Long resultId){
+        return searchHistoryRepository.findByRidAndUsername(username, resultId) == null;
+    }
+    public static boolean isNotValidRestorePapers(String username, List<String> papers){
+        if(papers.size()==0){return true;}
+        for (String paper : papers) {
+            if(!isValidPaper(paper)){return true;}
+            if(!isValidOnOff(username, paper, true)){return true;}
+        }
+        return false;
     }
 }

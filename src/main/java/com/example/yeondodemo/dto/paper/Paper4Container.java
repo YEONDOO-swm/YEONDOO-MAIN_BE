@@ -16,10 +16,10 @@ public class Paper4Container {
     private String conference;
     private int cites;
     private String url;
-    public Paper4Container(Paper paper, List<String> authors){
+    public Paper4Container(Paper paper){
         this.title = paper.getTitle();
         this.paperId = paper.getPaperId();
-        this.authors = authors;
+        this.authors = paper.getAuthors();
         this.year = paper.getYear();
         this.cites = paper.getCites();
         this.url = paper.getUrl();

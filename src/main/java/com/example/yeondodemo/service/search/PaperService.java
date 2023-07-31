@@ -6,7 +6,7 @@ import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperInfoRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
-import com.example.yeondodemo.repository.paper.QueryHistoryRepository;
+import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import com.example.yeondodemo.utils.ConnectPythonServer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,14 +47,13 @@ public class PaperService {
         for(String q: pythonPaperInfoDTO.getQuestions()){
             paperInfoRepository.save(new PaperInfo(paperid, "question", q));
         }
-        for(String s: pythonPaperInfoDTO.getSubjectrecommends()){
+        for(String s: pythonPaperInfoDTO.getSubjectRecommends()){
             paperInfoRepository.save(new PaperInfo(paperid, "subjectrecommend", s));
         }
 //        for(String r: pythonPaperInfoDTO.getReferences()){
 //            paperInfoRepository.save(new PaperInfo(paperid, "reference", r));
 //        }
         paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
-        paperRepository.updateSummary(paperid, pythonPaperInfoDTO.getSummary());
     }
     @Transactional
     public RetPaperInfoDTO getPaperInfo(String paperid, String username){
@@ -76,10 +75,8 @@ public class PaperService {
         //pythonPaperInfoDTO.setInsights(paperInfoRepository.findByPaperIdAndType(paperid, "insight"));
         // pythonPaperInfoDTO.setReferences(paperInfoRepository.findByPaperIdAndType(paperid, "reference"));
         pythonPaperInfoDTO.setQuestions(paperInfoRepository.findByPaperIdAndType(paperid, "question"));
-        pythonPaperInfoDTO.setSubjectrecommends(paperInfoRepository.findByPaperIdAndType(paperid, "subjectrecommend"));
-        pythonPaperInfoDTO.setSummary(paperRepository.findSummaryById(paperid));
-        Paper paper = paperRepository.findFullById(paperid);
-        paper.setAuthors(authorRepository.findByPaperId(paperid));
+        pythonPaperInfoDTO.setSubjectRecommends(paperInfoRepository.findByPaperIdAndType(paperid, "subjectrecommend"));
+        Paper paper = paperRepository.findById(paperid);
         RetPaperInfoDTO paperInfoDTO = new RetPaperInfoDTO(paper, pythonPaperInfoDTO, queryHistoryRepository.findByUsernameAndPaperid(username, paperid));
         log.info("paper info: {}", paperInfoDTO);
         return paperInfoDTO;

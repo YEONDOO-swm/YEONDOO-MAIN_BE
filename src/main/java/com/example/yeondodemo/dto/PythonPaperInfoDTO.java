@@ -11,6 +11,6 @@ public class PythonPaperInfoDTO{
     private String summary;
     private List<String> insights;
     private List<String> questions;
-    private List<String> subjectrecommends;
+    private List<String> subjectRecommends;
     private List<String> references;
 }

@@ -1,10 +1,8 @@
 package com.example.yeondodemo.httptest;
 
 import com.example.yeondodemo.Controller.LoginController;
-import com.example.yeondodemo.repository.paper.BatisPaperRepository;
-import com.example.yeondodemo.repository.paper.MemoryPaperRepository;
+import com.example.yeondodemo.repository.paper.batis.BatisPaperRepository;
 import com.example.yeondodemo.repository.studyfield.BatisStudyFieldRepository;
-import com.example.yeondodemo.repository.studyfield.MemoryStudyFieldRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.*;
 import com.example.yeondodemo.dto.LoginUserDTO;
@@ -17,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
