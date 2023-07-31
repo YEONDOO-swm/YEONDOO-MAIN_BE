@@ -203,11 +203,11 @@ public class HTTPSearchTest {
         )
                 .andExpect(jsonPath("$.answer").value("reinforcement learning is a learning paradigm for solving sequential decision-making problems. It works by learning from trial-and-error interactions with the environment over its lifetime, and can be enhanced by incorporating causal relationships into the learning process."))
                 .andExpect(jsonPath("$.papers[0].likes").value(0))
-                .andExpect(jsonPath("$.papers[0].islike").value(true))
+                .andExpect(jsonPath("$.papers[0].isLike").value(true))
                 .andExpect(jsonPath("$.papers[0].title").value("Attention is All you"))
                 .andExpect(jsonPath("$.papers[0].cites").isNumber())
                 .andExpect(jsonPath("$.papers[1].likes").value(0))
-                .andExpect(jsonPath("$.papers[1].islike").value(false))
+                .andExpect(jsonPath("$.papers[1].isLike").value(false))
                 .andExpect(jsonPath("$.papers[1].title").value("Insights into Lifelong Reinforcement Learning Systems"))
                 .andExpect(jsonPath("$.papers[1].cites").isNumber());
     }
