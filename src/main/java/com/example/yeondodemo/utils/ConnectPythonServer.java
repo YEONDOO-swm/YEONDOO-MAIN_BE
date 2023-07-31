@@ -33,7 +33,7 @@ public class ConnectPythonServer {
         HttpHeaders httpHeaders = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<PythonPaperInfoDTO> response = restTemplate.exchange(
-                pythonApiServer + "/getpaperinfo?paperid="+paperid,
+                pythonApiServer + "/getpaperinfo?paperId="+paperid,
                 HttpMethod.GET,
                 new HttpEntity<>(httpHeaders),
                 PythonPaperInfoDTO.class
