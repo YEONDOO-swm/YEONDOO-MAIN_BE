@@ -54,6 +54,7 @@ public class PaperValidator {
     public static boolean isNotValidRestorePapers(String username, List<String> papers){
         if(papers.size()==0){return true;}
         for (String paper : papers) {
+            log.info("--- paper: " + paper);
             if(!isValidPaper(paper)){return true;}
             if(!isValidOnOff(username, paper, true)){return true;}
         }
