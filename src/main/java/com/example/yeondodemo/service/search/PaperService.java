@@ -41,9 +41,9 @@ public class PaperService {
         return ret;
     }
     public void updateInfoRepository(PythonPaperInfoDTO pythonPaperInfoDTO, String paperid){
-//        for(String insight: pythonPaperInfoDTO.getInsights()){
-//            paperInfoRepository.save(new PaperInfo(paperid, "insight", insight));
-//        }
+        for(String insight: pythonPaperInfoDTO.getInsights()){
+            paperInfoRepository.save(new PaperInfo(paperid, "insight", insight));
+        }
         for(String q: pythonPaperInfoDTO.getQuestions()){
             paperInfoRepository.save(new PaperInfo(paperid, "question", q));
         }
