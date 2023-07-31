@@ -66,7 +66,7 @@ public class ConnectPythonServer {
         HttpHeaders httpHeaders = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<TestPython > response = restTemplate.exchange(
-                pythonApiServer + "/db/paper/metadata?paperId=" + paperId,
+                pythonApiServer + "/db/paper/metainfo?paperId=" + paperId,
                 HttpMethod.GET,
                 new HttpEntity<>(httpHeaders),
                 TestPython.class

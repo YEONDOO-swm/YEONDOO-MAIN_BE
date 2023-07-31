@@ -98,7 +98,7 @@ p8 = Paper("2307.00865", 2023, "A Survey on Graph Classification and Link Predic
 P = [p1, p2, p3, p4, p5, p6, p7, p8]
 metainfo_db = {p.papeId: p for p in P}
 
-@app.get("/db/paper/metadata")
+@app.get("/db/paper/metainfo")
 def paper_meta_info(paperId: str):
     try:
         c = metainfo_db[paperId].toJson()
