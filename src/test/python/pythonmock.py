@@ -6,7 +6,7 @@ app = FastAPI()
 
 
 class PythonQuestionDTO(BaseModel):
-    paperid: str
+    paperId: str
     history: list
     query: str
 @app.get("/getpaperinfo")
