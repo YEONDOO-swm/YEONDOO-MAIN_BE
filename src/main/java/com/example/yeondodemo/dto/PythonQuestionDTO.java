@@ -10,12 +10,12 @@ import java.util.List;
 
 @Getter @Slf4j @Setter @ToString
 public class PythonQuestionDTO {
-    private String paperid;
+    private String paperId;
     private List<PaperHistory> history;
     private String query;
     public PythonQuestionDTO(String paperid, List<PaperHistory> history, String query){
         //구분이 필요.
-        this.paperid = paperid;
+        this.paperId = paperid;
         this.history = history;
         this.query = query;
     }
