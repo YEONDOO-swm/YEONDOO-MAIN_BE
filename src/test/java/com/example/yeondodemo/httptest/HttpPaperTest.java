@@ -199,9 +199,9 @@ public class HttpPaperTest {
               //  .andExpect(jsonPath("$.paperinfo.summary").value("A long time ago in the machine learning literature, the idea of incorporating a mechanism inspired by the human visual system into neural networks was introduced. This idea is named the attention mechanism, and it has gone through a long development period. Today, many works have been devoted to this idea in a variety of tasks. Remarkable performance has recently been demonstrated. The goal of this paper is to provide an overview from the early work on searching for ways to implement attention idea with neural networks until the recent trends. This review emphasizes the important milestones during this progress regarding different tasks. By this way, this study aims to provide a road map for researchers to explore the current development and get inspired for novel approaches beyond the attention.\n"))
                 .andExpect(jsonPath("$.paperInfo.questions[0]").value("gpt가 만든 질문 1"))
                 .andExpect(jsonPath("$.paperInfo.questions[1]").value("gpt가 만든 질문 2"))
-                .andExpect(jsonPath("$.paperInfo.subjectrecommends[0]").value("향후 연구 주제 추천 1"))
-                .andExpect(jsonPath("$.paperInfo.subjectrecommends[1]").value("향후 연구 주제 추천 2"))
-                .andExpect(jsonPath("$.paperInfo.subjectrecommends[2]").value("향후 연구 주제 추천 3"));
+                .andExpect(jsonPath("$.paperInfo.subjectRecommends[0]").value("향후 연구 주제 추천 1"))
+                .andExpect(jsonPath("$.paperInfo.subjectRecommends[1]").value("향후 연구 주제 추천 2"))
+                .andExpect(jsonPath("$.paperInfo.subjectRecommends[2]").value("향후 연구 주제 추천 3"));
                // .andExpect(jsonPath("$.paperinfo.references[0]").value("ref1"))
                // .andExpect(jsonPath("$.paperinfo.references[2]").value("ref3"));
     }
