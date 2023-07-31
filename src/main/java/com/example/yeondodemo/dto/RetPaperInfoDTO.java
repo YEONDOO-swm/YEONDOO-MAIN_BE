@@ -9,10 +9,10 @@ import java.util.List;
 
 @Getter @Setter
 public class RetPaperInfoDTO {
-    private DetailPaperInfo paperinfo;
+    private DetailPaperInfo paperInfo;
     private List<PaperHistory> paperHistory;
     public RetPaperInfoDTO(Paper paper, PythonPaperInfoDTO pythonPaperInfoDTO, List<PaperHistory> paperHistories){
         this.paperHistory = paperHistories;
-        this.paperinfo = new DetailPaperInfo(paper, pythonPaperInfoDTO);
+        this.paperInfo = new DetailPaperInfo(paper, pythonPaperInfoDTO);
     }
 }
