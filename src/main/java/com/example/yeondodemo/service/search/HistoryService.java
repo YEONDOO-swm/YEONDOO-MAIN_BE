@@ -48,6 +48,7 @@ public class HistoryService {
     public void historySearchRestoreTrash(String username, List<String> papers){
         for (String paper : papers) {
             likePaperRepository.update(username, paper, true);
+            paperRepository.add(paper);
         }
     }
     public List<PaperHistoryDTO> historyPaper(String username){
