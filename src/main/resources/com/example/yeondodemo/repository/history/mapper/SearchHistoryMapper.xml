@@ -56,7 +56,7 @@
     </select>
     <select id="canCached" resultType="Long">
         SELECT ifnull(max(rid), 0)
-        FROM SEARCHHISTORY
+        FROM SearchHistory
         WHERE username = #{username} and query = #{query} and searchDate = #{date};
     </select>
 </mapper>
