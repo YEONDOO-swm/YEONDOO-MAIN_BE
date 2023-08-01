@@ -4,8 +4,8 @@
 <mapper namespace="com.example.yeondodemo.repository.history.mapper.SearchHistoryMapper">
 
     <insert id="save">
-        insert into SearchHistory (username,query, answer)
-        values (#{username}, #{query}, #{answer})
+        insert into SearchHistory (username,query, answer, searchDate)
+        values (#{username}, #{query}, #{answer}, CURRENT_DATE)
     </insert>
 
     <insert id="savePapers">
@@ -53,5 +53,10 @@
         select rid
         from SearchHistory
         where rid = #{rid} AND username = #{username}
+    </select>
+    <select id="canCached" resultType="Long">
+        SELECT ifnull(max(rid), 0)
+        FROM SEARCHHISTORY
+        WHERE username = #{username} and query = #{query} and searchDate = #{date};
     </select>
 </mapper>

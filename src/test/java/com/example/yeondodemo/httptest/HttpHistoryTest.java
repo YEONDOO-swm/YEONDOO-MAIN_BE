@@ -181,8 +181,6 @@ public class HttpHistoryTest{
                 .andExpect(jsonPath("$.papers[0]").doesNotExist())
                 .andExpect(jsonPath("$.results[2]").doesNotExist());
 
-
-
         //paper 추가
         LikeOnOffDTO likeOnOffDTO = new LikeOnOffDTO();
         likeOnOffDTO.setUsername("testtest1");

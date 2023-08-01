@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,5 +58,10 @@ public class BatisSearchHistoryRepository implements SearchHistoryRepository{
     @Override
     public List<PaperSimpleIdTitleDTO> findPapersById(Long id) {
         return searchHistoryMapper.findPapersById(id);
+    }
+
+    @Override
+    public Long canCached(String username, String query) {
+        return searchHistoryMapper.canCached(username, query, LocalDate.now());
     }
 }

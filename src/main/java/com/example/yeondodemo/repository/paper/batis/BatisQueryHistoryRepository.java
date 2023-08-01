@@ -35,4 +35,6 @@ public class BatisQueryHistoryRepository implements QueryHistoryRepository {
     public Integer getLastIdx(String username, String paperid) {
         return queryHistoryMapper.getLastIdx(username, paperid);
     }
+
+
 }

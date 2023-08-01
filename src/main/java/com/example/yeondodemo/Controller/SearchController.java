@@ -23,15 +23,11 @@ import static com.example.yeondodemo.validation.IntegrationValidator.inValidPape
 @RestController @Slf4j @RequiredArgsConstructor @RequestMapping("/api")
 public class SearchController {
     private final SearchService searchService;
-    @Value("${python.address}")
-    private String pythonapi;
 
     @GetMapping("/homesearch")
     public ResponseEntity search(@RequestParam String query, @RequestParam String username){
         if(SearchValidator.isNotValidateSearchQuery(query)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
-        PythonResultDTO response = ConnectPythonServer.request(query, pythonapi);
-        log.info("response {}", response.toString());
-        SearchResultDTO searchResultDTO = searchService.search(new SearchResultDTO(query), response,username);
+        SearchResultDTO searchResultDTO = searchService.search(query, username);
         log.info("python search: {}",searchResultDTO.toString());
         return new ResponseEntity<>(searchResultDTO, HttpStatus.OK);
     }

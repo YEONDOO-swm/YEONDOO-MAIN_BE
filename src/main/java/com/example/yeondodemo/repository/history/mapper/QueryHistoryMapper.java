@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface QueryHistoryMapper {
     void save(QueryHistory queryHistory);
-    List<PaperHistory> findByUsernameAndPaperid(String username, String paperid);
-    Integer getLastIdx(String username, String paperid);
+    List<PaperHistory> findByUsernameAndPaperid(String username, String paperIsd);
+    Integer getLastIdx(String username, String paperId);
     List<PaperHistoryDTO> findByUsername(String username);
 }

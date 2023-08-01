@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service @RequiredArgsConstructor @Slf4j
 public class PaperService {
@@ -30,7 +27,18 @@ public class PaperService {
     private String pythonapi;
     @Transactional
     public Map getPaperQuestion(String paperid, String username, String query){
-        List<PaperHistory> histories = queryHistoryRepository.findByUsernameAndPaperid(username, paperid);
+        List<PaperHistory> paperHistories = queryHistoryRepository.findByUsernameAndPaperid(username, paperid);
+        List<List<String>>  histories = new ArrayList<>();
+        List<String> t = null;
+        for (PaperHistory paperHistory : paperHistories) {
+            if(paperHistory.isWho()){
+                 t = new ArrayList<>();
+            }
+            t.add(paperHistory.getContent());
+            if(!paperHistory.isWho()){
+                histories.add(t);
+            }
+        }
         String answer = ConnectPythonServer.question(new PythonQuestionDTO(paperid, histories, query), pythonapi);
         Integer idx = queryHistoryRepository.getLastIdx(username, paperid);
         if(idx == null) {idx=0;}
@@ -57,12 +65,8 @@ public class PaperService {
     }
     @Transactional
     public RetPaperInfoDTO getPaperInfo(String paperid, String username){
-        //todo: 시간지나면 다시 업데이트 추가.
-        if (paperBufferRepository.isHit(paperid) == null){
-            paperBufferRepository.save(new PaperBuffer(paperid, false));
-        }
         log.info("getPaperInfo... ");
-        if(!paperBufferRepository.isHit(paperid)){
+        if((!paperBufferRepository.isHit(paperid))){
             //goto python server and get data
             log.info("go to python server.... ");
             PythonPaperInfoDTO pythonPaperInfoDTO = ConnectPythonServer.requestPaperInfo(paperid, pythonapi);

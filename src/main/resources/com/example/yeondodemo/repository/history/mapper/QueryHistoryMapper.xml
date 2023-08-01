@@ -11,15 +11,16 @@
     <select id="findByUsernameAndPaperid" resultType="com.example.yeondodemo.dto.PaperHistory">
         select content, who
         from QUERYHISTORY
-        where paperId = #{paperid} and username= #{username}
+        where paperId = #{paperIsd} and username= #{username}
         order by id ASC
     </select>
+
 
 
     <select id="getLastIdx" resultType="Integer">
         select idx
         from QUERYHISTORY
-        where paperId = #{paperid} and username= #{username}
+        where paperId = #{paperId} and username= #{username}
         order by id DESC LIMIT 1
     </select>
     <select id="findByUsername" resultType="com.example.yeondodemo.dto.history.PaperHistoryDTO">

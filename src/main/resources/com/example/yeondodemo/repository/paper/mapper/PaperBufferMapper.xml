@@ -22,8 +22,9 @@
     </select>
 
     <select id="isHit" resultType="Boolean">
-        select ishit
+        select IFNULL(max(ishit), 0) as ishit
         from PAPERBUFFER
-        where paperId = #{id}
+        where paperId = #{id} AND (ishit AND uddate >= CURDATE() -INTERVAL 7 DAY)
+
     </select>
 </mapper>

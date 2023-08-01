@@ -12,8 +12,10 @@ import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.dto.*;
 import com.example.yeondodemo.entity.User;
+import com.example.yeondodemo.utils.ConnectPythonServer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +30,26 @@ public class SearchService {
     private final UserRepository userRepository;
     private final BatisAuthorRepository authorRepository;
     private final SearchHistoryRepository searchHistoryRepository;
+    @Value("${python.address}")
+    private String pythonapi;
     @Transactional
-    public SearchResultDTO search(SearchResultDTO searchResultDTO, PythonResultDTO pythonResultDTO, String username){
+    public SearchResultDTO search(String query, String username){
+        SearchResultDTO searchResultDTO = new SearchResultDTO(query);
+        PythonResultDTO pythonResultDTO = null;
+        Long rid = searchHistoryRepository.canCached(username, query);
+        if(rid > 0){
+            log.info("cached.. ");
+            List<PaperSimpleIdTitleDTO> paperTitles = searchHistoryRepository.findPapersById(rid);
+            String answer = searchHistoryRepository.findAnswerById(rid);
+            List<TestPython> papers = new ArrayList<>();
+            for (PaperSimpleIdTitleDTO paperTitle : paperTitles) {
+                papers.add(new TestPython(paperRepository.findById(paperTitle.getPaperId())));
+            }
+            pythonResultDTO = new PythonResultDTO(answer, papers);
+        }else{
+            log.info("not cached.. ");
+            pythonResultDTO = ConnectPythonServer.request(query, pythonapi);
+        }
         searchResultDTO.setAnswer(pythonResultDTO.getAnswer());
         //List<String> papers = pythonResultDTO.getPapers();
         List<TestPython> papers = pythonResultDTO.getPapers();

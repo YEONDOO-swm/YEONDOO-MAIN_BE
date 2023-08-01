@@ -5,6 +5,7 @@ import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.entity.SearchHistory;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 @Mapper
 public interface SearchHistoryMapper {
@@ -17,5 +18,6 @@ public interface SearchHistoryMapper {
     void save(SearchHistory searchHistory);
     Long getLastId();
     List<PaperSimpleIdTitleDTO> findPapersById(Long id);
+    Long canCached(String username, String query, LocalDate date);
 
 }

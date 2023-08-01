@@ -13,4 +13,11 @@ public class PythonResultDTO {
     private String answer;
     //private List<String> papers;
     private  List<TestPython> papers;
+    public PythonResultDTO(){
+
+    }
+    public PythonResultDTO(String answer, List<TestPython> papers){
+        this.answer = answer;
+        this.papers = papers;
+    }
 }
