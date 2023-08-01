@@ -512,14 +512,14 @@ public class HttpHistoryTest{
                         get("http://localhost:8080/api/history/search/paper?username=testtest1")
                 ).andExpect(
                         status().isOk()
-                ).andExpect(jsonPath("$[1].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$[1].who").value(true))
-                .andExpect(jsonPath("$[1].content").value("hihi1"))
-                .andExpect(jsonPath("$[1].title").value("Attention is all you need"))
-                .andExpect(jsonPath("$[0].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$[0].who").value(false))
-                .andExpect(jsonPath("$[0].content").value("bibi"))
+                ).andExpect(jsonPath("$[0].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$[0].who").value(true))
+                .andExpect(jsonPath("$[0].content").value("hihi1"))
                 .andExpect(jsonPath("$[0].title").value("Attention is all you need"))
+                .andExpect(jsonPath("$[1].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$[1].who").value(false))
+                .andExpect(jsonPath("$[1].content").value("bibi"))
+                .andExpect(jsonPath("$[1].title").value("Attention is all you need"))
         ;
         questionDTO = new QuestionDTO();
         questionDTO.setQuestion("hihi2");
@@ -539,23 +539,23 @@ public class HttpHistoryTest{
                         get("http://localhost:8080/api/history/search/paper?username=testtest1")
                 ).andExpect(
                         status().isOk()
-                ).andExpect(jsonPath("$[2].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$[2].who").value(false))
-                .andExpect(jsonPath("$[3].content").value("hihi1"))
-                .andExpect(jsonPath("$[2].title").value("Attention is all you need"))
-                .andExpect(jsonPath("$[3].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$[3].who").value(true))
-                .andExpect(jsonPath("$[2].content").value("bibi"))
+                ).andExpect(jsonPath("$[3].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$[3].who").value(false))
+                .andExpect(jsonPath("$[2].content").value("hihi1"))
                 .andExpect(jsonPath("$[3].title").value("Attention is all you need"))
+                .andExpect(jsonPath("$[2].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$[2].who").value(true))
+                .andExpect(jsonPath("$[3].content").value("bibi"))
+                .andExpect(jsonPath("$[2].title").value("Attention is all you need"))
 
-                .andExpect(jsonPath("$[1].paperId").value("2307.00865"))
-                .andExpect(jsonPath("$[1].who").value(true))
-                .andExpect(jsonPath("$[1].content").value("hihi2"))
-                .andExpect(jsonPath("$[1].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
                 .andExpect(jsonPath("$[0].paperId").value("2307.00865"))
-                .andExpect(jsonPath("$[0].who").value(false))
-                .andExpect(jsonPath("$[0].content").value("bibi"))
+                .andExpect(jsonPath("$[0].who").value(true))
+                .andExpect(jsonPath("$[0].content").value("hihi2"))
                 .andExpect(jsonPath("$[0].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
+                .andExpect(jsonPath("$[1].paperId").value("2307.00865"))
+                .andExpect(jsonPath("$[1].who").value(false))
+                .andExpect(jsonPath("$[1].content").value("bibi"))
+                .andExpect(jsonPath("$[1].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
         ;
 
         questionDTO = new QuestionDTO();

@@ -33,19 +33,19 @@ public class PaperService {
         List<List<String>>  histories = new ArrayList<>();
         List<String> t = null;
         for (PaperHistory paperHistory : paperHistories) {
-            if(paperHistory.isWho()){
+            if(!paperHistory.isWho()){
                  t = new ArrayList<>();
             }
             t.add(paperHistory.getContent());
-            if(!paperHistory.isWho()){
+            if(paperHistory.isWho()){
                 histories.add(t);
             }
         }
         String answer = ConnectPythonServer.question(new PythonQuestionDTO(paperid, histories, query), pythonapi);
         Integer idx = queryHistoryRepository.getLastIdx(username, paperid);
         if(idx == null) {idx=0;}
-        queryHistoryRepository.save(new QueryHistory(username, paperid, idx+1, true, query));
-        queryHistoryRepository.save(new QueryHistory(username, paperid, idx+2, false, answer));
+        queryHistoryRepository.save(new QueryHistory(username, paperid, idx+1, false, answer));
+        queryHistoryRepository.save(new QueryHistory(username, paperid, idx+2, true, query));
         Map<String, String> ret = new HashMap<>();
         ret.put("answer", answer);
         return ret;
