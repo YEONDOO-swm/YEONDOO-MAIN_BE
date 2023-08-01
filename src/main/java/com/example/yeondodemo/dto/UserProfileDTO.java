@@ -19,7 +19,7 @@ import java.util.List;
 public class UserProfileDTO {
     @Pattern(regexp = "^[A-Za-z][A-Za-z0-9]{6,19}$")
     private String username;
-    @Pattern(regexp = "^[A-Za-z0-9]{1,30}")
+    @Pattern(regexp = "^[A-Za-z0-9가-힣 ]{1,30}")
     private String studyField;
     @Size(min=1,max=3)
     private List<String> keywords;
@@ -30,7 +30,7 @@ public class UserProfileDTO {
     @AssertTrue
     public boolean isAppropriateKeyword(){
         for (String keyword : keywords) {
-            if(!keyword.matches("^[A-Za-z0-9]{1,30}")){
+            if(!keyword.matches("^[A-Za-z0-9가-힣 ]{1,30}")){
                 return false;
             }
         }
