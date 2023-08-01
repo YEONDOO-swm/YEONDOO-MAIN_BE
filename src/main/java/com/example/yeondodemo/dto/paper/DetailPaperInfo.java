@@ -11,6 +11,7 @@ import java.util.List;
 @Getter @Setter @ToString
 public class DetailPaperInfo {
     private String title;
+    private String paperId;
     private int year;
     private String url;
     private String conference;
@@ -23,6 +24,7 @@ public class DetailPaperInfo {
     private List<String> subjectRecommends;
     private List<String> references;
     public DetailPaperInfo(Paper paper, PythonPaperInfoDTO pythonPaperInfoDTO){
+        this.paperId = paper.getPaperId();
         this.title = paper.getTitle();
         this.year = paper.getYear();
         this.url = paper.getUrl();
