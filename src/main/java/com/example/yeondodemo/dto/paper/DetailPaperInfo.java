@@ -17,6 +17,7 @@ public class DetailPaperInfo {
     private List<String> authors;
     private int cites;
     private String summary;
+    private Boolean isLike = false;
     private List<String> insights;
     private List<String> questions;
     private List<String> subjectRecommends;

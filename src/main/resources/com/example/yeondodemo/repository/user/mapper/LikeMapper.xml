@@ -40,7 +40,7 @@
             FROM LIKEPAPER as l
             WHERE l.username = #{username} AND l.isValid = 1
         )
-        ORDER BY l.id ASC
+        ORDER BY l.id DESC
     </select>
     <select id="findSimpleTrashByUser" resultType="com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO">
         SELECT p.paperId, p.title
@@ -52,6 +52,14 @@
             FROM LIKEPAPER as l
             WHERE l.username = #{username} AND l.isValid = 0
         )
-        ORDER BY l.id ASC
+        ORDER BY l.id DESC
     </select>
+
+
+    <select id="isLike" resultType="Boolean">
+        SELECT ifnull(max(id), 0) != 0 as isLike
+        FROM LIKEPAPER
+        WHERE paperId = #{paperId} and username = #{username}
+    </select>
+
 </mapper>

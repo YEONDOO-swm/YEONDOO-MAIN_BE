@@ -47,6 +47,11 @@ public class BatisLikePaperRepository implements LikePaperRepository{
     }
 
     @Override
+    public Boolean isLike(String username, String paperId) {
+        return likeMapper.isLike(username, paperId);
+    }
+
+    @Override
     public void clear() {
         likeMapper.clear();
     }

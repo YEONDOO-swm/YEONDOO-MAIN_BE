@@ -29,7 +29,7 @@
             INNER JOIN PAPER as p
             ON q.paperId = p.paperId
         where q.username= #{username}
-        order by id ASC
+        order by id DESC
     </select>
 
 

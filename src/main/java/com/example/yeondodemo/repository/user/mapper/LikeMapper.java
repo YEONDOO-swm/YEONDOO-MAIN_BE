@@ -14,5 +14,6 @@ public interface LikeMapper {
     List<String> findAllByUser(String username);
     List<PaperSimpleIdTitleDTO> findSimpleByUser(String username);
     List<PaperSimpleIdTitleDTO> findSimpleTrashByUser(String username);
+    Boolean isLike(String username, String paperId);
     void clear();
 }

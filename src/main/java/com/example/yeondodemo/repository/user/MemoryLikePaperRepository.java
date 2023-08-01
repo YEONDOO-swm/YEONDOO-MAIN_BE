@@ -48,6 +48,11 @@ public class MemoryLikePaperRepository implements LikePaperRepository{
     }
 
     @Override
+    public Boolean isLike(String username, String paperId) {
+        return null;
+    }
+
+    @Override
     public void clear() {
         store.clear();
     }

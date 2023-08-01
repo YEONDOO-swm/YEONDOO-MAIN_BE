@@ -7,6 +7,7 @@ import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperInfoRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.history.QueryHistoryRepository;
+import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.utils.ConnectPythonServer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ public class PaperService {
     private final PaperInfoRepository paperInfoRepository;
     private final PaperBufferRepository paperBufferRepository;
     private final PaperRepository paperRepository;
+    private final LikePaperRepository likePaperRepository;
     private final BatisAuthorRepository authorRepository;
     @Value("${python.address}")
     private String pythonapi;
@@ -72,7 +74,9 @@ public class PaperService {
             PythonPaperInfoDTO pythonPaperInfoDTO = ConnectPythonServer.requestPaperInfo(paperid, pythonapi);
 
             log.info("python return : {}", pythonPaperInfoDTO);
-            if(pythonPaperInfoDTO == null) return null;
+            if(pythonPaperInfoDTO == null) {
+                return null;
+            }
             updateInfoRepository(pythonPaperInfoDTO, paperid);
         };
         PythonPaperInfoDTO pythonPaperInfoDTO = new PythonPaperInfoDTO();
@@ -82,6 +86,7 @@ public class PaperService {
         pythonPaperInfoDTO.setSubjectRecommends(paperInfoRepository.findByPaperIdAndType(paperid, "subjectrecommend"));
         Paper paper = paperRepository.findById(paperid);
         RetPaperInfoDTO paperInfoDTO = new RetPaperInfoDTO(paper, pythonPaperInfoDTO, queryHistoryRepository.findByUsernameAndPaperid(username, paperid));
+        if(likePaperRepository.isLike(username, paperid)){paperInfoDTO.getPaperInfo().setIsLike(true);};
         log.info("paper info: {}", paperInfoDTO);
         return paperInfoDTO;
     }

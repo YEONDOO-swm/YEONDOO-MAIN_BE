@@ -20,7 +20,7 @@
         select rid, query
         from SearchHistory
         where username= #{username}
-        order by rid ASC
+        order by rid DESC
     </select>
 
     <select id="findAnswerById" resultType="String">

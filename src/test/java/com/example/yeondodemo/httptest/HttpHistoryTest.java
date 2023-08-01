@@ -175,9 +175,9 @@ public class HttpHistoryTest{
                 ).andExpect(
                         status().isOk()
                 )
-                .andExpect(jsonPath("$.results[0].query").value("hi1"))
-                .andExpect(jsonPath("$.results[1].query").value("hi2"))
-                .andExpect(jsonPath("$.results[1].rid").isNumber())
+                .andExpect(jsonPath("$.results[1].query").value("hi1"))
+                .andExpect(jsonPath("$.results[0].query").value("hi2"))
+                .andExpect(jsonPath("$.results[0].rid").isNumber())
                 .andExpect(jsonPath("$.papers[0]").doesNotExist())
                 .andExpect(jsonPath("$.results[2]").doesNotExist());
 
@@ -203,8 +203,8 @@ public class HttpHistoryTest{
                 ).andExpect(
                         status().isOk()
                 )
-                .andExpect(jsonPath("$.results[0].query").value("hi1"))
-                .andExpect(jsonPath("$.results[1].query").value("hi2"))
+                .andExpect(jsonPath("$.results[1].query").value("hi1"))
+                .andExpect(jsonPath("$.results[0].query").value("hi2"))
                 .andExpect(jsonPath("$.papers[0].paperId").value("2307.00865"))
                 .andExpect(jsonPath("$.papers[0].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
                 .andExpect(jsonPath("$.papers[1]").doesNotExist());
@@ -228,13 +228,13 @@ public class HttpHistoryTest{
                 ).andExpect(
                         status().isOk()
                 )
-                .andExpect(jsonPath("$.results[0].query").value("hi1"))
-                .andExpect(jsonPath("$.results[1].query").value("hi2"))
-                .andExpect(jsonPath("$.papers[0].paperId").value("2307.00865"))
-                .andExpect(jsonPath("$.papers[0].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
+                .andExpect(jsonPath("$.results[1].query").value("hi1"))
+                .andExpect(jsonPath("$.results[0].query").value("hi2"))
+                .andExpect(jsonPath("$.papers[1].paperId").value("2307.00865"))
+                .andExpect(jsonPath("$.papers[1].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
                 .andExpect(jsonPath("$.papers[2]").doesNotExist())
-                .andExpect(jsonPath("$.papers[1].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$.papers[1].title").value("Attention is all you need"));
+                .andExpect(jsonPath("$.papers[0].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$.papers[0].title").value("Attention is all you need"));
 
 
         //paper 제거
@@ -256,8 +256,8 @@ public class HttpHistoryTest{
                 ).andExpect(
                         status().isOk()
                 )
-                .andExpect(jsonPath("$.results[0].query").value("hi1"))
-                .andExpect(jsonPath("$.results[1].query").value("hi2"))
+                .andExpect(jsonPath("$.results[1].query").value("hi1"))
+                .andExpect(jsonPath("$.results[0].query").value("hi2"))
                 .andExpect(jsonPath("$.papers[1]").doesNotExist())
                 .andExpect(jsonPath("$.papers[0].paperId").value("1706.03762"))
                 .andExpect(jsonPath("$.papers[0].title").value("Attention is all you need"));
@@ -423,10 +423,10 @@ public class HttpHistoryTest{
                         get("http://localhost:8080/api/history/trash?username=testtest1")
                 ).andExpect(
                         status().isOk()
-                ).andExpect(jsonPath("$.trashContainers[0].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$.trashContainers[0].title").value("Attention is all you need"))
-                .andExpect(jsonPath("$.trashContainers[1].paperId").value("2307.00865"))
-                .andExpect(jsonPath("$.trashContainers[1].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
+                ).andExpect(jsonPath("$.trashContainers[1].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$.trashContainers[1].title").value("Attention is all you need"))
+                .andExpect(jsonPath("$.trashContainers[0].paperId").value("2307.00865"))
+                .andExpect(jsonPath("$.trashContainers[0].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
                 .andExpect(jsonPath("$.trashContainers[2]").doesNotExist())
                 .andExpect(jsonPath("$.papers").isArray())
                 .andExpect(jsonPath("$.papers").isEmpty());
@@ -512,14 +512,14 @@ public class HttpHistoryTest{
                         get("http://localhost:8080/api/history/search/paper?username=testtest1")
                 ).andExpect(
                         status().isOk()
-                ).andExpect(jsonPath("$[0].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$[0].who").value(true))
-                .andExpect(jsonPath("$[0].content").value("hihi1"))
-                .andExpect(jsonPath("$[0].title").value("Attention is all you need"))
-                .andExpect(jsonPath("$[1].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$[1].who").value(false))
-                .andExpect(jsonPath("$[1].content").value("bibi"))
+                ).andExpect(jsonPath("$[1].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$[1].who").value(true))
+                .andExpect(jsonPath("$[1].content").value("hihi1"))
                 .andExpect(jsonPath("$[1].title").value("Attention is all you need"))
+                .andExpect(jsonPath("$[0].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$[0].who").value(false))
+                .andExpect(jsonPath("$[0].content").value("bibi"))
+                .andExpect(jsonPath("$[0].title").value("Attention is all you need"))
         ;
         questionDTO = new QuestionDTO();
         questionDTO.setQuestion("hihi2");
@@ -539,23 +539,23 @@ public class HttpHistoryTest{
                         get("http://localhost:8080/api/history/search/paper?username=testtest1")
                 ).andExpect(
                         status().isOk()
-                ).andExpect(jsonPath("$[0].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$[0].who").value(true))
-                .andExpect(jsonPath("$[0].content").value("hihi1"))
-                .andExpect(jsonPath("$[0].title").value("Attention is all you need"))
-                .andExpect(jsonPath("$[1].paperId").value("1706.03762"))
-                .andExpect(jsonPath("$[1].who").value(false))
-                .andExpect(jsonPath("$[1].content").value("bibi"))
-                .andExpect(jsonPath("$[1].title").value("Attention is all you need"))
+                ).andExpect(jsonPath("$[2].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$[2].who").value(false))
+                .andExpect(jsonPath("$[3].content").value("hihi1"))
+                .andExpect(jsonPath("$[2].title").value("Attention is all you need"))
+                .andExpect(jsonPath("$[3].paperId").value("1706.03762"))
+                .andExpect(jsonPath("$[3].who").value(true))
+                .andExpect(jsonPath("$[2].content").value("bibi"))
+                .andExpect(jsonPath("$[3].title").value("Attention is all you need"))
 
-                .andExpect(jsonPath("$[2].paperId").value("2307.00865"))
-                .andExpect(jsonPath("$[2].who").value(true))
-                .andExpect(jsonPath("$[2].content").value("hihi2"))
-                .andExpect(jsonPath("$[2].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
-                .andExpect(jsonPath("$[3].paperId").value("2307.00865"))
-                .andExpect(jsonPath("$[3].who").value(false))
-                .andExpect(jsonPath("$[3].content").value("bibi"))
-                .andExpect(jsonPath("$[3].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
+                .andExpect(jsonPath("$[1].paperId").value("2307.00865"))
+                .andExpect(jsonPath("$[1].who").value(true))
+                .andExpect(jsonPath("$[1].content").value("hihi2"))
+                .andExpect(jsonPath("$[1].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
+                .andExpect(jsonPath("$[0].paperId").value("2307.00865"))
+                .andExpect(jsonPath("$[0].who").value(false))
+                .andExpect(jsonPath("$[0].content").value("bibi"))
+                .andExpect(jsonPath("$[0].title").value("A Survey on Graph Classification and Link Prediction based on GNN"))
         ;
 
         questionDTO = new QuestionDTO();

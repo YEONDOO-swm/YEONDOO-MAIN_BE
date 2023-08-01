@@ -15,5 +15,6 @@ public interface LikePaperRepository {
     List<String> findAllByUser(String username);
     List<PaperSimpleIdTitleDTO> findSimpleByUser(String username);
     List<PaperSimpleIdTitleDTO> findTrashSimpleByUser(String username);
+    Boolean isLike(String username, String paperId);
     void clear();
 }
