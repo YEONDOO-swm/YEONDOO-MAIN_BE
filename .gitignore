@@ -41,5 +41,5 @@ out/
 *.gz
 
 ##propeties
-!**/src/test/**/*.properties
-!**/src/main/**/*.properties
+**/src/test/**/*.properties
+**/src/main/**/*.properties
