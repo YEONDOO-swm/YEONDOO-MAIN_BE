@@ -13,4 +13,5 @@ public interface QueryHistoryMapper {
     List<PaperHistory> findByUsernameAndPaperid(String username, String paperIsd);
     Integer getLastIdx(String username, String paperId);
     List<PaperHistoryDTO> findByUsername(String username);
+    List<PaperHistory> findByUsernameAndPaperIdOrderQA(String username, String paperIsd);
 }

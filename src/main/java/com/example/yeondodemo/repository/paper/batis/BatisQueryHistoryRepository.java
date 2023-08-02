@@ -36,5 +36,10 @@ public class BatisQueryHistoryRepository implements QueryHistoryRepository {
         return queryHistoryMapper.getLastIdx(username, paperid);
     }
 
+    @Override
+    public List<PaperHistory> findByUsernameAndPaperIdOrderQA(String username, String paperid) {
+        return queryHistoryMapper.findByUsernameAndPaperIdOrderQA(username, paperid);
+    }
+
 
 }

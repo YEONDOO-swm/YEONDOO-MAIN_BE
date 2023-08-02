@@ -11,4 +11,5 @@ public interface QueryHistoryRepository {
     List<PaperHistory> findByUsernameAndPaperid(String username, String paperid);
     List<PaperHistoryDTO> findByUsername(String username);
     Integer getLastIdx(String username, String paperid);
+    List<PaperHistory> findByUsernameAndPaperIdOrderQA(String username,String paperid);
 }
