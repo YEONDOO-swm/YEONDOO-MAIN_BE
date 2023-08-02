@@ -41,4 +41,4 @@ out/
 *.gz
 
 ##propeties
-resources/**/*.properties
+/resources/**/*.properties
