@@ -40,6 +40,14 @@
         order by idx ASC
     </select>
 
+    <select id="findByUserAndIdOrderQA4Python" resultType="com.example.yeondodemo.dto.PaperHistory">
+        select content, who
+        from QUERYHISTORY
+        where paperId = #{paperIsd} and username= #{username}
+        order by idx ASC LIMIT 5
+    </select>
+
+
 
 
 </mapper>

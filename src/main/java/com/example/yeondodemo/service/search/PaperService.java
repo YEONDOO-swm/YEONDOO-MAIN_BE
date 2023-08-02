@@ -29,15 +29,15 @@ public class PaperService {
     private String pythonapi;
     @Transactional
     public Map getPaperQuestion(String paperid, String username, String query){
-        List<PaperHistory> paperHistories = queryHistoryRepository.findByUsernameAndPaperid(username, paperid);
+        List<PaperHistory> paperHistories = queryHistoryRepository.findByUserAndIdOrderQA4Python(username, paperid);
         List<List<String>>  histories = new ArrayList<>();
         List<String> t = null;
         for (PaperHistory paperHistory : paperHistories) {
-            if(!paperHistory.isWho()){
+            if(paperHistory.isWho()){
                  t = new ArrayList<>();
             }
             t.add(paperHistory.getContent());
-            if(paperHistory.isWho()){
+            if(!paperHistory.isWho()){
                 histories.add(t);
             }
         }

@@ -12,4 +12,5 @@ public interface QueryHistoryRepository {
     List<PaperHistoryDTO> findByUsername(String username);
     Integer getLastIdx(String username, String paperid);
     List<PaperHistory> findByUsernameAndPaperIdOrderQA(String username,String paperid);
+    List<PaperHistory> findByUserAndIdOrderQA4Python(String username, String paperIsd);
 }

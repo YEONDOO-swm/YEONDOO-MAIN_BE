@@ -41,5 +41,10 @@ public class BatisQueryHistoryRepository implements QueryHistoryRepository {
         return queryHistoryMapper.findByUsernameAndPaperIdOrderQA(username, paperid);
     }
 
+    @Override
+    public List<PaperHistory> findByUserAndIdOrderQA4Python(String username, String paperIsd) {
+        return queryHistoryMapper.findByUserAndIdOrderQA4Python(username, paperIsd);
+    }
+
 
 }
