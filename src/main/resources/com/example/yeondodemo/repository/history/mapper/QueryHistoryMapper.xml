@@ -41,10 +41,15 @@
     </select>
 
     <select id="findByUserAndIdOrderQA4Python" resultType="com.example.yeondodemo.dto.PaperHistory">
-        select content, who
-        from QUERYHISTORY
-        where paperId = #{paperIsd} and username= #{username}
-        order by idx ASC LIMIT 5
+        SELECT content, who, idx
+        FROM (
+                 SELECT content, who, idx
+                 FROM QUERYHISTORY AS q
+                 WHERE paperId = #{paperIsd} AND username = #{username}
+                 ORDER BY idx DESC
+                     LIMIT 10
+             ) AS subquery
+        ORDER BY idx ASC;
     </select>
 
 
