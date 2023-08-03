@@ -198,6 +198,7 @@ public class HTTPSearchTest {
                 get("http://localhost:8080/api/homesearch")
                         .queryParam("username", "testtest1")
                         .queryParam("query", "hi")
+                        .queryParam("searchType", "2")
         ).andExpect(
                 status().isOk()
         )
@@ -210,6 +211,22 @@ public class HTTPSearchTest {
                 .andExpect(jsonPath("$.papers[1].isLike").value(false))
                 .andExpect(jsonPath("$.papers[1].title").value("Insights into Lifelong Reinforcement Learning Systems"))
                 .andExpect(jsonPath("$.papers[1].cites").isNumber());
+
+
+
+        mockMvc.perform(
+                        get("http://localhost:8080/api/homesearch")
+                                .queryParam("username", "testtest1")
+                                .queryParam("query", "Attention is all you need")
+                                .queryParam("searchType", "1")
+                ).andExpect(
+                        status().isOk()
+                )
+                .andExpect(jsonPath("$.answer").value("Attention is all you need"))
+                .andExpect(jsonPath("$.papers[0].likes").value(0))
+                .andExpect(jsonPath("$.papers[0].isLike").value(true))
+                .andExpect(jsonPath("$.papers[0].title").value("Attention is All you"))
+                .andExpect(jsonPath("$.papers[0].cites").isNumber());
     }
     @Test
     public void searchFailWhenNull() throws Exception{
@@ -217,6 +234,8 @@ public class HTTPSearchTest {
                 get("http://localhost:8080/api/homesearch")
                         .queryParam("username", "testtest1")
                         .queryParam("query", "")
+                        .queryParam("searchType", "1")
+
         ).andExpect(
                 status().isBadRequest()
         );
@@ -233,6 +252,7 @@ public class HTTPSearchTest {
                 get("http://localhost:8080/api/homesearch")
                         .queryParam("username", "testtest1")
                         .queryParam("query", s)
+                        .queryParam("searchType", "1")
         ).andExpect(
                 status().isBadRequest()
         );

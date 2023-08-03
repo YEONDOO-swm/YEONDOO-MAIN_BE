@@ -33,10 +33,10 @@ public class SearchService {
     @Value("${python.address}")
     private String pythonapi;
     @Transactional
-    public SearchResultDTO search(String query, String username){
+    public SearchResultDTO search(String query, String username, Integer searchType){
         SearchResultDTO searchResultDTO = new SearchResultDTO(query);
         PythonResultDTO pythonResultDTO = null;
-        Long rid = searchHistoryRepository.canCached(username, query);
+        Long rid = searchHistoryRepository.canCached(username, query, searchType);
         if(rid > 0){
             log.info("cached.. ");
             List<PaperSimpleIdTitleDTO> paperTitles = searchHistoryRepository.findPapersById(rid);
@@ -48,7 +48,7 @@ public class SearchService {
             pythonResultDTO = new PythonResultDTO(answer, papers);
         }else{
             log.info("not cached.. ");
-            pythonResultDTO = ConnectPythonServer.request(query, pythonapi);
+            pythonResultDTO = ConnectPythonServer.request(query, searchType, pythonapi);
         }
         searchResultDTO.setAnswer(pythonResultDTO.getAnswer());
         //List<String> papers = pythonResultDTO.getPapers();

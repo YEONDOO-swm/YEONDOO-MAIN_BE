@@ -18,6 +18,6 @@ public interface SearchHistoryMapper {
     void save(SearchHistory searchHistory);
     Long getLastId();
     List<PaperSimpleIdTitleDTO> findPapersById(Long id);
-    Long canCached(String username, String query, LocalDate date);
+    Long canCached(String username, String query, Integer searchType, LocalDate date);
 
 }

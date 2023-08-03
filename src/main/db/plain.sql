@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 11.0.2-MariaDB)
 # Database: MAIN
-# Generation Time: 2023-08-01 00:46:32 +0000
+# Generation Time: 2023-08-03 00:30:26 +0000
 # ************************************************************
 
 
@@ -155,6 +155,7 @@ CREATE TABLE `SearchHistory` (
   `query` varchar(2000) NOT NULL DEFAULT '',
   `answer` varchar(2000) NOT NULL DEFAULT '',
   `searchDate` date DEFAULT NULL,
+  `searchType` int(20) DEFAULT NULL,
   PRIMARY KEY (`rid`),
   KEY `FK_USER_TO_SearchHistory_1` (`username`),
   CONSTRAINT `FK_USER_TO_SearchHistory_1` FOREIGN KEY (`username`) REFERENCES `USER` (`username`)

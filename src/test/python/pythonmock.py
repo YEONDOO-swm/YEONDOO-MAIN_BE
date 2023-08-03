@@ -41,26 +41,41 @@ async def process_question(data: PythonQuestionDTO):
     return {"answer": "bibi"}
 
 @app.get("/process")
-def process_query(query: str):
-    ret = {
-        "answer": "reinforcement learning is a learning paradigm for solving sequential decision-making problems. It works by learning from trial-and-error interactions with the environment over its lifetime, and can be enhanced by incorporating causal relationships into the learning process.",
-        "papers" : [
-          {"paperId": "1706.03762",
-          "year": "2020",
-          "title": "Attention is All you",
-          "authors": ["Changjian Li"],
-          "summary": "~~~",
-          "url" : "http~~~"
-          },
-        {"paperId": "2204.13154",
-          "year": "2020",
-          "title": "Insights into Lifelong Reinforcement Learning Systems",
-          "authors": ["Changjian Li", "hihi"],
-          "summary": "~~~",
-          "url" : "http~~~"
-          }
-        ]
-    }
+def process_query(query: str, searchType: int):
+    if searchType == 1: #searchType 1: Searching title,
+        ret = {
+            "answer": "Attention is all you need",
+            "papers" : [
+              {"paperId": "1706.03762",
+              "year": "2020",
+              "title": "Attention is All you",
+              "authors": ["Changjian Li"],
+              "summary": "~~~",
+              "url" : "http~~~"
+              }
+            ]
+        }
+    elif searchType == 2: #searchType 2: Concept explanation
+        ret = {
+            "answer": "reinforcement learning is a learning paradigm for solving sequential decision-making problems. It works by learning from trial-and-error interactions with the environment over its lifetime, and can be enhanced by incorporating causal relationships into the learning process.",
+            "papers" : [
+              {"paperId": "1706.03762",
+              "year": "2020",
+              "title": "Attention is All you",
+              "authors": ["Changjian Li"],
+              "summary": "~~~",
+              "url" : "http~~~"
+              },
+            {"paperId": "2204.13154",
+              "year": "2020",
+              "title": "Insights into Lifelong Reinforcement Learning Systems",
+              "authors": ["Changjian Li", "hihi"],
+              "summary": "~~~",
+              "url" : "http~~~"
+              }
+            ]
+        }
+
 
     return ret #결과값 딕셔너리 형태로 반환
 # ---------------new -----------------------

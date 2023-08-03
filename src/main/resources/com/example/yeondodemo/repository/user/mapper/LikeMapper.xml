@@ -31,28 +31,18 @@
     </select>
 
     <select id="findSimpleByUser" resultType="com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO">
-        SELECT p.paperId, p.title
-        FROM PAPER as p
-                 INNER JOIN LIKEPAPER as l
-                ON p.paperId = l.paperId
-        WHERE p.paperID IN (
-            SELECT l.paperId
-            FROM LIKEPAPER as l
-            WHERE l.username = #{username} AND l.isValid = 1
-        )
-        ORDER BY l.id DESC
+        SELECT p.title, p.paperId
+        FROM PAPER AS p
+                 INNER JOIN LIKEPAPER AS lp ON p.paperId = lp.paperId
+        WHERE lp.username = #{username} and lp.isvalid = 1
+        ORDER BY lp.id DESC
     </select>
     <select id="findSimpleTrashByUser" resultType="com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO">
-        SELECT p.paperId, p.title
-        FROM PAPER as p
-             INNER JOIN LIKEPAPER as l
-             ON p.paperId = l.paperId
-        WHERE p.paperID IN (
-            SELECT l.paperId
-            FROM LIKEPAPER as l
-            WHERE l.username = #{username} AND l.isValid = 0
-        )
-        ORDER BY l.id DESC
+        SELECT p.title, p.paperId
+        FROM PAPER AS p
+                 INNER JOIN LIKEPAPER AS lp ON p.paperId = lp.paperId
+        WHERE lp.username = #{username} and lp.isvalid = 0
+        ORDER BY lp.id DESC
     </select>
 
 

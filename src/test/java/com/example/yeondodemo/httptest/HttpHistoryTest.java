@@ -146,6 +146,7 @@ public class HttpHistoryTest{
                 get("http://localhost:8080/api/homesearch")
                         .queryParam("username", "testtest1")
                         .queryParam("query", "hi1")
+                        .queryParam("searchType", "2")
         );
 
 
@@ -166,6 +167,7 @@ public class HttpHistoryTest{
                 get("http://localhost:8080/api/homesearch")
                         .queryParam("username", "testtest1")
                         .queryParam("query", "hi2")
+                        .queryParam("searchType", "2")
         );
 
 
@@ -272,6 +274,7 @@ public class HttpHistoryTest{
                 get("http://localhost:8080/api/homesearch")
                         .queryParam("username", "testtest1")
                         .queryParam("query", "hi1")
+                        .queryParam("searchType", "2")
         );
         String contentAsString = mockMvc.perform(
                 get("http://localhost:8080/api/history/search?username=testtest1")
@@ -314,6 +317,7 @@ public class HttpHistoryTest{
                 get("http://localhost:8080/api/homesearch")
                         .queryParam("username", "testtest1")
                         .queryParam("query", "hi1")
+                        .queryParam("searchType", "2")
         );
         String contentAsString = mockMvc.perform(
                 get("http://localhost:8080/api/history/search?username=testtest1")

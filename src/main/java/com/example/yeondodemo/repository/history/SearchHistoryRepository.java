@@ -16,7 +16,7 @@ public interface SearchHistoryRepository {
      Long getLastId();
      void savePapers(List<PaperSimpleIdTitleDTO> papers);
      List<PaperSimpleIdTitleDTO> findPapersById(Long id);
-     Long canCached(String username, String query);
+     Long canCached(String username, String query, Integer searchType);
 
 
 }

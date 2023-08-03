@@ -18,11 +18,11 @@ import java.util.Map;
 @Getter @Setter @RequiredArgsConstructor
 public class ConnectPythonServer {
     //static String pythonApiServer = "http://10.0.128.161:80"; //파이썬 서버 주소 알아내고 수정하기
-    public static PythonResultDTO request(String query, String pythonApiServer){
+    public static PythonResultDTO request(String query,Integer searchType, String pythonApiServer){
         HttpHeaders httpHeaders = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<PythonResultDTO> response = restTemplate.exchange(
-                pythonApiServer + "/process?query="+query,
+                pythonApiServer + "/process?query="+query + "&searchType=" + searchType,
                 HttpMethod.GET,
                 new HttpEntity<>(httpHeaders),
                 PythonResultDTO.class
