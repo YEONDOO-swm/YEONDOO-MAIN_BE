@@ -5,6 +5,7 @@ import com.example.yeondodemo.repository.etc.batis.BatisKeywordRepository;
 import com.example.yeondodemo.repository.history.BatisSearchHistoryRepository;
 import com.example.yeondodemo.repository.history.SearchHistoryRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperRepository;
+import com.example.yeondodemo.repository.paper.batis.BatisQueryHistoryRepository;
 import com.example.yeondodemo.repository.studyfield.BatisStudyFieldRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.*;
@@ -37,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(LoginController.class)@AutoConfigureMybatis
-@AutoConfigureWebMvc @Import({BatisKeywordRepository.class, BatisSearchHistoryRepository.class, LoginService.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisPaperRepository.class, BatisLikePaperRepository.class})
+@AutoConfigureWebMvc @Import({BatisQueryHistoryRepository.class,BatisKeywordRepository.class, BatisSearchHistoryRepository.class, LoginService.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisPaperRepository.class, BatisLikePaperRepository.class})
 public class HttpLoginTest {
     @InjectMocks
     private LoginService loginService;

@@ -43,7 +43,7 @@
     <select id="findByUserAndIdOrderQA4Python" resultType="com.example.yeondodemo.dto.PaperHistory">
         SELECT content, who, id, score
         FROM (
-                 SELECT content, who, id, idx
+                 SELECT content, who, id, idx, score
                  FROM QUERYHISTORY AS q
                  WHERE paperId = #{paperIsd} AND username = #{username}
                  ORDER BY idx DESC

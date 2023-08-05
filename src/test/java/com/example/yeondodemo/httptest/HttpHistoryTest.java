@@ -60,7 +60,7 @@ import static util.utils.isFastApiInstalled;
 
 @WebMvcTest({HistoryController.class, SearchController.class, PaperController.class}) @AutoConfigureWebMvc
 @AutoConfigureMybatis
-@Import({PaperService.class, HistoryService.class, BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, SearchService.class, PythonPaperRepository.class, BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
+@Import({BatisQueryHistoryRepository.class, PaperService.class, HistoryService.class, BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, SearchService.class, PythonPaperRepository.class, BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
 public class HttpHistoryTest{
     @InjectMocks
     private HistoryService searchService;
