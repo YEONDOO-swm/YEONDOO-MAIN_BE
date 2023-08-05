@@ -15,5 +15,7 @@ public interface QueryHistoryMapper {
     List<PaperHistoryDTO> findByUsername(String username);
     List<PaperHistory> findByUsernameAndPaperIdOrderQA(String username, String paperIsd);
     List<PaperHistory> findByUserAndIdOrderQA4Python(String username, String paperIsd);
+    PaperHistory findByUsernameAndId(String username, Long id);
+    void updateScore(Long id, Integer score);
 
 }

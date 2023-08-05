@@ -9,7 +9,7 @@
     </insert>
 
     <select id="findByUsernameAndPaperid" resultType="com.example.yeondodemo.dto.PaperHistory">
-        select content, who
+        select content, who, id, score
         from QUERYHISTORY
         where paperId = #{paperIsd} and username= #{username}
         order by id ASC
@@ -34,16 +34,16 @@
 
 
     <select id="findByUsernameAndPaperIdOrderQA" resultType="com.example.yeondodemo.dto.PaperHistory">
-        select content, who
+        select content, who, id, score
         from QUERYHISTORY
         where paperId = #{paperIsd} and username= #{username}
         order by idx ASC
     </select>
 
     <select id="findByUserAndIdOrderQA4Python" resultType="com.example.yeondodemo.dto.PaperHistory">
-        SELECT content, who, idx
+        SELECT content, who, id, score
         FROM (
-                 SELECT content, who, idx
+                 SELECT content, who, id, idx
                  FROM QUERYHISTORY AS q
                  WHERE paperId = #{paperIsd} AND username = #{username}
                  ORDER BY idx DESC
@@ -51,6 +51,19 @@
              ) AS subquery
         ORDER BY idx ASC;
     </select>
+
+    <select id="findByUsernameAndId" resultType="com.example.yeondodemo.dto.PaperHistory">
+        SELECT content, who, id, score
+        FROM QUERYHISTORY
+        WHERE id = #{id} AND username = #{username};
+    </select>
+
+    <update id="updateScore">
+        update QUERYHISTORY
+        set score = #{score}
+        where id = #{id};
+    </update>
+
 
 
 

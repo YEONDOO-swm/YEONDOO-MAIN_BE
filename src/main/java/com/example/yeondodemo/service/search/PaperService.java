@@ -1,6 +1,7 @@
 package com.example.yeondodemo.service.search;
 
 import com.example.yeondodemo.dto.*;
+import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
@@ -89,6 +90,10 @@ public class PaperService {
         if(likePaperRepository.isLike(username, paperid)){paperInfoDTO.getPaperInfo().setIsLike(true);};
         log.info("paper info: {}", paperInfoDTO);
         return paperInfoDTO;
+    }
+    @Transactional
+    public void resultScore(PaperResultRequest paperResultRequest){
+        queryHistoryRepository.updateScore(paperResultRequest.getId(), paperResultRequest.getScore());
     }
 
 }

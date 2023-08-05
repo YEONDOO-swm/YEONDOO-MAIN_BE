@@ -1,6 +1,8 @@
 package com.example.yeondodemo.validation;
 
+import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.entity.Paper;
+import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import com.example.yeondodemo.repository.history.SearchHistoryRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
@@ -21,11 +23,16 @@ public class PaperValidator {
     private static UserRepository userRepository;
     private  static LikePaperRepository likePaperRepository;
     private static SearchHistoryRepository searchHistoryRepository;
+    private static QueryHistoryRepository queryHistoryRepository;
     public static void init(ApplicationContext context){
         paperRepository = context.getBean(PaperRepository.class);
         userRepository = context.getBean(UserRepository.class);
         likePaperRepository = context.getBean(LikePaperRepository.class);
         searchHistoryRepository = context.getBean(SearchHistoryRepository.class);
+        queryHistoryRepository = context.getBean(QueryHistoryRepository.class);
+    }
+    public static boolean isNotValidResultId(String username, PaperResultRequest paperResultRequest){
+        return queryHistoryRepository.findByUsernameAndId(username, paperResultRequest.getId()) == null;
     }
     public static boolean isValidPaper(String id){
         boolean valid = Optional.ofNullable(paperRepository.findById(id)).isPresent();

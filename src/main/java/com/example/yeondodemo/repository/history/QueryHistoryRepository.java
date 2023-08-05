@@ -13,4 +13,6 @@ public interface QueryHistoryRepository {
     Integer getLastIdx(String username, String paperid);
     List<PaperHistory> findByUsernameAndPaperIdOrderQA(String username,String paperid);
     List<PaperHistory> findByUserAndIdOrderQA4Python(String username, String paperIsd);
+    PaperHistory findByUsernameAndId(String username, Long id);
+    void updateScore(Long id, Integer score);
 }

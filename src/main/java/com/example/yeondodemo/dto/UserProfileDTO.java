@@ -19,7 +19,7 @@ import java.util.List;
 public class UserProfileDTO {
     @Pattern(regexp = "^[A-Za-z][A-Za-z0-9]{6,19}$")
     private String username;
-    @Pattern(regexp = "^[A-Za-z0-9가-힣 ]{1,30}")
+    @Pattern(regexp = "^[A-Za-z0-9가-힣 ]{1,100}")
     private String studyField;
     @Size(min=1,max=3)
     private List<String> keywords;
