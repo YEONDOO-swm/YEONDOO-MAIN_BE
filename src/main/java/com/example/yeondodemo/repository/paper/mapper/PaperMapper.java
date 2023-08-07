@@ -1,5 +1,6 @@
 package com.example.yeondodemo.repository.paper.mapper;
 
+import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.PaperWithOutMeta;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,5 +18,6 @@ public interface PaperMapper {
     String findSummaryById(String id);
     void add(String id);
     void sub(String id);
+    void saveF(PaperFullMeta paperFullMeta);
 
 }

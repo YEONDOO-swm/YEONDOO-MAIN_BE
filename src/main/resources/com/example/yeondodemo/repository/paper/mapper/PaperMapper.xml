@@ -7,6 +7,11 @@
         values (#{paperId}, #{conference},#{cites}, #{likes}, #{lastUpdate}, #{title})
     </insert>
 
+    <insert id="saveF">
+        insert into PAPER (paperId,  title, submitter, comments, journalRef, doi,  categories, license, summary, version, update_date)
+        values (#{paperId},  #{title}, #{submitter}, #{comments}, #{journalRef}, #{doi}, #{categories}, #{license}, #{summary}, #{version}, #{update_date})
+    </insert>
+
     <select id="clearStore">
         TRUNCATE TABLE PAPER
     </select>
@@ -21,7 +26,7 @@
     </update>
 
     <select id="findById" resultType="com.example.yeondodemo.entity.Paper">
-        select paperId,conference, cites, likes, lastUpdate, title
+        select *
         from PAPER
         where paperId = #{id}
     </select>

@@ -1,6 +1,7 @@
 package com.example.yeondodemo.repository.paper;
 
 import com.example.yeondodemo.dto.TestPython;
+import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
 import com.example.yeondodemo.utils.ConnectPythonServer;
@@ -9,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-@RequiredArgsConstructor @Repository
+@RequiredArgsConstructor //@Repository
 public class PythonPaperRepository implements PaperRepository{
     private final PaperMapper paperMapper;
     @Value("${python.address}") private String pythonapi;
@@ -28,6 +29,11 @@ public class PythonPaperRepository implements PaperRepository{
             paper = updater.update(paper);
         }
         return paper;
+    }
+
+    @Override
+    public Paper findById(String id, Boolean update) {
+        return null;
     }
 
     @Override
@@ -53,6 +59,11 @@ public class PythonPaperRepository implements PaperRepository{
     @Override
     public void sub(String id) {
         paperMapper.sub(id);
+    }
+
+    @Override
+    public void saveF(PaperFullMeta paperFullMeta) {
+
     }
 
 }

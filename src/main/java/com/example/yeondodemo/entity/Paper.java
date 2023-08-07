@@ -33,6 +33,7 @@ public class Paper extends PaperWithOutMeta{
     private String reportNo;
     private String categories;
     private String license;
+    private String version;
     public void setScholar(ScholarDTO scholarDTO){
         this.conference = scholarDTO.getConference();
         this.cites = scholarDTO.getCites();
@@ -47,9 +48,9 @@ public class Paper extends PaperWithOutMeta{
         this.paperId = id;
         this.url = "http://arxiv.org/abs/"+paperId;
     }
-
-    public Paper(PaperFullMeta paperFullMeta){
+    public Paper(){
 
     }
+
 
 }

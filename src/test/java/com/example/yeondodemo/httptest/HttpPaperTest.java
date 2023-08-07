@@ -1,6 +1,7 @@
 package com.example.yeondodemo.httptest;
 
 import com.example.yeondodemo.Controller.PaperController;
+import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.User;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.history.BatisSearchHistoryRepository;
@@ -8,6 +9,7 @@ import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import com.example.yeondodemo.repository.paper.*;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperBufferRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperInfoRepository;
+import com.example.yeondodemo.repository.paper.batis.BatisPaperRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisQueryHistoryRepository;
 import com.example.yeondodemo.repository.studyfield.BatisStudyFieldRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
@@ -32,6 +34,8 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +49,7 @@ import static util.utils.isFastApiInstalled;
 
 @WebMvcTest(PaperController.class) @AutoConfigureWebMvc
 @AutoConfigureMybatis
-@Import({BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, PaperService.class, PythonPaperRepository.class, BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
+@Import({BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, PaperService.class, BatisPaperRepository.class, BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
 public class HttpPaperTest {
 
     @InjectMocks
@@ -123,12 +127,12 @@ public class HttpPaperTest {
 //        paper1.setYear(2017);
 //        paper1.setLikes(200);
 //        //paper1.setSummary("The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.");
-//        Paper paper2 = new Paper("2204.13154");
-//        paper2.setSummary("A long time ago in the machine learning literature, the idea of incorporating a mechanism inspired by the human visual system into neural networks was introduced. This idea is named the attention mechanism, and it has gone through a long development period. Today, many works have been devoted to this idea in a variety of tasks. Remarkable performance has recently been demonstrated. The goal of this paper is to provide an overview from the early work on searching for ways to implement attention idea with neural networks until the recent trends. This review emphasizes the important milestones during this progress regarding different tasks. By this way, this study aims to provide a road map for researchers to explore the current development and get inspired for novel approaches beyond the attention.\n");
+        Paper paper2 = new Paper("2204.13154");
+        paper2.setSummary("A long time ago in the machine learning literature, the idea of incorporating a mechanism inspired by the human visual system into neural networks was introduced. This idea is named the attention mechanism, and it has gone through a long development period. Today, many works have been devoted to this idea in a variety of tasks. Remarkable performance has recently been demonstrated. The goal of this paper is to provide an overview from the early work on searching for ways to implement attention idea with neural networks until the recent trends. This review emphasizes the important milestones during this progress regarding different tasks. By this way, this study aims to provide a road map for researchers to explore the current development and get inspired for novel approaches beyond the attention.\n");
 //        //paper2.setAbs("A long time ago in the machine learning literature, the idea of incorporating a mechanism inspired by the human visual system into neural networks was introduced. This idea is named the attention mechanism, and it has gone through a long development period. Today, many works have been devoted to this idea in a variety of tasks. Remarkable performance has recently been demonstrated. The goal of this paper is to provide an overview from the early work on searching for ways to implement attention idea with neural networks until the recent trends. This review emphasizes the important milestones during this progress regarding different tasks. By this way, this study aims to provide a road map for researchers to explore the current development and get inspired for novel approaches beyond the attention.\n");
-//        //paper2.setAuthors(new ArrayList<String>(Arrays.asList("Derya Soydaner")));
+        paper2.setAuthors(new ArrayList<String>(Arrays.asList("Derya Soydaner")));
 //        //paper2.setUrl("https://arxiv.org/abs/2204.13154");
-//        //paper2.setTitle("Attention Mechanism in Neural Networks: Where it Comes and Where it Goes");
+        paper2.setTitle("Attention Mechanism in Neural Networks: Where it Comes and Where it Goes");
 //        paper2.setCites(170);
 //        paper2.setConference("2021 - proceedings.mlr.press");
 //        paper2.setYear(2021);

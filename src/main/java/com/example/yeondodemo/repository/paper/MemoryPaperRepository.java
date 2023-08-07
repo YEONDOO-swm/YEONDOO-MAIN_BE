@@ -1,5 +1,6 @@
 package com.example.yeondodemo.repository.paper;
 
+import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.PaperWithOutMeta;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,11 @@ public class MemoryPaperRepository implements PaperRepository {
     public Paper findById(String id) {
         log.info("findById id: {}", id);
         return store.get(id);
+    }
+
+    @Override
+    public Paper findById(String id, Boolean update) {
+        return null;
     }
 
 
@@ -42,6 +48,11 @@ public class MemoryPaperRepository implements PaperRepository {
 
     @Override
     public void sub(String id) {
+
+    }
+
+    @Override
+    public void saveF(PaperFullMeta paperFullMeta) {
 
     }
 

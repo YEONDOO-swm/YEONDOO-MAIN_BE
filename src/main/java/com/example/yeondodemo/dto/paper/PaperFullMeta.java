@@ -1,5 +1,6 @@
 package com.example.yeondodemo.dto.paper;
 
+import com.example.yeondodemo.entity.Paper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,8 +9,9 @@ import lombok.ToString;
 import java.util.List;
 
 @Getter @Setter @ToString
-public class PaperFullMeta {
-    private String id;
+public class PaperFullMeta{
+    @JsonProperty(value="id")
+    private String paperId;
     private String submitter;
     private String authors;
     private String title;
@@ -26,4 +28,6 @@ public class PaperFullMeta {
     private List<Version> versions;
     private String update_date;
     private List<List<String>> authors_parsed;
+    private String version;
+
 }

@@ -17,6 +17,7 @@ import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.paper.PythonPaperRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperBufferRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperInfoRepository;
+import com.example.yeondodemo.repository.paper.batis.BatisPaperRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisQueryHistoryRepository;
 import com.example.yeondodemo.repository.studyfield.BatisStudyFieldRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
@@ -60,7 +61,7 @@ import static util.utils.isFastApiInstalled;
 
 @WebMvcTest({HistoryController.class, SearchController.class, PaperController.class}) @AutoConfigureWebMvc
 @AutoConfigureMybatis
-@Import({BatisQueryHistoryRepository.class, PaperService.class, HistoryService.class, BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, SearchService.class, PythonPaperRepository.class, BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
+@Import({BatisQueryHistoryRepository.class, PaperService.class, HistoryService.class, BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, SearchService.class, BatisPaperRepository.class, BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
 public class HttpHistoryTest{
     @InjectMocks
     private HistoryService searchService;
