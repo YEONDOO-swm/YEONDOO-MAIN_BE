@@ -44,7 +44,7 @@ public class DbController {
     public ResponseEntity addPapers(@RequestBody List<PaperFullMeta> data) throws InterruptedException {
         System.out.println("data.get(0).getId() = " + data.get(0).getId());
         Paper paper = new Paper(data.get(0));
-        paperRepository.save();
+        //paperRepository.save();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
