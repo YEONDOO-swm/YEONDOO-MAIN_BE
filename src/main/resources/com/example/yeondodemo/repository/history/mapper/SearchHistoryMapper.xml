@@ -4,15 +4,15 @@
 <mapper namespace="com.example.yeondodemo.repository.history.mapper.SearchHistoryMapper">
 
     <insert id="save">
-        insert into SearchHistory (username,query, answer, searchDate)
-        values (#{username}, #{query}, #{answer}, CURRENT_DATE)
+        insert into SearchHistory (username,query, answer, searchDate, searchType)
+        values (#{username}, #{query}, #{answer}, CURRENT_DATE, #{searchType})
     </insert>
 
     <insert id="savePapers">
-        insert into SearchHistoryPaper (paperId, rid, searchType)
+        insert into SearchHistoryPaper (paperId, rid)
         VALUES
         <foreach collection="papers" index="paper" item="paper" separator=",">
-            (#{paper.paperId},  ${rid}, ${searchType})
+            (#{paper.paperId},  ${rid})
         </foreach>
     </insert>
 
