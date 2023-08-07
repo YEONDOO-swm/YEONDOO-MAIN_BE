@@ -41,7 +41,7 @@ async def process_question(data: PythonQuestionDTO):
     return {"answer": "bibi"}
 
 @app.get("/process")
-def process_query(query: str, searchType: int):
+def process_query(question: str, searchType: int):
     if searchType == 1: #searchType 1: Searching title,
         ret = {
             "answer": "Attention is all you need",
