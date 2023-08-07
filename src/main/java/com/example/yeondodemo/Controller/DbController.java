@@ -3,7 +3,10 @@ package com.example.yeondodemo.Controller;
 import com.example.yeondodemo.dto.dbcontroll.AddAuthorDTO;
 import com.example.yeondodemo.dto.dbcontroll.AddStudyFieldDTO;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
+import com.example.yeondodemo.dto.paper.PaperResultRequest;
+import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
+import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -24,6 +27,7 @@ import java.util.List;
 public class DbController {
     private final BatisAuthorRepository batisAuthorRepository;
     private final StudyFieldRepository studyFieldRepository;
+    private final PaperRepository paperRepository;
     @PostMapping("/addauthor")
     public ResponseEntity addAuthor(@Validated @RequestBody AddAuthorDTO addAuthorDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()){return new ResponseEntity(HttpStatus.BAD_REQUEST);}
@@ -39,7 +43,8 @@ public class DbController {
     @PostMapping("/upload")
     public ResponseEntity addPapers(@RequestBody List<PaperFullMeta> data) throws InterruptedException {
         System.out.println("data.get(0).getId() = " + data.get(0).getId());
-        Thread.sleep(3000);
+        Paper paper = new Paper(data.get(0));
+        paperRepository.save();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package com.example.yeondodemo.entity;
 
 import com.example.yeondodemo.dto.ScholarDTO;
 import com.example.yeondodemo.dto.TestPython;
+import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,6 +27,12 @@ public class Paper extends PaperWithOutMeta{
     private int likes=0;
     private int year;
     private LocalDate lastUpdate;
+    private String comments;
+    private String journalRef;
+    private String doi;
+    private String reportNo;
+    private String categories;
+    private String license;
     public void setScholar(ScholarDTO scholarDTO){
         this.conference = scholarDTO.getConference();
         this.cites = scholarDTO.getCites();
@@ -39,6 +46,10 @@ public class Paper extends PaperWithOutMeta{
     public Paper(String id){
         this.paperId = id;
         this.url = "http://arxiv.org/abs/"+paperId;
+    }
+
+    public Paper(PaperFullMeta paperFullMeta){
+
     }
 
 }
