@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-@Repository @RequiredArgsConstructor
+@RequiredArgsConstructor //@Repository
 public class PythonPaperRepository implements PaperRepository{
     private final PaperMapper paperMapper;
     @Value("${python.address}") private String pythonapi;

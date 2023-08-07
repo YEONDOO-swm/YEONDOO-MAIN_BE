@@ -9,10 +9,10 @@
     </insert>
 
     <insert id="savePapers">
-        insert into SearchHistoryPaper (paperId, rid)
+        insert into SearchHistoryPaper (paperId, rid, searchType)
         VALUES
         <foreach collection="papers" index="paper" item="paper" separator=",">
-            (#{paper.paperId},  ${rid})
+            (#{paper.paperId},  ${rid}, ${searchType})
         </foreach>
     </insert>
 

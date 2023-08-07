@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from pydantic import BaseModel
 import os
 
@@ -122,3 +122,27 @@ def paper_meta_info(paperId: str):
     except Exception as e:
         print(e)
         return None
+
+class ResponseMessage(BaseModel):
+    message: str
+
+class PdfFile(BaseModel):
+    filename: str
+    content: bytes
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATIC_DIR = os.path.join(BASE_DIR,'static/')
+IMG_DIR = os.path.join(STATIC_DIR,'images/')
+SERVER_IMG_DIR = os.path.join('http://localhost:8000/','static/','images/')
+
+from fastapi import APIRouter, File, UploadFile
+from typing import Annotated
+from typing import List
+
+@app.post("/upload")
+async def upload_pdf(file: UploadFile = File(..., content_type="application/pdf")):
+    with open(file.filename, "wb") as f:
+        f.write(file.file.read())
+
+    return {"message": "PDF 파일을 받았습니다."}

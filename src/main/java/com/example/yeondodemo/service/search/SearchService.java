@@ -66,7 +66,7 @@ public class SearchService {
             paperList.add(new PaperSimpleIdTitleDTO(paper));
             searchResultDTO.getPapers().add(paperDTO);
         }
-        searchHistoryRepository.save(new SearchHistory(searchResultDTO, username));
+        searchHistoryRepository.save(new SearchHistory(searchResultDTO, username, searchType));
         searchHistoryRepository.savePapers(paperList);
 //        for (String id : papers) {
 //            log.info(id);

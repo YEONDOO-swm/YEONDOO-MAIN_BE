@@ -11,9 +11,11 @@ public class SearchHistory {
     private String username;
     private String query;
     private String answer;
-    public SearchHistory(SearchResultDTO searchResultDTO, String username){
+    private Integer searchType;
+    public SearchHistory(SearchResultDTO searchResultDTO, String username,  Integer searchType){
         this.query = searchResultDTO.getQuery();
         this.answer = searchResultDTO.getAnswer();
-        this.username =username;
+        this.username = username;
+        this.searchType = searchType;
     }
 }

@@ -2,6 +2,7 @@ package com.example.yeondodemo.Controller;
 
 import com.example.yeondodemo.dto.dbcontroll.AddAuthorDTO;
 import com.example.yeondodemo.dto.dbcontroll.AddStudyFieldDTO;
+import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.rmi.server.RemoteRef;
+import java.util.List;
+
 @Controller @RequiredArgsConstructor
 public class DbController {
     private final BatisAuthorRepository batisAuthorRepository;
@@ -29,6 +33,14 @@ public class DbController {
     @PostMapping("/addStudyField")
     public ResponseEntity addStudyField(@RequestBody AddStudyFieldDTO studyFieldDTO){
         studyFieldRepository.saveAll(studyFieldDTO.getStudyFields());
-        return new ResponseEntity(studyFieldDTO.getStudyFields(), HttpStatus.OK);
+        return new ResponseEntity<>(studyFieldDTO.getStudyFields(), HttpStatus.OK);
+    }
+
+    @PostMapping("addPaperMeta")
+    public ResponseEntity addPaper(@RequestBody List<PaperFullMeta> paperFullMetas){
+        for (PaperFullMeta paperFullMeta : paperFullMetas) {
+
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
