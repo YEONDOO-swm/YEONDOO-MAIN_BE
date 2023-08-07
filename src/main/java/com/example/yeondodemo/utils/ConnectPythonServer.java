@@ -22,7 +22,7 @@ public class ConnectPythonServer {
         HttpHeaders httpHeaders = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<PythonResultDTO> response = restTemplate.exchange(
-                pythonApiServer + "/process?query="+query + "&searchType=" + searchType,
+                pythonApiServer + "/process?question="+query + "&searchType=" + searchType,
                 HttpMethod.GET,
                 new HttpEntity<>(httpHeaders),
                 PythonResultDTO.class
