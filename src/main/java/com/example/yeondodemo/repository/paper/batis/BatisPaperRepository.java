@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-@Slf4j  @RequiredArgsConstructor @Repository
+@Slf4j  @RequiredArgsConstructor //@Repository
 public class BatisPaperRepository implements PaperRepository {
     private final PaperMapper paperMapper;
     private final Updater updater;
