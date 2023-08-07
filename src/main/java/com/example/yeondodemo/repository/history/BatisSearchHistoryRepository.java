@@ -64,4 +64,14 @@ public class BatisSearchHistoryRepository implements SearchHistoryRepository{
     public Long canCached(String username, String query, Integer searchType) {
         return searchHistoryMapper.canCached(username, query, searchType, LocalDate.now());
     }
+
+    @Override
+    public Long findByUsernameAndId(String username, Long id) {
+        return searchHistoryMapper.findByUsernameAndId(username, id);
+    }
+
+    @Override
+    public void updateScore(Long id, int score) {
+        searchHistoryMapper.updateScore(id, score);
+    }
 }

@@ -31,9 +31,14 @@ public class PaperValidator {
         searchHistoryRepository = context.getBean(SearchHistoryRepository.class);
         queryHistoryRepository = context.getBean(QueryHistoryRepository.class);
     }
+    public static boolean isNotValidHomeResultId(String username, PaperResultRequest paperResultRequest){
+        return searchHistoryRepository.findByUsernameAndId(username, paperResultRequest.getId()) == null;
+    }
     public static boolean isNotValidResultId(String username, PaperResultRequest paperResultRequest){
         return queryHistoryRepository.findByUsernameAndId(username, paperResultRequest.getId()) == null;
     }
+
+
     public static boolean isValidPaper(String id){
         boolean valid = Optional.ofNullable(paperRepository.findById(id)).isPresent();
         log.info("Paper: {} is {}", id, valid);

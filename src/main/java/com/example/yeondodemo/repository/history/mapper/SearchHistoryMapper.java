@@ -19,5 +19,7 @@ public interface SearchHistoryMapper {
     Long getLastId();
     List<PaperSimpleIdTitleDTO> findPapersById(Long id);
     Long canCached(String username, String query, Integer searchType, LocalDate date);
+    Long findByUsernameAndId(String username, Long id);
+    void updateScore(Long id, int score);
 
 }

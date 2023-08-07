@@ -38,7 +38,7 @@ public class HistoryService {
         for (PaperSimpleIdTitleDTO paper : papers) {
             paperDTOS.add(new PaperDTO(paperRepository.findById(paper.getPaperId())));
         }
-        return new SearchResultDTO(query,answer, paperDTOS);
+        return new SearchResultDTO(query,answer,rid, paperDTOS);
     }
     public TrashContainerDTO historySearchTrash(String username){
         List<PaperSimpleIdTitleDTO> trashContainers =  likePaperRepository.findTrashSimpleByUser(username);

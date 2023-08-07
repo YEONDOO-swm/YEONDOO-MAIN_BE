@@ -2,6 +2,7 @@ package com.example.yeondodemo.service.search;
 
 import com.example.yeondodemo.dto.paper.Paper4Container;
 import com.example.yeondodemo.dto.paper.PaperContainerDTO;
+import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.SearchHistory;
@@ -32,6 +33,10 @@ public class SearchService {
     private final SearchHistoryRepository searchHistoryRepository;
     @Value("${python.address}")
     private String pythonapi;
+    @Transactional
+    public void resultScore(PaperResultRequest paperResultRequest){
+        searchHistoryRepository.updateScore(paperResultRequest.getId(), paperResultRequest.getScore());
+    }
     @Transactional
     public SearchResultDTO search(String query, String username, Integer searchType){
         SearchResultDTO searchResultDTO = new SearchResultDTO(query);
@@ -67,6 +72,7 @@ public class SearchService {
             searchResultDTO.getPapers().add(paperDTO);
         }
         searchHistoryRepository.save(new SearchHistory(searchResultDTO, username, searchType));
+        searchResultDTO.setId(searchHistoryRepository.getLastId());
         searchHistoryRepository.savePapers(paperList);
 //        for (String id : papers) {
 //            log.info(id);

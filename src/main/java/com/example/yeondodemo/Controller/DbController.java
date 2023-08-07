@@ -36,11 +36,10 @@ public class DbController {
         return new ResponseEntity<>(studyFieldDTO.getStudyFields(), HttpStatus.OK);
     }
 
-    @PostMapping("addPaperMeta")
-    public ResponseEntity addPaper(@RequestBody List<PaperFullMeta> paperFullMetas){
-        for (PaperFullMeta paperFullMeta : paperFullMetas) {
-
-        }
+    @PostMapping("/upload")
+    public ResponseEntity addPapers(@RequestBody List<PaperFullMeta> data) throws InterruptedException {
+        System.out.println("data.get(0).getId() = " + data.get(0).getId());
+        Thread.sleep(3000);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

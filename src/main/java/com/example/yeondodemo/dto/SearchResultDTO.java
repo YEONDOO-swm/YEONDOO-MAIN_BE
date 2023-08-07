@@ -13,11 +13,13 @@ import java.util.List;
 public class SearchResultDTO {
     private String query;
     private String answer;
+    private Long id;
     private List<PaperDTO> papers = new ArrayList<>();
     public SearchResultDTO(String query){
         this.query = query;
     }
-    public SearchResultDTO(String query, String answer, List<PaperDTO> papers){
+    public SearchResultDTO(String query, String answer, Long id, List<PaperDTO> papers){
+        this.id = id;
         this.query = query;
         this.answer =answer;
         this.papers = papers;

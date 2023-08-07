@@ -2,7 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.yeondodemo.repository.history.mapper.SearchHistoryMapper">
-
+    <select id="findByUsernameAndId" resultType="Long">
+        SELECT rid
+        FROM SearchHistory
+        WHERE rid = #{id} AND username = #{username};
+    </select>
     <insert id="save">
         insert into SearchHistory (username,query, answer, searchDate, searchType)
         values (#{username}, #{query}, #{answer}, CURRENT_DATE, #{searchType})
@@ -59,4 +63,10 @@
         FROM SearchHistory
         WHERE username = #{username} and query = #{query} and searchType = #{searchType} and searchDate = #{date};
     </select>
+
+    <update id="updateScore">
+        update SearchHistory
+        set score = #{score}
+        where rid = #{id};
+    </update>
 </mapper>

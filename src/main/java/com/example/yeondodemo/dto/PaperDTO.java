@@ -18,6 +18,7 @@ public class PaperDTO {
     private int year;
     private String conference;
     private int cites;
+    private String summary;
     private String url;
     public boolean getIslLike(){
         return isLike;
@@ -37,6 +38,7 @@ public class PaperDTO {
         this.conference=paper.getConference();
         this.cites=paper.getCites();
         this.url=paper.getUrl();
+        this.summary = paper.getSummary();
     }
     public PaperDTO(TestPython testPython, PaperWithOutMeta paper){
         this.paperId = paper.getPaperId();

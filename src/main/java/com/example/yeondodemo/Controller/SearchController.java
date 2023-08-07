@@ -3,8 +3,10 @@ package com.example.yeondodemo.Controller;
 import com.example.yeondodemo.dto.LikeOnOffDTO;
 import com.example.yeondodemo.dto.PythonResultDTO;
 import com.example.yeondodemo.dto.SearchResultDTO;
+import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.service.search.SearchService;
 import com.example.yeondodemo.utils.ConnectPythonServer;
+import com.example.yeondodemo.validation.PaperValidator;
 import com.example.yeondodemo.validation.UserValidator;
 import com.example.yeondodemo.validation.SearchValidator;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,14 @@ public class SearchController {
         SearchResultDTO searchResultDTO = searchService.search(query, username, searchType);
         log.info("python search: {}",searchResultDTO.toString());
         return new ResponseEntity<>(searchResultDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("home/result/score")
+    public ResponseEntity resultScore(@RequestParam String username, @Validated @RequestBody PaperResultRequest paperResultRequest, BindingResult bindingResult){
+        if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
+        if(bindingResult.hasErrors()|| PaperValidator.isNotValidHomeResultId(username, paperResultRequest)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
+        searchService.resultScore(paperResultRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/paperlikeonoff")
     public ResponseEntity likeOnOff(@Validated @RequestBody LikeOnOffDTO likeOnOffDTO, BindingResult bindingResult){

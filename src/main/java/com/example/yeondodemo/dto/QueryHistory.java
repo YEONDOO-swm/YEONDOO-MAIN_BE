@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 public class QueryHistory {
-    private int id;
+    private Long id;
     private String username;
     private String paperid;
     private String content;
