@@ -48,6 +48,14 @@ public class Paper extends PaperWithOutMeta{
         this.paperId = id;
         this.url = "http://arxiv.org/abs/"+paperId;
     }
+    public Paper(TestPython testPython){
+        this.paperId = testPython.getPaperId();
+        this.title = testPython.getTitle();
+        this.authors = testPython.getAuthors();
+        this.summary = testPython.getSummary();
+        this.url = testPython.getUrl();
+        this.year = testPython.getYear();
+    }
     public Paper(){
 
     }

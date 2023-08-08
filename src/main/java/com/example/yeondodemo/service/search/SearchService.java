@@ -72,6 +72,14 @@ public class SearchService {
         stopWatch.start("for ..");
         for (TestPython tPaper : papers) {
             Paper paper = paperRepository.findById(tPaper.getPaperId());
+            if(paper == null){
+                log.info("new Paper.. save..");
+                paper = new Paper(tPaper);
+                paperRepository.save(paper);
+                for (String author : paper.getAuthors()) {
+                    authorRepository.save(paper.getPaperId(), author);
+                }
+            }
             PaperDTO paperDTO = new PaperDTO(tPaper, paper);
             if (userSet != null && userSet.contains(paper.getPaperId())){ //userSEt null인부분 생각
                 paperDTO.setIsLike(true);
