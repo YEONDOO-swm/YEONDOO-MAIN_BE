@@ -23,7 +23,17 @@ public class BatisPaperRepository implements PaperRepository {
         }else{
             if(paper.getVersion() == null){paper.setUrl("https://arxiv.org/abs/" + paper.getPaperId());}
             else{paper.setUrl("https://arxiv.org/abs/" + paper.getPaperId() + "/" +  paper.getVersion());}
-            paper.setYear(2000 + Integer.parseInt(paper.getPaperId().substring(0,2)));
+            try{
+                paper.setYear(2000 + Integer.parseInt(paper.getPaperId().substring(0,2)));
+            }catch (Exception e){
+                String[] split = paper.getPaperId().split("/");
+                int t = Integer.parseInt(split[1].substring(0, 2));
+                if(t< 10){
+                    paper.setYear(2000+t);
+                }else{
+                    paper.setYear(1900+t);
+                }
+            }
             paper.setAuthors(authorMapper.findByPaperId(paper.getPaperId()));
             paper = updater.update(paper);
 

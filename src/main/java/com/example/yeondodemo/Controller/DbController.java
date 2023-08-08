@@ -12,6 +12,9 @@ import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -21,10 +24,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.rmi.server.RemoteRef;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +44,82 @@ public class DbController {
     private final PaperRepository paperRepository;
     private final BatisAuthorRepository authorRepository;
     private final PaperBufferRepository paperBufferRepository;
+    @GetMapping("/addLocal")
+    public ResponseEntity addPapers() throws InterruptedException {
+
+
+        Gson gson = new Gson();
+        int n = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader("data.json"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                n++;
+                if(n<3000000){
+                    continue;
+                }
+                try {
+                    PaperFullMeta paper= gson.fromJson(line, PaperFullMeta.class);
+
+                    if(paperRepository.findById(paper.getPaperId(), false) == null){
+                        if(paper.getComments()!= null && paper.getComments().length()>=450){
+                            paper.setComments(paper.getComments().substring(0,400));
+                        }
+                        if(paper.getJournalRef()!= null && paper.getJournalRef().length()>=300){
+                            paper.setJournalRef(paper.getJournalRef().substring(0,298));
+                        }
+                        if(paper.getSubmitter()!= null && paper.getSubmitter().length()>=100){
+                            paper.setSubmitter(paper.getSubmitter().substring(0,98));
+                        }
+                        if(paper.getDoi() != null && paper.getDoi().length()>=100){
+                            paper.setDoi(paper.getDoi().substring(0,98));
+                        }
+                        List<Version> versions = paper.getVersions();
+                        if (versions != null && !versions.isEmpty()) {
+                            String lastVersion = versions.get(versions.size() - 1).getVersion();
+                            paper.setVersion(lastVersion);
+                        }
+                        String input = "";
+                        try{
+                            paperRepository.saveF(paper);
+                            paperBufferRepository.save(new PaperBuffer(paper.getPaperId(), false));
+                            input = paper.getAuthors();
+
+                            if (input != null && !input.isEmpty()) {
+                                String[] nameArray = input.split(", ");
+                                for (String name : nameArray) {
+                                    if(name.length()>50){
+                                        continue;
+                                    }
+                                    authorRepository.save(paper.getPaperId(), name);
+                                }
+                            }
+
+                        }catch (Exception e){
+                            System.out.println("sizetitle : " + paper.getTitle().length());
+                            System.out.println("sizesize : " + paper.getComments().length());
+                            System.out.println("sizej : " + paper.getJournalRef().length());
+                            System.out.println("sizesizesub : " + paper.getSubmitter().length());
+                            System.out.println("sizesdoi : " + paper.getDoi().length());
+                            System.out.println("sizescate : " + paper.getCategories().length());
+                            System.out.println("input = " + input);
+                            Thread.sleep(100000000);
+
+                        }
+                    }
+                } catch (JsonSyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping("/addauthor")
     public ResponseEntity addAuthor(@Validated @RequestBody AddAuthorDTO addAuthorDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()){return new ResponseEntity(HttpStatus.BAD_REQUEST);}
@@ -53,6 +137,9 @@ public class DbController {
             PaperFullMeta paper = data.get(0);
             if(paper.getComments()!= null && paper.getComments().length()>=450){
                 paper.setComments(paper.getComments().substring(0,400));
+            }
+            if(paper.getTitle()!= null && paper.getTitle().length()>=300){
+                paper.setTitle(paper.getTitle().substring(0,300));
             }
             if(paper.getJournalRef()!= null && paper.getJournalRef().length()>=300){
                 paper.setJournalRef(paper.getJournalRef().substring(0,298));
@@ -92,11 +179,11 @@ public class DbController {
                 System.out.println("sizesdoi : " + paper.getDoi().length());
                 System.out.println("sizescate : " + paper.getCategories().length());
                 System.out.println("input = " + input);
+                System.out.println(paper);
                 Thread.sleep(100000000);
 
             }
         }
-        Thread.sleep(1);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -123,4 +210,6 @@ public class DbController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 }
