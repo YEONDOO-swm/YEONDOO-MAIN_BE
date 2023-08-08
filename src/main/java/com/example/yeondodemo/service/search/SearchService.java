@@ -86,15 +86,6 @@ public class SearchService {
         log.info(stopWatch.shortSummary());
         log.info(String.valueOf(stopWatch.getTotalTimeMillis()));
         log.info(stopWatch.prettyPrint());
-//        for (String id : papers) {
-//            log.info(id);
-//            Paper paper = paperRepository.findById(id®);
-//            PaperDTO paperDTO = new PaperDTO(paper);
-//            if (userSet != null && userSet.contains(paper)){ //userSEt null인부분 생각
-//                paperDTO.setIslike(true);
-//            }
-//            searchResultDTO.getPapers().add(paperDTO);
-//        }
         return searchResultDTO;
     }
     @Transactional

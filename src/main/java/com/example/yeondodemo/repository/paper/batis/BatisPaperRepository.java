@@ -35,7 +35,7 @@ public class BatisPaperRepository implements PaperRepository {
                 }
             }
             paper.setAuthors(authorMapper.findByPaperId(paper.getPaperId()));
-            paper = updater.update(paper);
+            //paper = updater.update(paper);
 
         }
         return paper;
