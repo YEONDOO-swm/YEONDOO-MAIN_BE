@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +40,11 @@ public class SearchService {
     }
     @Transactional
     public SearchResultDTO search(String query, String username, Integer searchType){
+        StopWatch stopWatch = new StopWatch();
         SearchResultDTO searchResultDTO = new SearchResultDTO(query);
         PythonResultDTO pythonResultDTO = null;
         Long rid = searchHistoryRepository.canCached(username, query, searchType);
+        stopWatch.start("if ...");
         if(rid > 0){
             log.info("cached.. ");
             List<PaperSimpleIdTitleDTO> paperTitles = searchHistoryRepository.findPapersById(rid);
@@ -55,6 +58,9 @@ public class SearchService {
             log.info("not cached.. ");
             pythonResultDTO = ConnectPythonServer.request(query, searchType, pythonapi);
         }
+        stopWatch.stop();
+
+        stopWatch.start("Setting");
         searchResultDTO.setAnswer(pythonResultDTO.getAnswer());
         //List<String> papers = pythonResultDTO.getPapers();
         List<TestPython> papers = pythonResultDTO.getPapers();
@@ -62,6 +68,8 @@ public class SearchService {
         User user = userRepository.findByName(username);
         List<String> userSet = likePaperRepository.findByUser(user.getUsername());
         List<PaperSimpleIdTitleDTO> paperList = new ArrayList<>();
+        stopWatch.stop();
+        stopWatch.start("for ..");
         for (TestPython tPaper : papers) {
             Paper paper = paperRepository.findById(tPaper.getPaperId());
             PaperDTO paperDTO = new PaperDTO(tPaper, paper);
@@ -71,9 +79,13 @@ public class SearchService {
             paperList.add(new PaperSimpleIdTitleDTO(paper));
             searchResultDTO.getPapers().add(paperDTO);
         }
+        stopWatch.stop();
         searchHistoryRepository.save(new SearchHistory(searchResultDTO, username, searchType));
         searchResultDTO.setId(searchHistoryRepository.getLastId());
         searchHistoryRepository.savePapers(paperList);
+        log.info(stopWatch.shortSummary());
+        log.info(String.valueOf(stopWatch.getTotalTimeMillis()));
+        log.info(stopWatch.prettyPrint());
 //        for (String id : papers) {
 //            log.info(id);
 //            Paper paper = paperRepository.findById(id®);

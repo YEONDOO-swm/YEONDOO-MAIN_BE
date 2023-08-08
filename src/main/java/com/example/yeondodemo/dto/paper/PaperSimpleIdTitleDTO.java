@@ -1,5 +1,7 @@
 package com.example.yeondodemo.dto.paper;
 
+import com.example.yeondodemo.dto.PaperDTO;
+import com.example.yeondodemo.dto.TestPython;
 import com.example.yeondodemo.entity.Paper;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +18,9 @@ public class PaperSimpleIdTitleDTO {
     public PaperSimpleIdTitleDTO(String paperId, String title){
         this.paperId = paperId;
         this.title =title;
+    }
+    public PaperSimpleIdTitleDTO(TestPython testPython){
+        this.paperId = testPython.getPaperId();
+        this.title = testPython.getTitle();
     }
 }

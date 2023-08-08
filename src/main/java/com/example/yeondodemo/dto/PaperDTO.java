@@ -51,4 +51,15 @@ public class PaperDTO {
         this.url=testPython.getUrl();
         this.summary = testPython.getSummary();
     }
+    public PaperDTO(TestPython testPython){
+        this.paperId = testPython.getPaperId();
+        this.title=testPython.getTitle();
+        //this.likes=paper.getLikes();
+        this.authors=testPython.getAuthors();
+        this.year=testPython.getYear();
+        //this.conference=paper.getConference();
+        //this.cites=paper.getCites();
+        this.url=testPython.getUrl();
+        this.summary = testPython.getSummary();
+    }
 }
