@@ -49,5 +49,6 @@ public class PaperDTO {
         this.conference=paper.getConference();
         this.cites=paper.getCites();
         this.url=testPython.getUrl();
+        this.summary = testPython.getSummary();
     }
 }
