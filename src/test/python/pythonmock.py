@@ -38,7 +38,7 @@ class PythonQuestionDTO(BaseModel):
 @app.post("/question")
 async def process_question(data: PythonQuestionDTO):
     print(data)
-    return {"answer": "bibi"}
+    return {"answer": 'answer ' + data.query, "track":{"totalTokens":1200.0,"promptTokens":1000.0,"completionTokens":200.0,"totalCost":0.0248}}
 
 @app.get("/process")
 def process_query(question: str, searchType: int):
@@ -47,7 +47,13 @@ def process_query(question: str, searchType: int):
         ret = {
             "answer": "Attention is all you need",
             "papers" : [
-
+              {"paperId": "1706.03762",
+              "year": "2020",
+              "title": "Attention is All you",
+              "authors": ["Changjian Li"],
+              "summary": "~~~",
+              "url" : "http~~~"
+              }
             ]
         }
     elif searchType == 2: #searchType 2: Concept explanation

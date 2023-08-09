@@ -4,6 +4,7 @@ import com.example.yeondodemo.dto.PythonPaperInfoDTO;
 import com.example.yeondodemo.dto.PythonQuestionDTO;
 import com.example.yeondodemo.dto.PythonResultDTO;
 import com.example.yeondodemo.dto.TestPython;
+import com.example.yeondodemo.dto.python.PythonQuestionResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -40,7 +41,7 @@ public class ConnectPythonServer {
         );
         return response.getBody();
     }
-    public static String question(PythonQuestionDTO pythonQuestionDTO, String pythonApiServer){
+    public static PythonQuestionResponse question(PythonQuestionDTO pythonQuestionDTO, String pythonApiServer){
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -53,13 +54,13 @@ public class ConnectPythonServer {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         // HTTP POST 요청 보내기
-        ResponseEntity<Map> response = restTemplate.exchange(
+        ResponseEntity<PythonQuestionResponse> response = restTemplate.exchange(
                 pythonApiServer + "/question",
                 HttpMethod.POST,
                 request,
-                Map.class
+                PythonQuestionResponse.class
         );
-        return (String) response.getBody().get("answer");
+        return response.getBody();
     }
 
     public static TestPython getMeta(String paperId, String pythonApiServer){

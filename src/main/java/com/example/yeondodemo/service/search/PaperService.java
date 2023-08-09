@@ -2,6 +2,7 @@ package com.example.yeondodemo.service.search;
 
 import com.example.yeondodemo.dto.*;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
+import com.example.yeondodemo.dto.python.PythonQuestionResponse;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
@@ -42,13 +43,13 @@ public class PaperService {
                 histories.add(t);
             }
         }
-        String answer = ConnectPythonServer.question(new PythonQuestionDTO(paperid, histories, query), pythonapi);
+        PythonQuestionResponse answer = ConnectPythonServer.question(new PythonQuestionDTO(paperid, histories, query), pythonapi);
         Integer idx = queryHistoryRepository.getLastIdx(username, paperid);
         if(idx == null) {idx=0;}
         queryHistoryRepository.save(new QueryHistory(username, paperid, idx+2, false, answer));
         queryHistoryRepository.save(new QueryHistory(username, paperid, idx+1, true, query));
         Map<String, String> ret = new HashMap<>();
-        ret.put("answer", answer);
+        ret.put("answer", answer.getAnswer());
         return ret;
     }
     public void updateInfoRepository(PythonPaperInfoDTO pythonPaperInfoDTO, String paperid){

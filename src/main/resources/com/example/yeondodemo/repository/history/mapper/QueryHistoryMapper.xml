@@ -4,8 +4,8 @@
 <mapper namespace="com.example.yeondodemo.repository.history.mapper.QueryHistoryMapper">
 
     <insert id="save">
-        insert into QUERYHISTORY (username,paperId, idx, content, who)
-        values (#{username}, #{paperid}, #{idx}, #{content}, #{who})
+        insert into QUERYHISTORY (username,paperId, idx, content, who, totalCost, totalTokens, promptTokens, completionTokens)
+        values (#{username}, #{paperid}, #{idx}, #{content}, #{who}, #{totalCost}, #{totalTokens},#{promptTokens}, #{completionTokens})
     </insert>
 
     <select id="findByUsernameAndPaperid" resultType="com.example.yeondodemo.dto.PaperHistory">
