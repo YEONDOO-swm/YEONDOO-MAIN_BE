@@ -42,24 +42,12 @@ async def process_question(data: PythonQuestionDTO):
 
 @app.get("/process")
 def process_query(question: str, searchType: int):
+    print(question)
     if searchType == 1: #searchType 1: Searching title,
         ret = {
             "answer": "Attention is all you need",
             "papers" : [
-              {"paperId": "1706.03762",
-              "year": "2020",
-              "title": "Attention is All you",
-              "authors": ["Changjian Li"],
-              "summary": "~~~",
-              "url" : "http~~~"
-              },
-              {"paperId": "testtest.1234",
-              "year": "2020",
-              "title": "Attention is All you",
-              "authors": ["Changjian Li"],
-              "summary": "~~~",
-              "url" : "http~~~"
-              }
+
             ]
         }
     elif searchType == 2: #searchType 2: Concept explanation

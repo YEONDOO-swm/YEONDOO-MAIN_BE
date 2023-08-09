@@ -13,11 +13,13 @@
     </insert>
 
     <insert id="savePapers">
-        insert into SearchHistoryPaper (paperId, rid)
-        VALUES
-        <foreach collection="papers" index="paper" item="paper" separator=",">
-            (#{paper.paperId},  ${rid})
-        </foreach>
+        <if test="papers != null and papers.size() > 0">
+            insert into SearchHistoryPaper (paperId, rid)
+            VALUES
+            <foreach collection="papers" index="paper" item="paper" separator=",">
+                (#{paper.paperId}, ${rid})
+            </foreach>
+        </if>
     </insert>
 
     <select id="findByUsername" resultType="com.example.yeondodemo.dto.history.SearchHistoryResponseDTO">

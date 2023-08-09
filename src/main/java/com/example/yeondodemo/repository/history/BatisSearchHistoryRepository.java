@@ -52,7 +52,9 @@ public class BatisSearchHistoryRepository implements SearchHistoryRepository{
     @Override
     public void savePapers(List<PaperSimpleIdTitleDTO> papers) {
         Long rid = searchHistoryMapper.getLastId();
-        searchHistoryMapper.savePapers(rid, papers);
+        if(papers != null && papers.size() > 0){
+            searchHistoryMapper.savePapers(rid, papers);
+        }
     }
 
     @Override
