@@ -11,8 +11,7 @@ public class LoginUserDTO {
     @Pattern(regexp = "^[A-Za-z][A-Za-z0-9]{6,19}$")
     private String username;
     @Pattern(regexp = "^[A-Za-z][A-Za-z0-9!@#$%^&*()]{6,19}$")
-    private String password;
-    @AssertTrue
+    private String password;    @AssertTrue
     public boolean isValidUsername(){
         log.info("isValid? {} ", UserValidator.isValid(username, password) );
         return UserValidator.isValid(username, password);
