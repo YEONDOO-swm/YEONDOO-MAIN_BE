@@ -12,6 +12,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    private String name;
     private Boolean isFirst=true;
     private String studyField;
     private List<String> keywords=new ArrayList<>();
@@ -19,6 +20,11 @@ public class User {
     public User(String username, String password){
         this.username=username;
         this.password=password;
+    }
+    public User(String username, String password, String name){
+        this.username=username;
+        this.password=password;
+        this.name = name;
     }
     public User() {
 

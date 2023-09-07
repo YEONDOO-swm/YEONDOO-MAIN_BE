@@ -12,10 +12,10 @@ public class GoogleRequest {
     private String responseType;
     private String scope;
     private String code;
-    private String accessType="offline";
+    private String accessType;
     private String grantType;
     private String state;
-    private String includeGrantedScopes="true";
+    private String includeGrantedScopes;
     private String loginHint;
     private String prompt;
 }

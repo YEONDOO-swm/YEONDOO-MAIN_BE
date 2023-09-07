@@ -9,6 +9,7 @@ import com.example.yeondodemo.dto.LoginUserDTO;
 import com.example.yeondodemo.dto.UserProfileDTO;
 import com.example.yeondodemo.entity.User;
 import com.example.yeondodemo.service.login.LoginService;
+import com.example.yeondodemo.utils.LoginUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,18 +33,16 @@ public class LoginController {
     private final UserRepository userRepository;
     private final StudyFieldRepository studyFieldRepository;
     private final LoginService loginService;
-
-
-
-
     @Value("${spring.google.client_id}")
     String clientId;
-
     @Value("${spring.google.client_secret}")
     String clientSecret;
-
+    @Value("${jwt.secret}")
+    String jwtSecret;
     @PostMapping("/login/google")
     public ResponseEntity getGoogleInfo(@RequestBody Map<String,String> M){
+        String jwt = LoginUtil.createJwt("syleelsw@snu.ac.kr", jwtSecret);
+        System.out.println("jwt = " + jwt);
         String authCode = M.get("authCode");
         System.out.println(authCode);
         RestTemplate restTemplate = new RestTemplate();
@@ -52,7 +51,7 @@ public class LoginController {
                 .clientId(clientId)
                 .clientSecret(clientSecret)
                 .code(authCode)
-                .redirectUri("http://localhost:5173/home")
+                .redirectUri("postmessage")
                 .grantType("authorization_code").build();
         ResponseEntity<GoogleResponse> response = restTemplate.postForEntity("https://oauth2.googleapis.com/token",
                 googleOAuthRequestParam, GoogleResponse.class);
@@ -62,10 +61,16 @@ public class LoginController {
         ResponseEntity<GoogleInfoResponse> infoResponse = restTemplate.postForEntity("https://oauth2.googleapis.com/tokeninfo",
                 map, GoogleInfoResponse.class);
         String email=infoResponse.getBody().getEmail();
-        Map<String, String> ret = new HashMap<>();
-        ret.put("jwt", email);
-        log.info("이메일 "+ email);
-        return new ResponseEntity(ret,HttpStatus.OK);
+        String name = infoResponse.getBody().getName();
+        User user = userRepository.findByName(email);
+        if(user==null){
+            user = new User(email, "",name);
+            userRepository.save(user);
+        }
+        Map ret = new HashMap<String, String>();
+        ret.put("jwt", jwt);
+        ret.put("username", name);
+        return new ResponseEntity(ret, HttpStatus.OK);
     }
     @GetMapping("/join")
     public ResponseEntity join(@RequestParam String username, @RequestParam String password){
