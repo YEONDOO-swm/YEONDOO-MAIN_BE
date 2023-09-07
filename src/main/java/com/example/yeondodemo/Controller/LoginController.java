@@ -1,5 +1,8 @@
 package com.example.yeondodemo.Controller;
 
+import com.example.yeondodemo.dto.login.GoogleInfoResponse;
+import com.example.yeondodemo.dto.login.GoogleRequest;
+import com.example.yeondodemo.dto.login.GoogleResponse;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.dto.LoginUserDTO;
@@ -9,23 +12,60 @@ import com.example.yeondodemo.service.login.LoginService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController @Slf4j @RequiredArgsConstructor @RequestMapping("/api")
 public class LoginController {
     private final UserRepository userRepository;
     private final StudyFieldRepository studyFieldRepository;
     private final LoginService loginService;
+
+
+
+
+    @Value("${spring.google.client_id}")
+    String clientId;
+
+    @Value("${spring.google.client_secret}")
+    String clientSecret;
+
+    @PostMapping("/login/google")
+    public String getGoogleInfo(@RequestBody Map<String,String> M){
+        String authCode = M.get("authCode");
+        System.out.println(authCode);
+        RestTemplate restTemplate = new RestTemplate();
+        GoogleRequest googleOAuthRequestParam = GoogleRequest
+                .builder()
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .code(authCode)
+                .redirectUri("http://localhost:5173/home")
+                .grantType("authorization_code").build();
+        ResponseEntity<GoogleResponse> response = restTemplate.postForEntity("https://oauth2.googleapis.com/token",
+                googleOAuthRequestParam, GoogleResponse.class);
+        String jwtToken=response.getBody().getId_token();
+        Map<String, String> map=new ConcurrentHashMap<>();
+        map.put("id_token",jwtToken);
+        ResponseEntity<GoogleInfoResponse> infoResponse = restTemplate.postForEntity("https://oauth2.googleapis.com/tokeninfo",
+                map, GoogleInfoResponse.class);
+        String email=infoResponse.getBody().getEmail();
+
+        log.info("이메일 "+ email);
+        return email;
+    }
     @GetMapping("/join")
     public ResponseEntity join(@RequestParam String username, @RequestParam String password){
         if( !username.matches("^[A-Za-z][A-Za-z0-9]{6,19}$") || !password.matches("^[A-Za-z][A-Za-z0-9!@#$%^&*()]{6,19}$") || (userRepository.findByName(username) != null)){

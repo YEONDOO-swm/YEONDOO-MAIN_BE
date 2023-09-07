@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller @RequestMapping("api/history") @RequiredArgsConstructor @Slf4j
+@Controller @RequestMapping("/api/history") @RequiredArgsConstructor @Slf4j
 public class HistoryController {
     private final HistoryService historyService;
     @GetMapping("/search")
