@@ -43,7 +43,7 @@ public class LoginController {
     String clientSecret;
 
     @PostMapping("/login/google")
-    public String getGoogleInfo(@RequestBody Map<String,String> M){
+    public ResponseEntity getGoogleInfo(@RequestBody Map<String,String> M){
         String authCode = M.get("authCode");
         System.out.println(authCode);
         RestTemplate restTemplate = new RestTemplate();
@@ -62,9 +62,10 @@ public class LoginController {
         ResponseEntity<GoogleInfoResponse> infoResponse = restTemplate.postForEntity("https://oauth2.googleapis.com/tokeninfo",
                 map, GoogleInfoResponse.class);
         String email=infoResponse.getBody().getEmail();
-
+        Map<String, String> ret = new HashMap<>();
+        ret.put("jwt", email);
         log.info("이메일 "+ email);
-        return email;
+        return new ResponseEntity(ret,HttpStatus.OK);
     }
     @GetMapping("/join")
     public ResponseEntity join(@RequestParam String username, @RequestParam String password){
