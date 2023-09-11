@@ -37,7 +37,7 @@ public class AspectController {
              log.info("valid user: {}", username);
              jwt = provider.createJwt(name);
              HttpHeaders headers = new HttpHeaders();
-             headers.add("gauth", jwt);
+             headers.set("Gauth", jwt);
              HttpStatusCode status = result.getStatusCode();
              return new ResponseEntity<>(result.getBody(), headers, status);
         }else{

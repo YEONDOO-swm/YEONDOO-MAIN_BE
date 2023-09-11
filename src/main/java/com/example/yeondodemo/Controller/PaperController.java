@@ -20,20 +20,20 @@ import static com.example.yeondodemo.validation.IntegrationValidator.inValidPape
 public class PaperController {
     private final PaperService paperService;
     @GetMapping("/{paperid}")
-    public ResponseEntity paperInfo(@RequestHeader("gauth") String jwt,@PathVariable String paperid, @RequestParam String username){
+    public ResponseEntity paperInfo(@RequestHeader("Gauth") String jwt,@PathVariable String paperid, @RequestParam String username){
         ResponseEntity<Object> BAD_REQUEST = inValidPaperUserRequest(paperid, username);
         if (BAD_REQUEST != null) return BAD_REQUEST;
         return new ResponseEntity<>(paperService.getPaperInfo(paperid, username), HttpStatus.OK);
     }
     @PostMapping("/{paperid}")
-    public ResponseEntity paperQuestion(@RequestHeader("gauth") String jwt,@PathVariable String paperid, @RequestParam String username, @Validated @RequestBody QuestionDTO question, BindingResult bindingResult){
+    public ResponseEntity paperQuestion(@RequestHeader("Gauth") String jwt,@PathVariable String paperid, @RequestParam String username, @Validated @RequestBody QuestionDTO question, BindingResult bindingResult){
         ResponseEntity<Object> BAD_REQUEST = inValidPaperUserRequest(paperid, username, bindingResult);
         if (BAD_REQUEST != null) return BAD_REQUEST;
         return new ResponseEntity<>(paperService.getPaperQuestion(paperid, username, question.getQuestion()), HttpStatus.OK);
     }
 
     @PostMapping("/result/score")
-    public ResponseEntity resultScore(@RequestHeader("gauth") String jwt,@RequestParam String username, @Validated @RequestBody PaperResultRequest paperResultRequest, BindingResult bindingResult){
+    public ResponseEntity resultScore(@RequestHeader("Gauth") String jwt,@RequestParam String username, @Validated @RequestBody PaperResultRequest paperResultRequest, BindingResult bindingResult){
         if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
         if(bindingResult.hasErrors()|| PaperValidator.isNotValidResultId(username, paperResultRequest)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
         paperService.resultScore(paperResultRequest);
