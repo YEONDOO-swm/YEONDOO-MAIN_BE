@@ -16,7 +16,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilter {
     //헤더에서 받아올 이름 지정
-    public static final String AUTHORIZATION_HEADER = "gauth";
+    public static final String AUTHORIZATION_HEADER = "Gauth";
     private final JwtTokenProvider tokenProvider;
 
     @Override
