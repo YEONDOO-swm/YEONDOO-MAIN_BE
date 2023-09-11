@@ -19,31 +19,31 @@ import java.util.List;
 public class HistoryController {
     private final HistoryService historyService;
     @GetMapping("/search")
-    public ResponseEntity historySearch(@RequestHeader("X_AUTH_TOKEN") String jwt, @RequestParam String username){
+    public ResponseEntity historySearch(@RequestHeader("X-Auth-Token") String jwt, @RequestParam String username){
         if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
         return new ResponseEntity<>(historyService.historySearch(username), HttpStatus.OK);
     }
     @GetMapping("/search/result/{resultId}")
-    public ResponseEntity historySearchResult(@RequestHeader("X_AUTH_TOKEN") String jwt,@RequestParam String username, @PathVariable Long resultId){
+    public ResponseEntity historySearchResult(@RequestHeader("X-Auth-Token") String jwt,@RequestParam String username, @PathVariable Long resultId){
         if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
         if(PaperValidator.isNotValidRid(username, resultId)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
         return new ResponseEntity<>(historyService.historySearchResult(username, resultId), HttpStatus.OK);
     }
     @GetMapping("/trash")
-    public ResponseEntity historySearchTrash(@RequestHeader("X_AUTH_TOKEN") String jwt,@RequestParam String username){
+    public ResponseEntity historySearchTrash(@RequestHeader("X-Auth-Token") String jwt,@RequestParam String username){
         if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
         return new ResponseEntity<>(historyService.historySearchTrash(username), HttpStatus.OK);
 
     }
     @PostMapping("/trash")
-    public ResponseEntity historySearchTrash(@RequestHeader("X_AUTH_TOKEN") String jwt,@RequestParam String username, @RequestBody List<String> papers){
+    public ResponseEntity historySearchTrash(@RequestHeader("X-Auth-Token") String jwt,@RequestParam String username, @RequestBody List<String> papers){
         if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
         if(PaperValidator.isNotValidRestorePapers(username, papers)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
         historyService.historySearchRestoreTrash(username, papers);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/search/paper")
-    public ResponseEntity historyPaper(@RequestHeader("X_AUTH_TOKEN") String jwt,@RequestParam String username){
+    public ResponseEntity historyPaper(@RequestHeader("X-Auth-Token") String jwt,@RequestParam String username){
         if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
         return new ResponseEntity(historyService.historyPaper(username), HttpStatus.OK);
     }

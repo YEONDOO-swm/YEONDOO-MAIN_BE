@@ -41,7 +41,7 @@ public class JwtTokenProvider implements InitializingBean {
                 .parseClaimsJws(token)
                 .getBody();
 
-        List<? extends SimpleGrantedAuthority> authorities = Arrays.stream(claims.get("X_AUTH_TOKEN").toString().split(","))
+        List<? extends SimpleGrantedAuthority> authorities = Arrays.stream(claims.get("X-Auth-Token").toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
