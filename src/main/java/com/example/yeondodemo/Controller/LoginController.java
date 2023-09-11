@@ -65,13 +65,14 @@ public class LoginController {
         String email=infoResponse.getBody().getEmail();
         String name = infoResponse.getBody().getName();
         String jwt = LoginUtil.createJwt(email, jwtSecret);
+        log.info("jwt: {}", jwt);
         User user = userRepository.findByName(email);
         if(user==null){
             user = new User(email, "",name);
             userRepository.save(user);
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.set("X_AUTH_TOKEN", jwt);
+        headers.set("X-Auth-Token", jwt);
         Map ret = new HashMap<String, String>();
         ret.put("username", email);
         return new ResponseEntity(ret, headers,HttpStatus.OK);
@@ -83,7 +84,7 @@ public class LoginController {
         String name = provider.getUserName(jwt);
         User user = userRepository.findByName(name);
         UserValidator.login.put(name, user);
-        headers.set("X_AUTH_TOKEN", jwt);
+        headers.set("X-Auth-Token", jwt);
         return new ResponseEntity(headers,HttpStatus.OK);
     }
     @GetMapping("/join")
