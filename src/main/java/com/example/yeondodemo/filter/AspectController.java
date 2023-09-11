@@ -37,14 +37,8 @@ public class AspectController {
              log.info("valid user: {}", username);
              jwt = provider.createJwt(name);
              HttpHeaders headers = new HttpHeaders();
-             headers.set("Gauth", jwt);
-            headers.set("Access-Control-Allow-Origin", "https://yeondoo.net");
-            headers.set("Access-Control-Allow-Credentials", "true");
-            headers.set("Access-Control-Allow-Methods","*");
-            headers.set("Access-Control-Max-Age", "3600");
-            headers.set("Access-Control-Allow-Headers",
-                    "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-            headers.set("Cross-Origin-Opener-Policy", "same-origin");
+             headers.add("Gauth", jwt);
+             headers.add("Access-Control-Expose-Headers","Gauth" );
              HttpStatusCode status = result.getStatusCode();
              return new ResponseEntity<>(result.getBody(), headers, status);
         }else{
