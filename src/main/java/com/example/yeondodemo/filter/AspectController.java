@@ -34,9 +34,10 @@ public class AspectController {
         }
         if(provider.validateToken(jwt) && name == username){
              result = (ResponseEntity) joinPoint.proceed();
+             log.info("valid user: {}", username);
              jwt = provider.createJwt(name);
              HttpHeaders headers = new HttpHeaders();
-             headers.add("X-AUTH_TOKEN", jwt);
+             headers.add("X_AUTH_TOKEN", jwt);
              HttpStatusCode status = result.getStatusCode();
              return new ResponseEntity<>(result.getBody(), headers, status);
         }else{
