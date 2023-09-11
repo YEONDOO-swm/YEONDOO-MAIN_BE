@@ -72,9 +72,10 @@ public class LoginController {
             userRepository.save(user);
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Auth-Token", jwt);
+        headers.set("gauth", jwt);
         Map ret = new HashMap<String, String>();
         ret.put("username", email);
+        ret.put("gauth", jwt);
         return new ResponseEntity(ret, headers,HttpStatus.OK);
     }
     @GetMapping("/test")
@@ -84,7 +85,7 @@ public class LoginController {
         String name = provider.getUserName(jwt);
         User user = userRepository.findByName(name);
         UserValidator.login.put(name, user);
-        headers.set("X-Auth-Token", jwt);
+        headers.set("gauth", jwt);
         return new ResponseEntity(headers,HttpStatus.OK);
     }
     @GetMapping("/join")
