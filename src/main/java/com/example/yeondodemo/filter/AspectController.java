@@ -38,7 +38,6 @@ public class AspectController {
              jwt = provider.createJwt(name);
              HttpHeaders headers = new HttpHeaders();
              headers.add("Gauth", jwt);
-             headers.add("Access-Control-Expose-Headers","Gauth" );
              HttpStatusCode status = result.getStatusCode();
              return new ResponseEntity<>(result.getBody(), headers, status);
         }else{
