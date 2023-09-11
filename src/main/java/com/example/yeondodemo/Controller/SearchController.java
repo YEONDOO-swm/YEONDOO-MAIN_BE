@@ -27,7 +27,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping("/homesearch")
-    public ResponseEntity search(@RequestParam String query, @RequestParam String username, @RequestParam Integer searchType){
+    public ResponseEntity search(@RequestHeader("X-AUTH_TOKEN") String jwt,@RequestParam String query, @RequestParam String username, @RequestParam Integer searchType){
         //SearchType: 1: 논문 검색, 2: 개념 설명
         if(SearchValidator.isNotValidateSearchQuery(query, searchType)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
         SearchResultDTO searchResultDTO = searchService.search(query, username, searchType);
@@ -36,14 +36,14 @@ public class SearchController {
     }
 
     @PostMapping("home/result/score")
-    public ResponseEntity resultScore(@RequestParam String username, @Validated @RequestBody PaperResultRequest paperResultRequest, BindingResult bindingResult){
+    public ResponseEntity resultScore(@RequestHeader("X-AUTH_TOKEN") String jwt,@RequestParam String username, @Validated @RequestBody PaperResultRequest paperResultRequest, BindingResult bindingResult){
         if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
         if(bindingResult.hasErrors()|| PaperValidator.isNotValidHomeResultId(username, paperResultRequest)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
         searchService.resultScore(paperResultRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @PostMapping("/paperlikeonoff")
-    public ResponseEntity likeOnOff(@Validated @RequestBody LikeOnOffDTO likeOnOffDTO, BindingResult bindingResult){
+    public ResponseEntity likeOnOff(@RequestHeader("X-AUTH_TOKEN") String jwt,@Validated @RequestBody LikeOnOffDTO likeOnOffDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             HttpStatus status = HttpStatus.UNAUTHORIZED;
             log.info("errors: {}", bindingResult);
@@ -63,7 +63,7 @@ public class SearchController {
 
     }
     @GetMapping("/container")
-    public ResponseEntity paperContainer(@RequestParam String username){
+    public ResponseEntity paperContainer(@RequestHeader("X-AUTH_TOKEN") String jwt,@RequestParam String username){
         if(UserValidator.isNotValidName(username)){return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);}
         return new ResponseEntity<>(searchService.getPaperContainer(username), HttpStatus.OK);
     }

@@ -9,11 +9,14 @@ import com.example.yeondodemo.dto.LoginUserDTO;
 import com.example.yeondodemo.dto.UserProfileDTO;
 import com.example.yeondodemo.entity.User;
 import com.example.yeondodemo.service.login.LoginService;
+import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.LoginUtil;
+import com.example.yeondodemo.validation.UserValidator;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -33,6 +36,7 @@ public class LoginController {
     private final UserRepository userRepository;
     private final StudyFieldRepository studyFieldRepository;
     private final LoginService loginService;
+    private final JwtTokenProvider provider;
     @Value("${spring.google.client_id}")
     String clientId;
     @Value("${spring.google.client_secret}")
@@ -41,8 +45,6 @@ public class LoginController {
     String jwtSecret;
     @PostMapping("/login/google")
     public ResponseEntity getGoogleInfo(@RequestBody Map<String,String> M){
-        String jwt = LoginUtil.createJwt("syleelsw@snu.ac.kr", jwtSecret);
-        System.out.println("jwt = " + jwt);
         String authCode = M.get("authCode");
         System.out.println(authCode);
         RestTemplate restTemplate = new RestTemplate();
@@ -62,15 +64,27 @@ public class LoginController {
                 map, GoogleInfoResponse.class);
         String email=infoResponse.getBody().getEmail();
         String name = infoResponse.getBody().getName();
+        String jwt = LoginUtil.createJwt(email, jwtSecret);
         User user = userRepository.findByName(email);
         if(user==null){
             user = new User(email, "",name);
             userRepository.save(user);
         }
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-AUTH_TOKEN", jwt);
         Map ret = new HashMap<String, String>();
-        ret.put("jwt", jwt);
-        ret.put("username", name);
-        return new ResponseEntity(ret, HttpStatus.OK);
+        ret.put("username", email);
+        return new ResponseEntity(ret, headers,HttpStatus.OK);
+    }
+    @GetMapping("/test")
+    public ResponseEntity testJoin(){
+        String jwt = LoginUtil.createJwt("syleelsw@snu.ac.kr", jwtSecret);
+        HttpHeaders headers = new HttpHeaders();
+        String name = provider.getUserName(jwt);
+        User user = userRepository.findByName(name);
+        UserValidator.login.put(name, user);
+        headers.set("X-AUTH_TOKEN", jwt);
+        return new ResponseEntity(headers,HttpStatus.OK);
     }
     @GetMapping("/join")
     public ResponseEntity join(@RequestParam String username, @RequestParam String password){
