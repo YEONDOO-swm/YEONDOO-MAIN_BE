@@ -72,7 +72,7 @@ public class LoginController {
             userRepository.save(user);
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.set("gauth", jwt);
+        headers.add("gauth", jwt);
         Map ret = new HashMap<String, String>();
         ret.put("username", email);
         ret.put("gauth", jwt);
