@@ -1,7 +1,7 @@
 package com.example.yeondodemo.repository.user;
 
 
-import com.example.yeondodemo.entity.User;
+import com.example.yeondodemo.entity.Workspace;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -12,30 +12,34 @@ import java.util.Map;
 
  @Slf4j
 public class MemoryUserRepository implements UserRepository {
-    private static final Map<Long, User> store = new HashMap<>();
-    private static final Map<String, Long> name2id = new HashMap<>();
+    private static final Map<Long, Workspace> store = new HashMap<>();
+    private static final Map<Long, Long> name2id = new HashMap<>();
     private static Long sequence = 0L;
     @Override
-    public User findById(Long id) {
+    public Workspace findById(Long id) {
         log.info("findByID: {}", id);
         return store.get(id);
     }
     @Override
-    public User save(User user){
+    public Workspace save(Workspace user){
         log.info("save User {}", user);
         store.put(++sequence, user);
         user.setId(sequence);
-        name2id.put(user.getUsername(), sequence);
+        name2id.put(user.getWorkspaceId(), sequence);
         return user;
     }
     @Override
-    public List<User> findAll() {
+    public List<Workspace> findAll() {
         log.info("findAll");
-        return new ArrayList<User>(store.values());
+        return new ArrayList<Workspace>(store.values());
     }
 
-    @Override
-    public User findByName(String name) {
+     @Override
+     public Workspace findByName(Long name) {
+         return null;
+     }
+
+    public Workspace findByName(String name) {
         log.info("findByName name: {}", name);
         return store.get(name2id.get(name));
     }
@@ -46,7 +50,7 @@ public class MemoryUserRepository implements UserRepository {
         name2id.clear();
     }
     @Override
-    public User update(User user){
+    public Workspace update(Workspace user){
         return user;
     }
 }

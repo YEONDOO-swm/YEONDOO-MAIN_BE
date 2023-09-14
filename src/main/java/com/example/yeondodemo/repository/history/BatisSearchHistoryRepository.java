@@ -20,8 +20,8 @@ public class BatisSearchHistoryRepository implements SearchHistoryRepository{
     @Value("${python.address}") private String pythonapi;
 
     @Override
-    public Long findByRidAndUsername(String username, Long rid) {
-        return searchHistoryMapper.findByRidAndUsername(username, rid);
+    public Long findByRidAndUsername(Long workspaceId, Long rid) {
+        return searchHistoryMapper.findByRidAndUsername(workspaceId, rid);
     }
 
     @Override
@@ -35,8 +35,8 @@ public class BatisSearchHistoryRepository implements SearchHistoryRepository{
     }
 
     @Override
-    public List<SearchHistoryResponseDTO> findByUsername(String username) {
-        return searchHistoryMapper.findByUsername(username);
+    public List<SearchHistoryResponseDTO> findByUsername(Long workspaceId) {
+        return searchHistoryMapper.findByUsername(workspaceId);
     }
 
     @Override
@@ -63,13 +63,13 @@ public class BatisSearchHistoryRepository implements SearchHistoryRepository{
     }
 
     @Override
-    public Long canCached(String username, String query, Integer searchType) {
-        return searchHistoryMapper.canCached(username, query, searchType, LocalDate.now());
+    public Long canCached(Long workspaceId, String query, Integer searchType) {
+        return searchHistoryMapper.canCached(workspaceId, query, searchType, LocalDate.now());
     }
 
     @Override
-    public Long findByUsernameAndId(String username, Long id) {
-        return searchHistoryMapper.findByUsernameAndId(username, id);
+    public Long findByUsernameAndId(Long workspaceId, Long id) {
+        return searchHistoryMapper.findByUsernameAndId(workspaceId, id);
     }
 
     @Override

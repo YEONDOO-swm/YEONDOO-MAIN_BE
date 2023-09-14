@@ -1,6 +1,6 @@
 package com.example.yeondodemo;
 
-import com.example.yeondodemo.validation.UserValidator;
+import com.example.yeondodemo.validation.WorkspaceValidator;
 import com.example.yeondodemo.validation.PaperValidator;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -8,8 +8,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 
+@EnableScheduling
 @RequiredArgsConstructor
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class YeondoDemoApplication {
@@ -19,7 +21,7 @@ public class YeondoDemoApplication {
     }
     @PostConstruct
     public void init(){
-        UserValidator.init(context);
+        WorkspaceValidator.init(context);
         PaperValidator.init(context);
     }
 

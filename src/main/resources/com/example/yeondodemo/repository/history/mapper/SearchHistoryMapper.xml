@@ -5,11 +5,11 @@
     <select id="findByUsernameAndId" resultType="Long">
         SELECT rid
         FROM SearchHistory
-        WHERE rid = #{id} AND username = #{username};
+        WHERE rid = #{id} AND workspaceId = #{workspaceId};
     </select>
     <insert id="save">
-        insert into SearchHistory (username,query, answer, searchDate, searchType)
-        values (#{username}, #{query}, #{answer}, CURRENT_DATE, #{searchType})
+        insert into SearchHistory (workspaceId,query, answer, searchDate, searchType)
+        values (#{workspaceId}, #{query}, #{answer}, CURRENT_DATE, #{searchType})
     </insert>
 
     <insert id="savePapers">
@@ -25,7 +25,7 @@
     <select id="findByUsername" resultType="com.example.yeondodemo.dto.history.SearchHistoryResponseDTO">
         select rid, query
         from SearchHistory
-        where username= #{username}
+        where workspaceId= #{workspaceId}
         order by rid DESC
     </select>
 
@@ -58,12 +58,12 @@
     <select id="findByRidAndUsername" resultType="Long">
         select rid
         from SearchHistory
-        where rid = #{rid} AND username = #{username}
+        where rid = #{rid} AND workspaceId = #{workspaceId}
     </select>
     <select id="canCached" resultType="Long">
         SELECT ifnull(max(rid), 0)
         FROM SearchHistory
-        WHERE username = #{username} and query = #{query} and searchType = #{searchType} and searchDate = #{date};
+        WHERE workspaceId = #{workspaceId} and query = #{query} and searchType = #{searchType} and searchDate = #{date};
     </select>
 
     <update id="updateScore">

@@ -6,13 +6,13 @@ import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.SearchHistory;
+import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.history.SearchHistoryRepository;
 import com.example.yeondodemo.repository.paper.*;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.dto.*;
-import com.example.yeondodemo.entity.User;
 import com.example.yeondodemo.utils.ConnectPythonServer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +39,11 @@ public class SearchService {
         searchHistoryRepository.updateScore(paperResultRequest.getId(), paperResultRequest.getScore());
     }
     @Transactional
-    public SearchResultDTO search(String query, String username, Integer searchType){
+    public SearchResultDTO search(String query, Long workspaceId, Integer searchType){
         StopWatch stopWatch = new StopWatch();
         SearchResultDTO searchResultDTO = new SearchResultDTO(query);
         PythonResultDTO pythonResultDTO = null;
-        Long rid = searchHistoryRepository.canCached(username, query, searchType);
+        Long rid = searchHistoryRepository.canCached(workspaceId, query, searchType);
         stopWatch.start("if ...");
         if(rid > 0){
             log.info("cached.. ");
@@ -65,8 +65,8 @@ public class SearchService {
         //List<String> papers = pythonResultDTO.getPapers();
         List<TestPython> papers = pythonResultDTO.getPapers();
         log.info("python paper: {}", papers.toString());
-        User user = userRepository.findByName(username);
-        List<String> userSet = likePaperRepository.findByUser(user.getUsername());
+        Workspace workspace = userRepository.findByName(workspaceId);
+        List<String> userSet = likePaperRepository.findByUser(workspace.getWorkspaceId());
         List<PaperSimpleIdTitleDTO> paperList = new ArrayList<>();
         stopWatch.stop();
         stopWatch.start("for ..");
@@ -91,7 +91,7 @@ public class SearchService {
         if(paperList == null || paperList.size() == 0){
             searchResultDTO.setAnswer("아니아니아니");
         }
-        searchHistoryRepository.save(new SearchHistory(searchResultDTO, username, searchType));
+        searchHistoryRepository.save(new SearchHistory(searchResultDTO, workspaceId, searchType));
         searchResultDTO.setId(searchHistoryRepository.getLastId());
         searchHistoryRepository.savePapers(paperList);
         log.info(stopWatch.shortSummary());
@@ -101,15 +101,15 @@ public class SearchService {
     }
     @Transactional
     public void likeonoff(LikeOnOffDTO likeOnOffDTO){
-        String username = likeOnOffDTO.getUsername();
+        Long workspaceId = likeOnOffDTO.getWorkspaceId();
         String paperId = likeOnOffDTO.getPaperId();
         boolean onoff = likeOnOffDTO.isOn();
-        List<String> userSet = likePaperRepository.findAllByUser(username);
+        List<String> userSet = likePaperRepository.findAllByUser(workspaceId);
         //Paper paper = paperRepository.findById(paperId);
         if(userSet.contains(paperId)){
-            likePaperRepository.update(username, paperId, onoff);
+            likePaperRepository.update(workspaceId, paperId, onoff);
         }else{
-            likePaperRepository.save(username, paperId, onoff);
+            likePaperRepository.save(workspaceId, paperId, onoff);
         }
         if(onoff){
             paperRepository.add(paperId);
@@ -117,8 +117,8 @@ public class SearchService {
             paperRepository.sub(paperId);
         }
     }
-    public List<Paper4Container> getPaperContainer(String username){
-        List<String> paperSet = likePaperRepository.findByUser(username);
+    public List<Paper4Container> getPaperContainer(Long workspaceId){
+        List<String> paperSet = likePaperRepository.findByUser(workspaceId);
         List<Paper4Container> ret = new ArrayList<>();
         for(String paperId: paperSet){
             Paper paper = paperRepository.findById(paperId);

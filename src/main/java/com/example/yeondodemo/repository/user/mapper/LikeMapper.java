@@ -8,12 +8,12 @@ import java.util.Set;
 
 @Mapper
 public interface LikeMapper {
-    void save(String username, String paperId, Boolean isValid, Integer id);
-    void update(String username, String paperId, Boolean isValid);
-    List<String> findByUser(String username);
-    List<String> findAllByUser(String username);
-    List<PaperSimpleIdTitleDTO> findSimpleByUser(String username);
-    List<PaperSimpleIdTitleDTO> findSimpleTrashByUser(String username);
-    Boolean isLike(String username, String paperId);
+    void save(Long workspaceId, String paperId, Boolean isValid, Integer id);
+    void update(Long workspaceId, String paperId, Boolean isValid);
+    List<String> findByUser(Long workspaceId);
+    List<String> findAllByUser(Long workspaceId);
+    List<PaperSimpleIdTitleDTO> findSimpleByUser(Long workspaceId);
+    List<PaperSimpleIdTitleDTO> findSimpleTrashByUser(Long workspaceId);
+    Boolean isLike(Long workspaceId, String paperId);
     void clear();
 }

@@ -14,8 +14,12 @@ import com.example.yeondodemo.utils.ConnectPythonServer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.*;
 
@@ -30,8 +34,8 @@ public class PaperService {
     @Value("${python.address}")
     private String pythonapi;
     @Transactional
-    public Map getPaperQuestion(String paperid, String username, String query){
-        List<PaperHistory> paperHistories = queryHistoryRepository.findByUserAndIdOrderQA4Python(username, paperid);
+    public Map getPaperQuestion(String paperid, Long workspaceId, String query){
+        List<PaperHistory> paperHistories = queryHistoryRepository.findByUserAndIdOrderQA4Python(workspaceId, paperid);
         List<List<String>>  histories = new ArrayList<>();
         List<String> t = null;
         for (PaperHistory paperHistory : paperHistories) {
@@ -44,13 +48,49 @@ public class PaperService {
             }
         }
         PythonQuestionResponse answer = ConnectPythonServer.question(new PythonQuestionDTO(paperid, histories, query), pythonapi);
-        Integer idx = queryHistoryRepository.getLastIdx(username, paperid);
+        Integer idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
         if(idx == null) {idx=0;}
-        queryHistoryRepository.save(new QueryHistory(username, paperid, idx+2, false, answer));
-        queryHistoryRepository.save(new QueryHistory(username, paperid, idx+1, true, query));
+        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
+        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
         Map<String, String> ret = new HashMap<>();
         ret.put("answer", answer.getAnswer());
         return ret;
+    }
+
+    @Transactional
+    public Flux<ServerSentEvent<String>> getPaperQuestionStream(String paperid, Long workspaceId, String query){
+        List<PaperHistory> paperHistories = queryHistoryRepository.findByUserAndIdOrderQA4Python(workspaceId, paperid);
+        List<List<String>>  histories = new ArrayList<>();
+        List<String> t = null;
+        for (PaperHistory paperHistory : paperHistories) {
+            if(paperHistory.isWho()){
+                t = new ArrayList<>();
+            }
+            t.add(paperHistory.getContent());
+            if(!paperHistory.isWho()){
+                histories.add(t);
+            }
+        }
+        //Flux<String> answerStream = ConnectPythonServer.questionStream(new PythonQuestionDTO(paperid, histories, query), pythonapi);
+        List<String> answerList = new ArrayList<>();
+
+       return WebClient.create()
+                .post()
+                .uri(pythonapi + "/question")
+                .body(Mono.just(new PythonQuestionDTO(paperid, histories, query)), PythonQuestionDTO.class)
+                .retrieve()
+                .bodyToFlux(String.class).map(data -> {
+            answerList.add(data);
+            return ServerSentEvent.builder(data).build();
+        }).doOnComplete(
+                       () -> {
+                           Integer idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
+                           String answer = String.join("",answerList);
+                           if(idx == null) {idx=0;}
+                           queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
+                           queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
+                       }
+               );
     }
     public void updateInfoRepository(PythonPaperInfoDTO pythonPaperInfoDTO, String paperid){
         for(String insight: pythonPaperInfoDTO.getInsights()){
@@ -68,7 +108,7 @@ public class PaperService {
         paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
     }
     @Transactional
-    public RetPaperInfoDTO getPaperInfo(String paperid, String username){
+    public RetPaperInfoDTO getPaperInfo(String paperid, Long workspaceId){
         log.info("getPaperInfo... ");
         if((!paperBufferRepository.isHit(paperid))){
             //goto python server and get data
@@ -87,8 +127,8 @@ public class PaperService {
         pythonPaperInfoDTO.setQuestions(paperInfoRepository.findByPaperIdAndType(paperid, "question"));
         pythonPaperInfoDTO.setSubjectRecommends(paperInfoRepository.findByPaperIdAndType(paperid, "subjectrecommend"));
         Paper paper = paperRepository.findById(paperid);
-        RetPaperInfoDTO paperInfoDTO = new RetPaperInfoDTO(paper, pythonPaperInfoDTO, queryHistoryRepository.findByUsernameAndPaperIdOrderQA(username, paperid));
-        if(likePaperRepository.isLike(username, paperid)){paperInfoDTO.getPaperInfo().setIsLike(true);};
+        RetPaperInfoDTO paperInfoDTO = new RetPaperInfoDTO(paper, pythonPaperInfoDTO, queryHistoryRepository.findByUsernameAndPaperIdOrderQA(workspaceId, paperid));
+        if(likePaperRepository.isLike(workspaceId, paperid)){paperInfoDTO.getPaperInfo().setIsLike(true);};
         log.info("paper info: {}", paperInfoDTO);
         return paperInfoDTO;
     }

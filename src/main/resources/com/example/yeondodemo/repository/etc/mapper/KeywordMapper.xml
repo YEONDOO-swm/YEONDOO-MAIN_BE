@@ -4,16 +4,16 @@
 <mapper namespace="com.example.yeondodemo.repository.etc.mapper.KeywordMapper">
 
     <insert id="save">
-        insert into KEYWORD (username,keyword)
+        insert into KEYWORD (workspaceId,keyword)
         VALUES
         <foreach collection="keywords" index="keyword" item="keyword" separator=",">
-            (#{username}, #{keyword})
+            (#{workspaceId}, #{keyword})
         </foreach>
     </insert>
 
     <select id="findByUsername" resultType="String">
         select keyword
         from KEYWORD
-        where username = #{username}
+        where workspaceId = #{workspaceId}
     </select>
 </mapper>

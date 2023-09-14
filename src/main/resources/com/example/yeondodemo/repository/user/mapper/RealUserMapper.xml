@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.user.mapper.RealUserMapper">
+
+    <insert id="save">
+        insert into RealUser (email, enrollDate)
+        values (#{email}, CURRENT_DATE)
+    </insert>
+
+
+    <insert id="saveWorkspaceConnection">
+        insert into Workspaces (email, workspaceId)
+        values (#{email}, #{workspaceId})
+    </insert>
+
+    <select id="exist" resultType="String">
+        select email
+        from RealUser
+        where email = #{email}
+    </select>
+    <select id="findByName" resultType="Long">
+        SELECT workspaceId
+        FROM Workspaces
+        WHERE email = #{email}
+    </select>
+
+</mapper>

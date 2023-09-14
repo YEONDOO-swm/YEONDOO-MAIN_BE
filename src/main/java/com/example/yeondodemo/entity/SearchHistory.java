@@ -8,14 +8,14 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 public class SearchHistory {
-    private String username;
+    private Long workspaceId;
     private String query;
     private String answer;
     private Integer searchType;
-    public SearchHistory(SearchResultDTO searchResultDTO, String username,  Integer searchType){
+    public SearchHistory(SearchResultDTO searchResultDTO, Long workspaceId,  Integer searchType){
         this.query = searchResultDTO.getQuery();
         this.answer = searchResultDTO.getAnswer();
-        this.username = username;
+        this.workspaceId = workspaceId;
         this.searchType = searchType;
     }
 }

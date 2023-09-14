@@ -4,13 +4,13 @@
 <mapper namespace="com.example.yeondodemo.repository.user.mapper.LikeMapper">
 
     <insert id="save">
-        insert into LIKEPAPER (username,paperId, isValid)
-        values (#{username}, #{paperId}, #{isValid})
+        insert into LIKEPAPER (workspaceId,paperId, isValid)
+        values (#{workspaceId}, #{paperId}, #{isValid})
     </insert>
     <update id="update">
         update LIKEPAPER
         set isValid=#{isValid}
-        where username = #{username} AND paperId = #{paperId}
+        where workspaceId= #{workspaceId} AND paperId = #{paperId}
     </update>
     <select id="clear" >
         TRUNCATE TABLE LIKEPAPER
@@ -19,14 +19,14 @@
     <select id="findByUser" resultType="String">
         SELECT paperId
         FROM LIKEPAPER
-        WHERE username = #{username} and isValid = 1
+        WHERE workspaceId= #{workspaceId} and isValid = 1
         ORDER BY id ASC
     </select>
 
     <select id="findAllByUser" resultType="String">
         SELECT paperId
         FROM LIKEPAPER
-        WHERE username = #{username}
+        WHERE workspaceId = #{workspaceId}
         ORDER BY id ASC
     </select>
 
@@ -34,14 +34,14 @@
         SELECT p.title, p.paperId
         FROM PAPER AS p
                  INNER JOIN LIKEPAPER AS lp ON p.paperId = lp.paperId
-        WHERE lp.username = #{username} and lp.isvalid = 1
+        WHERE lp.workspaceId = #{workspaceId} and lp.isvalid = 1
         ORDER BY lp.id DESC
     </select>
     <select id="findSimpleTrashByUser" resultType="com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO">
         SELECT p.title, p.paperId
         FROM PAPER AS p
                  INNER JOIN LIKEPAPER AS lp ON p.paperId = lp.paperId
-        WHERE lp.username = #{username} and lp.isvalid = 0
+        WHERE lp.workspaceId = #{workspaceId} and lp.isvalid = 0
         ORDER BY lp.id DESC
     </select>
 
@@ -49,7 +49,7 @@
     <select id="isLike" resultType="Boolean">
         SELECT ifnull(max(id), 0) != 0 as isLike
         FROM LIKEPAPER
-        WHERE paperId = #{paperId} and username = #{username}
+        WHERE paperId = #{paperId} and workspaceId = #{workspaceId}
     </select>
 
 </mapper>

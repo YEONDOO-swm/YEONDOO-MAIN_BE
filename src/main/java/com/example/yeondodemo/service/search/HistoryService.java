@@ -16,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service @RequiredArgsConstructor @Slf4j
 public class HistoryService {
@@ -24,13 +26,17 @@ public class HistoryService {
     private final LikePaperRepository likePaperRepository;
     private final PaperRepository paperRepository;
     private final QueryHistoryRepository queryHistoryRepository;
-    public HistorySearchDTO historySearch(String username){
-        List<SearchHistoryResponseDTO> results = searchHistoryRepository.findByUsername(username);
-        List<PaperSimpleIdTitleDTO> papers =  likePaperRepository.findSimpleByUser(username);
-        return new HistorySearchDTO(results, papers);
+    public Map<String, List<SearchHistoryResponseDTO>> historySearch(Long workspaceId){
+        /*List<SearchHistoryResponseDTO> results = searchHistoryRepository.findByUsername(workspaceId);
+        List<PaperSimpleIdTitleDTO> papers =  likePaperRepository.findSimpleByUser(workspaceId);
+        return new HistorySearchDTO(results, papers);*/
+        List<SearchHistoryResponseDTO> results = searchHistoryRepository.findByUsername(workspaceId);
+        Map<String, List<SearchHistoryResponseDTO>> ret = new HashMap<>();
+        ret.put("results", results);
+        return ret;
     }
 
-    public SearchResultDTO historySearchResult(String username, Long rid){
+    public SearchResultDTO historySearchResult(Long workspaceId, Long rid){
         List<PaperSimpleIdTitleDTO> papers = searchHistoryRepository.findPapersById(rid);
         String query = searchHistoryRepository.findQueryById(rid);
         String answer = searchHistoryRepository.findAnswerById(rid);
@@ -40,18 +46,18 @@ public class HistoryService {
         }
         return new SearchResultDTO(query,answer,rid, paperDTOS);
     }
-    public TrashContainerDTO historySearchTrash(String username){
-        List<PaperSimpleIdTitleDTO> trashContainers =  likePaperRepository.findTrashSimpleByUser(username);
-        List<PaperSimpleIdTitleDTO> papers =  likePaperRepository.findSimpleByUser(username);
+    public TrashContainerDTO historySearchTrash(Long workspaceId){
+        List<PaperSimpleIdTitleDTO> trashContainers =  likePaperRepository.findTrashSimpleByUser(workspaceId);
+        List<PaperSimpleIdTitleDTO> papers =  likePaperRepository.findSimpleByUser(workspaceId);
         return new TrashContainerDTO(trashContainers, papers);
     }
-    public void historySearchRestoreTrash(String username, List<String> papers){
+    public void historySearchRestoreTrash(Long workspaceId, List<String> papers){
         for (String paper : papers) {
-            likePaperRepository.update(username, paper, true);
+            likePaperRepository.update(workspaceId, paper, true);
             paperRepository.add(paper);
         }
     }
-    public List<PaperHistoryDTO> historyPaper(String username){
-        return queryHistoryRepository.findByUsername(username);
+    public List<PaperHistoryDTO> historyPaper(Long workspaceId){
+        return queryHistoryRepository.findByUsername(workspaceId);
     }
 }

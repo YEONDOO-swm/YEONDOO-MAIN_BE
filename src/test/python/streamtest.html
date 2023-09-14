@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stream Example</title>
+</head>
+<body>
+<button id="startStream">Start Stream</button>
+<div id="streamData"></div>
+
+<script>
+    document.getElementById('startStream').addEventListener('click', function () {
+        // Create a new XMLHttpRequest object
+        var xhr = new XMLHttpRequest();
+
+        // Define the callback function to handle the response
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 3) {
+                // When data is streaming (readyState 3)
+                var responseData = xhr.responseText;
+                var streamDataElement = document.getElementById('streamData');
+                streamDataElement.innerHTML += responseData;
+            }
+        };
+
+        // Open a GET request to your Spring RestController endpoint
+        xhr.open('GET', 'http://localhost:8080/getStreamFromFastAPI', true);
+
+        // Set the response type to text (since we're expecting text/plain)
+        xhr.responseType = 'text';
+
+        // Send the request
+        xhr.send();
+    });
+</script>
+</body>
+</html>

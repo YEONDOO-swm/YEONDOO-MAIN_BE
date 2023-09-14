@@ -11,12 +11,12 @@ import java.util.List;
 public class BatisKeywordRepository implements KeywordRepository {
     private final KeywordMapper keywordMapper;
     @Override
-    public void save(String username, List<String> keywords) {
-        keywordMapper.save(username, keywords);
+    public void save(Long workspaceId, List<String> keywords) {
+        keywordMapper.save(workspaceId, keywords);
     }
 
     @Override
-    public List<String> findByUsername(String username) {
-        return keywordMapper.findByUsername(username);
+    public List<String> findByUsername(Long workspaceId) {
+        return keywordMapper.findByUsername(workspaceId);
     }
 }

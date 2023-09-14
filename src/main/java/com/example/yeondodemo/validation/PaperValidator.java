@@ -2,13 +2,13 @@ package com.example.yeondodemo.validation;
 
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.entity.Paper;
+import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import com.example.yeondodemo.repository.history.SearchHistoryRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.entity.PaperWithOutMeta;
-import com.example.yeondodemo.entity.User;
 import com.example.yeondodemo.service.search.HistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -31,11 +31,11 @@ public class PaperValidator {
         searchHistoryRepository = context.getBean(SearchHistoryRepository.class);
         queryHistoryRepository = context.getBean(QueryHistoryRepository.class);
     }
-    public static boolean isNotValidHomeResultId(String username, PaperResultRequest paperResultRequest){
-        return searchHistoryRepository.findByUsernameAndId(username, paperResultRequest.getId()) == null;
+    public static boolean isNotValidHomeResultId(Long workspaceId, PaperResultRequest paperResultRequest){
+        return searchHistoryRepository.findByUsernameAndId(workspaceId, paperResultRequest.getId()) == null;
     }
-    public static boolean isNotValidResultId(String username, PaperResultRequest paperResultRequest){
-        return queryHistoryRepository.findByUsernameAndId(username, paperResultRequest.getId()) == null;
+    public static boolean isNotValidResultId(Long workspaceId, PaperResultRequest paperResultRequest){
+        return queryHistoryRepository.findByUsernameAndId(workspaceId, paperResultRequest.getId()) == null;
     }
 
 
@@ -44,10 +44,10 @@ public class PaperValidator {
         log.info("Paper: {} is {}", id, valid);
         return Optional.ofNullable(paperRepository.findById(id)).isPresent();
     }
-    public static boolean isValidOnOff(String username, String id, boolean onoff){
-        User user = userRepository.findByName(username);
+    public static boolean isValidOnOff(Long workspaceId, String id, boolean onoff){
+        Workspace workspace = userRepository.findByName(workspaceId);
         Paper paper = paperRepository.findById(id);
-        List<String> userSet = likePaperRepository.findByUser(user.getUsername());
+        List<String> userSet = likePaperRepository.findByUser(workspace.getWorkspaceId());
         if(onoff){
             if(userSet!=null){
                 if(userSet.contains(paper.getPaperId())){return false;}
@@ -60,15 +60,15 @@ public class PaperValidator {
             return false;
         }
     }
-    public static boolean isNotValidRid(String username, Long resultId){
-        return searchHistoryRepository.findByRidAndUsername(username, resultId) == null;
+    public static boolean isNotValidRid(Long workspaceId, Long resultId){
+        return searchHistoryRepository.findByRidAndUsername(workspaceId, resultId) == null;
     }
-    public static boolean isNotValidRestorePapers(String username, List<String> papers){
+    public static boolean isNotValidRestorePapers(Long workspaceId, List<String> papers){
         if(papers.size()==0){return true;}
         for (String paper : papers) {
             log.info("--- paper: " + paper);
             if(!isValidPaper(paper)){return true;}
-            if(!isValidOnOff(username, paper, true)){return true;}
+            if(!isValidOnOff(workspaceId, paper, true)){return true;}
         }
         return false;
     }

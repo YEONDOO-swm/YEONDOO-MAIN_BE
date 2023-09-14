@@ -4,14 +4,14 @@
 <mapper namespace="com.example.yeondodemo.repository.history.mapper.QueryHistoryMapper">
 
     <insert id="save">
-        insert into QUERYHISTORY (username,paperId, idx, content, who, totalCost, totalTokens, promptTokens, completionTokens)
-        values (#{username}, #{paperid}, #{idx}, #{content}, #{who}, #{totalCost}, #{totalTokens},#{promptTokens}, #{completionTokens})
+        insert into QUERYHISTORY (workspaceId,paperId, idx, content, who, totalCost, totalTokens, promptTokens, completionTokens)
+        values (#{workspaceId}, #{paperid}, #{idx}, #{content}, #{who}, #{totalCost}, #{totalTokens},#{promptTokens}, #{completionTokens})
     </insert>
 
     <select id="findByUsernameAndPaperid" resultType="com.example.yeondodemo.dto.PaperHistory">
         select content, who, id, score
         from QUERYHISTORY
-        where paperId = #{paperIsd} and username= #{username}
+        where paperId = #{paperIsd} and workspaceId= #{workspaceId}
         order by id ASC
     </select>
 
@@ -20,7 +20,7 @@
     <select id="getLastIdx" resultType="Integer">
         select idx
         from QUERYHISTORY
-        where paperId = #{paperId} and username= #{username}
+        where paperId = #{paperId} and workspaceId= #{workspaceId}
         order by idx DESC LIMIT 1
     </select>
     <select id="findByUsername" resultType="com.example.yeondodemo.dto.history.PaperHistoryDTO">
@@ -28,7 +28,7 @@
         from QUERYHISTORY as q
             INNER JOIN PAPER as p
             ON q.paperId = p.paperId
-        where q.username= #{username}
+        where q.workspaceId= #{workspaceId}
         order by id DESC
     </select>
 
@@ -36,7 +36,7 @@
     <select id="findByUsernameAndPaperIdOrderQA" resultType="com.example.yeondodemo.dto.PaperHistory">
         select content, who, id, score
         from QUERYHISTORY
-        where paperId = #{paperIsd} and username= #{username}
+        where paperId = #{paperIsd} and workspaceId= #{workspaceId}
         order by idx ASC
     </select>
 
@@ -45,7 +45,7 @@
         FROM (
                  SELECT content, who, id, idx, score
                  FROM QUERYHISTORY AS q
-                 WHERE paperId = #{paperIsd} AND username = #{username}
+                 WHERE paperId = #{paperIsd} AND workspaceId= #{workspaceId}
                  ORDER BY idx DESC
                      LIMIT 10
              ) AS subquery
@@ -55,7 +55,7 @@
     <select id="findByUsernameAndId" resultType="com.example.yeondodemo.dto.PaperHistory">
         SELECT content, who, id, score
         FROM QUERYHISTORY
-        WHERE id = #{id} AND username = #{username};
+        WHERE id = #{id} AND workspaceId = #{workspaceId};
     </select>
 
     <update id="updateScore">

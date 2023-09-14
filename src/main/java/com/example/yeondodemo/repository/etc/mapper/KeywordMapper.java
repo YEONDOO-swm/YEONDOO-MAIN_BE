@@ -6,7 +6,7 @@ import java.util.List;
 
 @Mapper
 public interface KeywordMapper {
-    void save(String username, List<String> keywords);
-    List<String> findByUsername(String username);
+    void save(Long workspaceId, List<String> keywords);
+    List<String> findByUsername(Long workspaceId);
 
 }
