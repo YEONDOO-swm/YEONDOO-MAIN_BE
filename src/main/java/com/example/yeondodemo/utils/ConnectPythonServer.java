@@ -13,6 +13,8 @@ import lombok.Setter;
 
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
 
@@ -61,6 +63,13 @@ public class ConnectPythonServer {
                 PythonQuestionResponse.class
         );
         return response.getBody();
+    }
+    public static Flux questionStream(PythonQuestionDTO pythonQuestionDTO, String pythonApiServer){
+        return WebClient.create()
+                .post()
+                .uri(pythonApiServer + "/question")
+                .retrieve()
+                .bodyToFlux(String.class);
     }
 
     public static TestPython getMeta(String paperId, String pythonApiServer){

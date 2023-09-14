@@ -21,34 +21,34 @@ public class BatisQueryHistoryRepository implements QueryHistoryRepository {
         return queryHistory;
     }
     @Override
-    public List<PaperHistory> findByUsernameAndPaperid(String username, String paperid){
-        log.info("findby username and paaperid : user: {} paepr: {} ",username,paperid);
-        return queryHistoryMapper.findByUsernameAndPaperid(username, paperid);
+    public List<PaperHistory> findByUsernameAndPaperid(Long workspaceId, String paperid){
+        log.info("findby username and paaperid : user: {} paepr: {} ",workspaceId,paperid);
+        return queryHistoryMapper.findByUsernameAndPaperid(workspaceId, paperid);
     }
 
     @Override
-    public List<PaperHistoryDTO> findByUsername(String username) {
-        return queryHistoryMapper.findByUsername(username);
+    public List<PaperHistoryDTO> findByUsername(Long workspaceId) {
+        return queryHistoryMapper.findByUsername(workspaceId);
     }
 
     @Override
-    public Integer getLastIdx(String username, String paperid) {
-        return queryHistoryMapper.getLastIdx(username, paperid);
+    public Integer getLastIdx(Long workspaceId, String paperid) {
+        return queryHistoryMapper.getLastIdx(workspaceId, paperid);
     }
 
     @Override
-    public List<PaperHistory> findByUsernameAndPaperIdOrderQA(String username, String paperid) {
-        return queryHistoryMapper.findByUsernameAndPaperIdOrderQA(username, paperid);
+    public List<PaperHistory> findByUsernameAndPaperIdOrderQA(Long workspaceId, String paperid) {
+        return queryHistoryMapper.findByUsernameAndPaperIdOrderQA(workspaceId, paperid);
     }
 
     @Override
-    public List<PaperHistory> findByUserAndIdOrderQA4Python(String username, String paperIsd) {
-        return queryHistoryMapper.findByUserAndIdOrderQA4Python(username, paperIsd);
+    public List<PaperHistory> findByUserAndIdOrderQA4Python(Long workspaceId, String paperIsd) {
+        return queryHistoryMapper.findByUserAndIdOrderQA4Python(workspaceId, paperIsd);
     }
 
     @Override
-    public PaperHistory findByUsernameAndId(String username, Long id) {
-        return queryHistoryMapper.findByUsernameAndId(username, id);
+    public PaperHistory findByUsernameAndId(Long workspaceId, Long id) {
+        return queryHistoryMapper.findByUsernameAndId(workspaceId, id);
     }
 
     @Override

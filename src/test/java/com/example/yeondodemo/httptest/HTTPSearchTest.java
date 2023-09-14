@@ -5,6 +5,7 @@ import com.example.yeondodemo.Controller.SearchController;
 import com.example.yeondodemo.dto.PaperBuffer;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.dto.paper.Version;
+import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.history.BatisSearchHistoryRepository;
 import com.example.yeondodemo.repository.history.QueryHistoryRepository;
@@ -18,10 +19,13 @@ import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.*;
 import com.example.yeondodemo.dto.LikeOnOffDTO;
 import com.example.yeondodemo.dto.TestPython;
-import com.example.yeondodemo.entity.Paper;
-import com.example.yeondodemo.entity.User;
+import com.example.yeondodemo.repository.user.batis.BatisLikePaperRepository;
+import com.example.yeondodemo.repository.user.batis.BatisRealUserRepository;
+import com.example.yeondodemo.repository.user.batis.BatisUserRepository;
 import com.example.yeondodemo.service.search.SearchService;
+import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.Updater;
+import com.example.yeondodemo.validation.WorkspaceValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -32,8 +36,11 @@ import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
@@ -45,6 +52,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -52,8 +60,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static util.utils.installFastApi;
 import static util.utils.isFastApiInstalled;
 
+@EnableAspectJAutoProxy
+@WithMockUser
 @WebMvcTest(SearchController.class) @AutoConfigureWebMvc @AutoConfigureMybatis
-@Import({BatisPaperRepository.class, BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, SearchService.class,  BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
+@Import({BatisRealUserRepository.class, JwtTokenProvider.class,BatisPaperRepository.class, BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, SearchService.class,  BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
 public class HTTPSearchTest {
     @InjectMocks
     private SearchService searchService;
@@ -79,6 +89,12 @@ public class HTTPSearchTest {
     BatisAuthorRepository authorRepository;
     @Autowired
     PlatformTransactionManager transactionManager;
+
+    @Autowired
+    RealUserRepository realUserRepository;
+    @Autowired
+    JwtTokenProvider provider;
+    String jwt;
     TransactionStatus status;
 
     private static Process process;
@@ -105,79 +121,23 @@ public class HTTPSearchTest {
             process.destroy();
         }
     }
-
     @BeforeEach
-    public void beforeEach(){
+    public void beforeEach() {
+        String email = "test@test.com";
         status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        User user1 = new User("testtest1", "testtest");
-        User user2 = new User("testtest2", "testtest");
-        user2.setIsFirst(false);
-        userRepository.save(user1);
-        userRepository.save(user2);
+        realUserRepository.save(email);
+        Workspace user1 = new Workspace(0l, "testtest");
+        Workspace user2 = new Workspace(1L, "testtest");
+        realUserRepository.saveWorkspace(email, user1);
+        realUserRepository.saveWorkspace(email, user2);
+        jwt = provider.createJwt(email);
         studyFieldRepository.save("1234");
         studyFieldRepository.save("12345");
         studyFieldRepository.save("12346");
         studyFieldRepository.save("12347");
-//        Paper paper1 = new Paper("1706.03762");
-//        //paper1.setAbs("The dominant sequence transduction models are based on complex recurrent or convolutional neural networks that include an encoder and a decoder. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 Englishto-German translation task, improving over the existing best results, including ensembles, by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.0 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature.");
-//        paper1.setCites(81192);
-//        paper1.setAuthors(new ArrayList<String>(Arrays.asList("Ashish Vaswani", "Noam Shazeer", "Niki Parmar", "Jakob Uszkoreit", "Llion Jones", "Aidan N. Gomez", "Łukasz Kaiser", "Illia Polosukhin")));
-//        paper1.setUrl("https://arxiv.org/abs/1706.03762");
-//        paper1.setConference("2017 - proceedings.neurips.cc");
-//        paper1.setTitle("Attention is all you need");
-//        paper1.setYear(2017);
-//        paper1.setLikes(200);
-//        paper1.setSummary("The dominant sequence transduction models are based on complex recurrent or convolutional neural networks in an encoder-decoder configuration. The best performing models also connect the encoder and decoder through an attention mechanism. We propose a new simple network architecture, the Transformer, based solely on attention mechanisms, dispensing with recurrence and convolutions entirely. Experiments on two machine translation tasks show these models to be superior in quality while being more parallelizable and requiring significantly less time to train. Our model achieves 28.4 BLEU on the WMT 2014 English-to-German translation task, improving over the existing best results, including ensembles by over 2 BLEU. On the WMT 2014 English-to-French translation task, our model establishes a new single-model state-of-the-art BLEU score of 41.8 after training for 3.5 days on eight GPUs, a small fraction of the training costs of the best models from the literature. We show that the Transformer generalizes well to other tasks by applying it successfully to English constituency parsing both with large and limited training data.");
-//        Paper paper2 = new Paper("2204.13154");
-//        paper2.setSummary("A long time ago in the machine learning literature, the idea of incorporating a mechanism inspired by the human visual system into neural networks was introduced. This idea is named the attention mechanism, and it has gone through a long development period. Today, many works have been devoted to this idea in a variety of tasks. Remarkable performance has recently been demonstrated. The goal of this paper is to provide an overview from the early work on searching for ways to implement attention idea with neural networks until the recent trends. This review emphasizes the important milestones during this progress regarding different tasks. By this way, this study aims to provide a road map for researchers to explore the current development and get inspired for novel approaches beyond the attention.\n");
-//        //paper2.setAbs("A long time ago in the machine learning literature, the idea of incorporating a mechanism inspired by the human visual system into neural networks was introduced. This idea is named the attention mechanism, and it has gone through a long development period. Today, many works have been devoted to this idea in a variety of tasks. Remarkable performance has recently been demonstrated. The goal of this paper is to provide an overview from the early work on searching for ways to implement attention idea with neural networks until the recent trends. This review emphasizes the important milestones during this progress regarding different tasks. By this way, this study aims to provide a road map for researchers to explore the current development and get inspired for novel approaches beyond the attention.\n");
-//        paper2.setAuthors(new ArrayList<String>(Arrays.asList("Derya Soydaner")));
-//        //paper2.setUrl("https://arxiv.org/abs/2204.13154");
-//        paper2.setTitle("Attention Mechanism in Neural Networks: Where it Comes and Where it Goes");
-//        paper2.setCites(170);
-//        paper2.setConference("2021 - proceedings.mlr.press");
-//        paper2.setYear(2021);
-//        paper2.setLikes(12);
-//        int i=0;
-//        Paper[] papers= new Paper[20];
-//        papers[i++] = new Paper("2307.00865");
-//        papers[i++] =  new Paper("2010.01369");
-//        papers[i++] =  new Paper("2204.05437");
-//        papers[i++] =  new Paper("1903.08131");
-//        papers[i++] =  new Paper("1707.02725");
-//        papers[i++] =  new Paper("2111.00977");
-//        papers[i++] =  new Paper("2212.09507");
-//        papers[i++] =  new Paper("1404.5997");
-//        papers[i++] =  new Paper("2203.12114");
-//        papers[i++] =  new Paper("1909.02765");
-//        papers[i++] =  new Paper("2001.09608");
-//        papers[i++] =  new Paper("2212.00253");
-//        papers[i++] =  new Paper("2108.11510");
-//        papers[i++] =  new Paper("2009.07888");
-//        papers[i++] =  new Paper("2105.10559");
-//        papers[i++] =  new Paper("2202.05135");
-//        papers[i++] =  new Paper("1909.13474");
-//        papers[i++] =  new Paper("2307.01452");
-//        papers[i++] =  new Paper("2108.03258");
-//        papers[i++] =  new Paper("2204.11897");
-//        paperRepository.save(paper1);
-//        paperRepository.save(paper2);
-//        for(String author : paper1.getAuthors()){
-//            authorRepository.save(paper1.getPaperId(), author);
-//        }
-//        for (Paper paper : papers) {
-//            paperRepository.save(paper);
-//        }
-//        String user ="testtest1";
-//        likePaperRepository.save(user, paper1.getPaperId(), true);
-//        likePaperRepository.save(user, papers[0].getPaperId(), true);
-//        likePaperRepository.save(user, papers[2].getPaperId(), true);
-//        likePaperRepository.save(user, papers[4].getPaperId(), true);
-//        likePaperRepository.save(user, papers[6].getPaperId(), true);
-//        likePaperRepository.save(user, papers[10].getPaperId(), true);
-//        likePaperRepository.save(user, papers[12].getPaperId(), true);
-//        likePaperRepository.save(user, papers[15].getPaperId(), true);
-//        likePaperRepository.save(user, paper1.getPaperId(), true);
+        WorkspaceValidator.login.put(jwt, new HashSet<Long>());
+        WorkspaceValidator.login.get(jwt).add(0L);
+        WorkspaceValidator.login.get(jwt).add(1L);
     }
     @AfterEach
     public void afterEach(){
@@ -201,10 +161,11 @@ public class HTTPSearchTest {
         List<TestPython> test = new ArrayList<>(Arrays.asList(testPython1,testPython2));
         paperRepository.findById("1706.03762");
         paperRepository.findById("2204.13154");
-        likePaperRepository.save("testtest1", "1706.03762", true);
+        likePaperRepository.save(0L, "1706.03762", true);
         mockMvc.perform(
                 get("http://localhost:8080/api/homesearch")
-                        .queryParam("username", "testtest1")
+                        .header("Gauth", jwt)
+                        .queryParam("workspaceId", "0")
                         .queryParam("query", "hi")
                         .queryParam("searchType", "2")
         ).andExpect(
@@ -224,7 +185,8 @@ public class HTTPSearchTest {
 
         mockMvc.perform(
                         get("http://localhost:8080/api/homesearch")
-                                .queryParam("username", "testtest1")
+                                .header("Gauth", jwt)
+                                .queryParam("workspaceId", "0")
                                 .queryParam("query", "Attention is all you need")
                                 .queryParam("searchType", "1")
                 ).andExpect(
@@ -240,7 +202,8 @@ public class HTTPSearchTest {
     public void searchFailWhenNull() throws Exception{
         mockMvc.perform(
                 get("http://localhost:8080/api/homesearch")
-                        .queryParam("username", "testtest1")
+                        .header("Gauth", jwt)
+                        .queryParam("workspaceId", "0")
                         .queryParam("query", "")
                         .queryParam("searchType", "1")
 
@@ -258,7 +221,8 @@ public class HTTPSearchTest {
 
         mockMvc.perform(
                 get("http://localhost:8080/api/homesearch")
-                        .queryParam("username", "testtest1")
+                        .header("Gauth", jwt)
+                        .queryParam("workspaceId", "0")
                         .queryParam("query", s)
                         .queryParam("searchType", "1")
         ).andExpect(
@@ -269,45 +233,50 @@ public class HTTPSearchTest {
     @Test
     public void likeOnTestSuccess() throws Exception {
         LikeOnOffDTO likeOnOffDTO = new LikeOnOffDTO();
-        likeOnOffDTO.setUsername("testtest1");
+        likeOnOffDTO.setWorkspaceId(0L);
         likeOnOffDTO.setPaperId("2010.01369");
         likeOnOffDTO.setOn(true);
         String content = objectMapper.writeValueAsString(likeOnOffDTO);
         mockMvc.perform(
                 post("http://localhost:8080/api/paperlikeonoff")
+                        .header("Gauth", jwt)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         );
-        Assertions.assertThat(likePaperRepository.findByUser("testtest1")).contains("2010.01369");
+        Assertions.assertThat(likePaperRepository.findByUser(0L)).contains("2010.01369");
     }
     @Test
     public void likeOffTestSuccess() throws Exception {
         LikeOnOffDTO likeOnOffDTO = new LikeOnOffDTO();
-        likeOnOffDTO.setUsername("testtest1");
+        likeOnOffDTO.setWorkspaceId(0L);
         likeOnOffDTO.setPaperId("2307.00865");
         likeOnOffDTO.setOn(false);
         String content = objectMapper.writeValueAsString(likeOnOffDTO);
         mockMvc.perform(
                 post("http://localhost:8080/api/paperlikeonoff")
+                        .header("Gauth", jwt)
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         );
-        Assertions.assertThat(likePaperRepository.findByUser("testtest1")).doesNotContain("2307.00865");
+        Assertions.assertThat(likePaperRepository.findByUser(0L)).doesNotContain("2307.00865");
     }
 
     @Test
     public void likeTestFailBadRequestTryToOn() throws Exception {
         LikeOnOffDTO likeOnOffDTO = new LikeOnOffDTO();
-        likeOnOffDTO.setUsername("testtest1");
+        likeOnOffDTO.setWorkspaceId(0L);
         likeOnOffDTO.setPaperId("2307.00865");
         likeOnOffDTO.setOn(true);
         paperRepository.findById("2307.00865");
-        likePaperRepository.save("testtest1", "2307.00865", true);
+        likePaperRepository.save(0L, "2307.00865", true);
         String content = objectMapper.writeValueAsString(likeOnOffDTO);
         mockMvc.perform(
                 post("http://localhost:8080/api/paperlikeonoff")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .header("Gauth", jwt)
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -318,12 +287,14 @@ public class HTTPSearchTest {
     @Test
     public void likeTestFailBadRequestTryToOff() throws Exception {
         LikeOnOffDTO likeOnOffDTO = new LikeOnOffDTO();
-        likeOnOffDTO.setUsername("testtest1");
+        likeOnOffDTO.setWorkspaceId(0L);
         likeOnOffDTO.setPaperId("2010.01369");
         likeOnOffDTO.setOn (false);
         String content = objectMapper.writeValueAsString(likeOnOffDTO);
         mockMvc.perform(
                 post("http://localhost:8080/api/paperlikeonoff")
+                        .header("Gauth", jwt)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -335,7 +306,8 @@ public class HTTPSearchTest {
         //when null
         mockMvc.perform(
                 get("http://localhost:8080/api/container")
-                        .queryParam("username","testtest2")
+                        .header("Gauth", jwt)
+                        .queryParam("workspaceId","2")
         ).andExpect(
                 status().isOk()
         ).andExpect(
@@ -344,7 +316,8 @@ public class HTTPSearchTest {
         //when notnull
         mockMvc.perform(
                 get("http://localhost:8080/api/container")
-                        .queryParam("username","testtest1")
+                        .header("Gauth", jwt)
+                        .queryParam("workspaceId","1")
         ).andExpect(
                 status().isOk()
         ).andExpect(

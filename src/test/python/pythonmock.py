@@ -1,10 +1,31 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+import time
 import os
+
+import asyncio
 
 app = FastAPI()
 
+async def generate_chunks_default():
+    for i in range(1, 10):
+        yield f"Message {i}\n"
+        await asyncio.sleep(0.1)
+    yield "event: close\ndata: \n\n"
 
+@app.get("/test/stream")
+async def post_chat():
+    headers={
+                    "Content-Type": "text/event-stream",
+                    "Cache-Control": "no-cache",
+                    "Connection": "keep-alive",
+                }
+    return StreamingResponse(
+        content=generate_chunks_default(),
+        media_type="text/plain;charset=utf-8",
+        headers=headers
+    )
 @app.get("/getpaperinfo")
 def getpaperinfo(paperId:str):
     return {"summary" : "A long time ago in the machine learning literature, the idea of incorporating a mechanism inspired by the human visual system into neural networks was introduced. This idea is named the attention mechanism, and it has gone through a long development period. Today, many works have been devoted to this idea in a variety of tasks. Remarkable performance has recently been demonstrated. The goal of this paper is to provide an overview from the early work on searching for ways to implement attention idea with neural networks until the recent trends. This review emphasizes the important milestones during this progress regarding different tasks. By this way, this study aims to provide a road map for researchers to explore the current development and get inspired for novel approaches beyond the attention.\n",
@@ -35,11 +56,17 @@ class PythonQuestionDTO(BaseModel):
     paperId: str
     query: str
     history: list
-@app.post("/question")
+#@app.post("/question")
 async def process_question(data: PythonQuestionDTO):
     print(data)
     return {"answer": 'answer ' + data.query, "track":{"totalTokens":1200.0,"promptTokens":1000.0,"completionTokens":200.0,"totalCost":0.0248}}
 
+@app.post("/question")
+async def post_chat(data: PythonQuestionDTO):
+    return StreamingResponse(
+        content=generate_chunks_default(),
+        media_type="text/plain;charset=utf-8"
+    )
 @app.get("/process")
 def process_query(question: str, searchType: int):
     print(question)

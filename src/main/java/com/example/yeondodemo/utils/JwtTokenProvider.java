@@ -14,25 +14,22 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 @Slf4j
-public class JwtTokenProvider implements InitializingBean {
-    @Value("${jwt.secret}")
-    private String secretKey;
+public class JwtTokenProvider {
+    public String secretKey;
     private Key key;
     static long REFRESH_TOKEN_VALID_MILLISECOND = 3600000;
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         this.secretKey = secretKey;
+        this.key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
     }
     // 2. secret 값을 Base64로 디코딩해 Key변수에 할당
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
-    }
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder()

@@ -9,17 +9,17 @@ import java.time.LocalDate;
 import java.util.List;
 @Mapper
 public interface SearchHistoryMapper {
-    List<SearchHistoryResponseDTO> findByUsername(String username);
+    List<SearchHistoryResponseDTO> findByUsername(Long workspaceId);
 
-    Long findByRidAndUsername(String username, Long rid);
+    Long findByRidAndUsername(Long workspaceId, Long rid);
     void savePapers(Long rid, List< PaperSimpleIdTitleDTO > papers);
     String findAnswerById(Long rid);
     String findQueryById(Long rid);
     void save(SearchHistory searchHistory);
     Long getLastId();
     List<PaperSimpleIdTitleDTO> findPapersById(Long id);
-    Long canCached(String username, String query, Integer searchType, LocalDate date);
-    Long findByUsernameAndId(String username, Long id);
+    Long canCached(Long workspaceId, String query, Integer searchType, LocalDate date);
+    Long findByUsernameAndId(Long workspaceId, Long id);
     void updateScore(Long id, int score);
 
 }

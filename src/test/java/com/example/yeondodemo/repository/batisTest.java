@@ -23,7 +23,7 @@ public class batisTest {
 
     void batis(){
 
-        List<PaperHistory> testtest1 = queryHistoryRepository.findByUsernameAndPaperid("testtest1", "1706.03762");
+        List<PaperHistory> testtest1 = queryHistoryRepository.findByUsernameAndPaperid(11l, "1706.03762");
         System.out.println("testtest1 = " + testtest1);
         System.out.println(paperRepository.findById("1706.03762"));
         System.out.println(paperBufferRepository.isHit("1706.03762"));

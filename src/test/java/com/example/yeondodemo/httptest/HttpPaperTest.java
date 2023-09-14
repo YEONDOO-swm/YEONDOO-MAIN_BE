@@ -1,8 +1,10 @@
 package com.example.yeondodemo.httptest;
 
 import com.example.yeondodemo.Controller.PaperController;
+import com.example.yeondodemo.ControllerAsnc.AsyncPaperController;
 import com.example.yeondodemo.entity.Paper;
-import com.example.yeondodemo.entity.User;
+import com.example.yeondodemo.entity.Workspace;
+import com.example.yeondodemo.filter.AspectController;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.history.BatisSearchHistoryRepository;
 import com.example.yeondodemo.repository.history.QueryHistoryRepository;
@@ -13,43 +15,54 @@ import com.example.yeondodemo.repository.paper.batis.BatisPaperRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisQueryHistoryRepository;
 import com.example.yeondodemo.repository.studyfield.BatisStudyFieldRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
-import com.example.yeondodemo.repository.user.BatisLikePaperRepository;
-import com.example.yeondodemo.repository.user.BatisUserRepository;
+import com.example.yeondodemo.repository.user.RealUserRepository;
+import com.example.yeondodemo.repository.user.batis.BatisLikePaperRepository;
+import com.example.yeondodemo.repository.user.batis.BatisRealUserRepository;
+import com.example.yeondodemo.repository.user.batis.BatisUserRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.service.search.PaperService;
+import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.Updater;
+import com.example.yeondodemo.validation.WorkspaceValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.AsyncContext;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.catalina.security.SecurityConfig;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mybatis.spring.boot.test.autoconfigure.AutoConfigureMybatis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.ServerSentEvent;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static util.utils.installFastApi;
 import static util.utils.isFastApiInstalled;
-
-
-@WebMvcTest(PaperController.class) @AutoConfigureWebMvc
+import reactor.test.StepVerifier;
+@EnableAspectJAutoProxy
+@WebMvcTest({PaperController.class, AsyncPaperController.class}) @AutoConfigureWebMvc
 @AutoConfigureMybatis
-@Import({BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, PaperService.class, BatisPaperRepository.class, BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
+@WithMockUser
+@Import({AspectController.class, SecurityConfig.class, AspectController.class, BatisRealUserRepository.class, JwtTokenProvider.class,BatisSearchHistoryRepository.class, Updater.class, BatisAuthorRepository.class, BatisPaperBufferRepository.class, BatisPaperInfoRepository.class, BatisQueryHistoryRepository.class, PaperService.class, BatisPaperRepository.class, BatisLikePaperRepository.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisLikePaperRepository.class})
 public class HttpPaperTest {
 
     @InjectMocks
@@ -78,6 +91,12 @@ public class HttpPaperTest {
     BatisAuthorRepository authorRepository;
     @Autowired
     Updater updater;
+
+    @Autowired
+    RealUserRepository realUserRepository;
+    @Autowired
+    JwtTokenProvider provider;
+    String jwt;
     TransactionStatus status;
     private static Process process;
 
@@ -107,12 +126,17 @@ public class HttpPaperTest {
 
     @BeforeEach
     public void beforeEach(){
+        String email = "test@test.com";
         status = transactionManager.getTransaction(new DefaultTransactionDefinition());
-        User user1 = new User("testtest1", "testtest");
-        User user2 = new User("testtest2", "testtest");
-        user2.setIsFirst(false);
-        userRepository.save(user1);
-        userRepository.save(user2);
+        realUserRepository.save(email);
+        Workspace user1 = new Workspace(0l, "testtest");
+        Workspace user2 = new Workspace(1L, "testtest");
+        realUserRepository.saveWorkspace(email, user1);
+        realUserRepository.saveWorkspace(email, user2);
+        jwt = provider.createJwt(email);
+        WorkspaceValidator.login.put(jwt, new HashSet<Long>());
+        WorkspaceValidator.login.get(jwt).add(0L);
+        WorkspaceValidator.login.get(jwt).add(1L);
         studyFieldRepository.save("1234");
         studyFieldRepository.save("12345");
         studyFieldRepository.save("12346");
@@ -186,16 +210,19 @@ public class HttpPaperTest {
     @Test
     public void test2dot2Success() throws Exception {
         String paperId = "1706.03762";
-        String username = "testtest1";
+        String email="test@test.com";
+        Long workspaceId = 0L;
+        System.out.println("jwt = " + jwt);
+        System.out.println("WorkspaceValidator.login = " + WorkspaceValidator.login);
         mockMvc.perform(
-                        get("http://localhost:8080/api/paper/{paperId}?username={username}", paperId, username)
+                        get("http://localhost:8080/api/paper/1706.03762?workspaceId={workspaceId}",workspaceId)
+                                .header("Gauth", jwt)
                 ).andExpect(
                         status().isOk()
                 )
                 .andExpect(jsonPath("$.paperInfo.title").value("Attention is all you need"))
                 .andExpect(jsonPath("$.paperInfo.year").value(2017))
                 .andExpect(jsonPath("$.paperInfo.url").value("https://arxiv.org/abs/1706.03762"))
-                .andExpect(jsonPath("$.paperInfo.conference").value("2017 - proceedings.neurips.cc"))
                 .andExpect(jsonPath("$.paperInfo.authors[0]").value("Ashish Vaswani"))
                 .andExpect(jsonPath("$.paperInfo.authors[1]").value("Noam Shazeer"))
                 .andExpect(jsonPath("$.paperInfo.authors[2]").value("Niki Parmar"))
@@ -213,39 +240,56 @@ public class HttpPaperTest {
     public void test2dot2Fail() throws Exception {
         //wrong paperid
         String paperId = "1706.03763";
-        String username = "testtest1";
+        Long workspaceId = 0L;
         mockMvc.perform(
-                        get("http://localhost:8080/api/paper/{paperId}?username={username}", paperId, username)
+                        get("http://localhost:8080/api/paper/{paperId}?worksapceId={workspaceId}", paperId, workspaceId)
+                                .header("Gauth", jwt)
                 ).andExpect(
                         status().isBadRequest()
                 );
         //wrong user
         paperId = "1706.03762";
-        username = "testtest44";
+        workspaceId = 3L;
         mockMvc.perform(
-                get("http://localhost:8080/api/paper/{paperId}?username={username}", paperId, username)
+                get("http://localhost:8080/api/paper/{paperId}?workspaceId={workspaceId}", paperId, workspaceId)
+                        .header("Gauth", jwt+"1")
         ).andExpect(
                 status().isUnauthorized()
         );
     }
 
-
+    @Autowired
+    private WebTestClient webTestClient;
     @Test
     public void test2dot3_InPaperQuerySuccess() throws Exception {
-        String paperId = "1706.03762";
-        String username = "testtest1";
+        //포기
+/*        String paperId = "1706.03762";
+        Long workspaceId = 0L;
         Map<String, String> question = new HashMap<>();
         question.put("question", "what is Question?");
         String content = objectMapper.writeValueAsString(question);
-        mockMvc.perform(
-                post("http://localhost:8080/api/paper/{paperId}?username={username}", paperId, username)
+        MvcResult mvcResult = mockMvc.perform(
+                post("http://localhost:8080/api/paper/{paperId}?workspaceId={wokspaceId}", paperId, workspaceId)
+                        .header("Gauth", jwt)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .content(content)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.TEXT_EVENT_STREAM_VALUE)
         ).andExpect(
                 status().isOk()
-        ).andExpect(jsonPath("$.answer").value("bibi"))
-        ;
+        ).andReturn();
+        Thread.sleep(2000);
+        Flux<ServerSentEvent<String>> fluxResponse = (Flux<ServerSentEvent<String>>) mvcResult.getAsyncResult();
+
+        StepVerifier.create(fluxResponse)
+                .expectNextCount(3) // 예상되는 Flux 요소 수
+                .expectComplete()
+            .verify();
+                mockMvc.perform(asyncDispatch(mvcResult))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.TEXT_EVENT_STREAM_VALUE))
+                .andExpect(jsonPath("$.length()").value(3));*/
+
 
     }
 

@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter @Setter @ToString
 public class QueryHistory {
     private Long id;
-    private String username;
+    private Long workspaceId;
     private String paperid;
     private String content;
     private Integer idx;
@@ -19,15 +19,15 @@ public class QueryHistory {
     private Float completionTokens;
     private Float totalCost;
 
-    public QueryHistory(String username, String paperid, int idx, boolean who, String content){
-        this.username = username;
+    public QueryHistory(Long workspaceId, String paperid, int idx, boolean who, String content){
+        this.workspaceId = workspaceId;
         this.paperid = paperid;
         this.idx = idx;
         this.content = content;
         this.who = who;
     }
-    public QueryHistory(String username, String paperid, int idx, boolean who, PythonQuestionResponse response){
-        this.username = username;
+    public QueryHistory(Long workspaceId, String paperid, int idx, boolean who, PythonQuestionResponse response){
+        this.workspaceId = workspaceId;
         this.paperid = paperid;
         this.idx = idx;
         this.content = response.getAnswer();

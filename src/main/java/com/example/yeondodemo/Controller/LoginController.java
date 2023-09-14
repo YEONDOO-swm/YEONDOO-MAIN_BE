@@ -3,16 +3,16 @@ package com.example.yeondodemo.Controller;
 import com.example.yeondodemo.dto.login.GoogleInfoResponse;
 import com.example.yeondodemo.dto.login.GoogleRequest;
 import com.example.yeondodemo.dto.login.GoogleResponse;
+import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
+import com.example.yeondodemo.repository.user.RealUserRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.dto.LoginUserDTO;
 import com.example.yeondodemo.dto.UserProfileDTO;
-import com.example.yeondodemo.entity.User;
 import com.example.yeondodemo.service.login.LoginService;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.LoginUtil;
-import com.example.yeondodemo.validation.UserValidator;
-import jakarta.annotation.PostConstruct;
+import com.example.yeondodemo.validation.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,16 +25,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @RestController @Slf4j @RequiredArgsConstructor @RequestMapping("/api")
 public class LoginController {
     private final UserRepository userRepository;
     private final StudyFieldRepository studyFieldRepository;
+    private final RealUserRepository realUserRepository;
     private final LoginService loginService;
     private final JwtTokenProvider provider;
     @Value("${spring.google.client_id}")
@@ -66,84 +64,41 @@ public class LoginController {
         String name = infoResponse.getBody().getName();
         String jwt = LoginUtil.createJwt(email, jwtSecret);
         log.info("jwt: {}", jwt);
-        User user = userRepository.findByName(email);
-        if(user==null){
-            user = new User(email, "",name);
-            userRepository.save(user);
+        if(realUserRepository.exist(name)==null){
+            realUserRepository.save(name);
         }
+        Set<Long> userWorkspace = realUserRepository.findByName(email);
+        WorkspaceValidator.addLogin(jwt, userWorkspace);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Gauth", jwt);
         Map ret = new HashMap<String, String>();
-        ret.put("username", email);
+        ret.put("username", name);
         ret.put("Gauth", jwt);
         return new ResponseEntity(ret, headers,HttpStatus.OK);
     }
     @GetMapping("/test")
     public ResponseEntity testJoin(){
-        String jwt = LoginUtil.createJwt("syleelsw@snu.ac.kr", jwtSecret);
+        String jwt = provider.createJwt("syleelsw@snu.ac.kr");
         HttpHeaders headers = new HttpHeaders();
         String name = provider.getUserName(jwt);
-        User user = userRepository.findByName(name);
-        UserValidator.login.put(name, user);
+
+        log.info("jwt: {}", jwt);
+        if(realUserRepository.exist(name)==null){
+            realUserRepository.save(name);
+        }
+        Set<Long> userWorkspace = realUserRepository.findByName(name);
+        WorkspaceValidator.login.put(jwt, userWorkspace);
         headers.set("Gauth", jwt);
+        System.out.println("userWorkspace = " + userWorkspace);
+        System.out.println(userWorkspace.getClass());
         return new ResponseEntity(headers,HttpStatus.OK);
     }
-    @GetMapping("/join")
-    public ResponseEntity join(@RequestParam String username, @RequestParam String password){
-        if( !username.matches("^[A-Za-z][A-Za-z0-9]{6,19}$") || !password.matches("^[A-Za-z][A-Za-z0-9!@#$%^&*()]{6,19}$") || (userRepository.findByName(username) != null)){
-            log.info("usrnaem "+username.matches("^[A-Za-z][A-Za-z0-9]{6,19}$"));
-            log.info("pw "  + password.matches("^[A-Za-z][A-Za-z0-9!@#$%^&*()]{6,19}$"));
-            log.info("isin: " + userRepository.findByName(username));
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
-        User user = new User(username, password);
-        userRepository.save(user);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-    @PostMapping("/login")
-    public ResponseEntity login(@Validated @RequestBody LoginUserDTO loginUserDTO, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            log.info("errors: {}", bindingResult);
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        log.info("login Success, user: {}",loginUserDTO.getUsername());
-        User user = loginService.join(loginUserDTO);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("isFirst",user.getIsFirst());
-        return new ResponseEntity<>(response,HttpStatus.OK);
-    }
-    @GetMapping("/userprofile/{username}")
-    public ResponseEntity getStudyFields(@PathVariable String username){
-        HttpStatus status = HttpStatus.OK;
-        if(!loginService.isValidUser(username)){status=HttpStatus.NOT_FOUND;}
-        else if(loginService.checkNotFirst(username)){status=HttpStatus.UNAUTHORIZED;}
-        Map<String, List<String>> response = new HashMap<>();
-        response.put("fields",studyFieldRepository.findAll());
-        return new ResponseEntity<>(response, status);
-    }
-    @PostMapping("/userprofile")
-    public ResponseEntity setUserProfile(@Validated @RequestBody UserProfileDTO userProfileDTO, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
-            HttpStatus status = HttpStatus.UNAUTHORIZED;
-            log.info("errors: {}", bindingResult);
-            for (ObjectError allError : bindingResult.getAllErrors()) {
-                System.out.println("allError = " + allError);
-            }
-            List<ObjectError> errors = bindingResult.getAllErrors();
-            for (ObjectError error : errors) {
-                System.out.println(error.getCode());
-            }
 
-            switch(Objects.requireNonNull(bindingResult.getFieldError().getCode())){
-                //@1Login기능 제대로 구현시 UnAuthorized추가할것.
-                case "Size", "AssertTrue", "Pattern":
-                    status = HttpStatus.BAD_REQUEST;
-                    break;
-            }
-            return new ResponseEntity<>(status);
-        }
-        loginService.setUserProfile(userProfileDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping("/test/login")
+    public ResponseEntity testLogin(@RequestHeader("Gauth") String jwt, @RequestParam String email){
+        Set<Long> userWorkspace = realUserRepository.findByName(email);
+        WorkspaceValidator.login.put(jwt, userWorkspace);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 }

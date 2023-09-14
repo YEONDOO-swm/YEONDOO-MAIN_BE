@@ -4,22 +4,22 @@
 <mapper namespace="com.example.yeondodemo.repository.user.mapper.UserMapper">
 
     <insert id="save">
-        insert into USER (username,password, isfirst)
-        values (#{saveParam.username}, #{saveParam.password}, #{saveParam.isFirst})
+        insert into WORKSPACE (workspaceId,description, title, studyField)
+        values (#{saveParam.workspaceId}, #{saveParam.description}, #{saveParam.title}, #{saveParam.studyField})
     </insert>
     <update id="update">
-        update USER
+        update WORKSPACE
         set isfirst=#{updateParam.isFirst},
             studyField = #{updateParam.studyField}
-        where username = #{updateParam.username}
+        where workspaceId = #{updateParam.workspaceId}
     </update>
     <select id="clearStore" >
-        TRUNCATE TABLE USER
+        TRUNCATE TABLE WORKSPACE
     </select>
 
-    <select id="findByName" resultType="com.example.yeondodemo.entity.User">
+    <select id="findByName" resultType="com.example.yeondodemo.entity.Workspace">
         SELECT *
-        FROM USER
-        WHERE username = #{username}
+        FROM WORKSPACE
+        WHERE workspaceId = #{workspaceId}
     </select>
 </mapper>

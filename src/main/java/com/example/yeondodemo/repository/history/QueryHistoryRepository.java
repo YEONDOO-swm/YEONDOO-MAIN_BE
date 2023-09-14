@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface QueryHistoryRepository {
     QueryHistory save(QueryHistory queryHistory);
-    List<PaperHistory> findByUsernameAndPaperid(String username, String paperid);
-    List<PaperHistoryDTO> findByUsername(String username);
-    Integer getLastIdx(String username, String paperid);
-    List<PaperHistory> findByUsernameAndPaperIdOrderQA(String username,String paperid);
-    List<PaperHistory> findByUserAndIdOrderQA4Python(String username, String paperIsd);
-    PaperHistory findByUsernameAndId(String username, Long id);
+    List<PaperHistory> findByUsernameAndPaperid(Long workspaceId, String paperid);
+    List<PaperHistoryDTO> findByUsername(Long workspaceId);
+    Integer getLastIdx(Long workspaceId, String paperid);
+    List<PaperHistory> findByUsernameAndPaperIdOrderQA(Long workspaceId,String paperid);
+    List<PaperHistory> findByUserAndIdOrderQA4Python(Long workspaceId, String paperIsd);
+    PaperHistory findByUsernameAndId(Long workspaceId, Long id);
     void updateScore(Long id, Integer score);
 }
