@@ -62,10 +62,10 @@ public class LoginController {
                 map, GoogleInfoResponse.class);
         String email=infoResponse.getBody().getEmail();
         String name = infoResponse.getBody().getName();
-        String jwt = LoginUtil.createJwt(email, jwtSecret);
+        String jwt = provider.createJwt(email);
         log.info("jwt: {}", jwt);
-        if(realUserRepository.exist(name)==null){
-            realUserRepository.save(name);
+        if(realUserRepository.exist(email)==null){
+            realUserRepository.save(email);
         }
         Set<Long> userWorkspace = realUserRepository.findByName(email);
         WorkspaceValidator.addLogin(jwt, userWorkspace);
