@@ -16,4 +16,8 @@
         from KEYWORD
         where workspaceId = #{workspaceId}
     </select>
+    <delete id="deleteByWorkspaceId">
+        DELETE FROM KEYWORD
+        WHERE workspaceId = #{workspaceId}
+    </delete>
 </mapper>

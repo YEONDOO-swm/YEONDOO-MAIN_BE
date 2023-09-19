@@ -11,7 +11,7 @@ import java.util.List;
 public interface QueryHistoryMapper {
     void save(QueryHistory queryHistory);
     List<PaperHistory> findByUsernameAndPaperid(Long workspaceId, String paperIsd);
-    Integer getLastIdx(Long workspaceId, String paperId);
+    Long getLastIdx(Long workspaceId, String paperId);
     List<PaperHistoryDTO> findByUsername(Long workspaceId);
     List<PaperHistory> findByUsernameAndPaperIdOrderQA(Long workspaceId, String paperIsd);
     List<PaperHistory> findByUserAndIdOrderQA4Python(Long workspaceId, String paperIsd);

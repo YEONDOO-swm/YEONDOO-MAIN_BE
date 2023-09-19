@@ -26,6 +26,16 @@ public class PaperController {
         if (BAD_REQUEST != null) return BAD_REQUEST;
         return new ResponseEntity<>(paperService.getPaperInfo(paperid, workspaceId), HttpStatus.OK);
     }
+    @GetMapping("/resultId")
+    public ResponseEntity getAnswerResultId(@RequestHeader("Gaut") String jwt, @RequestParam Long key){
+        try{
+            return new ResponseEntity<>(paperService.getResultId(key), HttpStatus.OK);
+        }catch (IllegalAccessError e){
+            log.info("Invalid access: key: {}", key);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
 
 /*        String fastApiStreamingEndpoint = "http://localhost:8000/test/stream";

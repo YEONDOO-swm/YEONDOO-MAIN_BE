@@ -22,6 +22,7 @@ import com.example.yeondodemo.dto.TestPython;
 import com.example.yeondodemo.repository.user.batis.BatisLikePaperRepository;
 import com.example.yeondodemo.repository.user.batis.BatisRealUserRepository;
 import com.example.yeondodemo.repository.user.batis.BatisUserRepository;
+import com.example.yeondodemo.service.login.TokenType;
 import com.example.yeondodemo.service.search.SearchService;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.Updater;
@@ -130,7 +131,7 @@ public class HTTPSearchTest {
         Workspace user2 = new Workspace(1L, "testtest");
         realUserRepository.saveWorkspace(email, user1);
         realUserRepository.saveWorkspace(email, user2);
-        jwt = provider.createJwt(email);
+        jwt = provider.createJwt(email, TokenType.ACCESS);
         studyFieldRepository.save("1234");
         studyFieldRepository.save("12345");
         studyFieldRepository.save("12346");

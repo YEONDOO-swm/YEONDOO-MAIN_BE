@@ -11,7 +11,7 @@ public class QueryHistory {
     private Long workspaceId;
     private String paperid;
     private String content;
-    private Integer idx;
+    private Long idx;
     private boolean who;
 
     private Float totalTokens;
@@ -19,14 +19,14 @@ public class QueryHistory {
     private Float completionTokens;
     private Float totalCost;
 
-    public QueryHistory(Long workspaceId, String paperid, int idx, boolean who, String content){
+    public QueryHistory(Long workspaceId, String paperid, long idx, boolean who, String content){
         this.workspaceId = workspaceId;
         this.paperid = paperid;
         this.idx = idx;
         this.content = content;
         this.who = who;
     }
-    public QueryHistory(Long workspaceId, String paperid, int idx, boolean who, PythonQuestionResponse response){
+    public QueryHistory(Long workspaceId, String paperid, long idx, boolean who, PythonQuestionResponse response){
         this.workspaceId = workspaceId;
         this.paperid = paperid;
         this.idx = idx;

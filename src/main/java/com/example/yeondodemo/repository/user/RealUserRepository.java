@@ -11,4 +11,5 @@ public interface RealUserRepository {
     List<Workspace> findAll();
     String exist(String email);
     void saveWorkspace(String email, Workspace workspace);
+    void updateWorkspaceValidity(Long workspaceId);
 }

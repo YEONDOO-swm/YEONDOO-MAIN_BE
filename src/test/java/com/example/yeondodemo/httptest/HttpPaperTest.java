@@ -21,6 +21,7 @@ import com.example.yeondodemo.repository.user.batis.BatisRealUserRepository;
 import com.example.yeondodemo.repository.user.batis.BatisUserRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
+import com.example.yeondodemo.service.login.TokenType;
 import com.example.yeondodemo.service.search.PaperService;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.Updater;
@@ -133,7 +134,7 @@ public class HttpPaperTest {
         Workspace user2 = new Workspace(1L, "testtest");
         realUserRepository.saveWorkspace(email, user1);
         realUserRepository.saveWorkspace(email, user2);
-        jwt = provider.createJwt(email);
+        jwt = provider.createJwt(email, TokenType.ACCESS);
         WorkspaceValidator.login.put(jwt, new HashSet<Long>());
         WorkspaceValidator.login.get(jwt).add(0L);
         WorkspaceValidator.login.get(jwt).add(1L);

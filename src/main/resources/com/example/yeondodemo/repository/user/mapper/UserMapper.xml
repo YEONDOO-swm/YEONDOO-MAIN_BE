@@ -4,13 +4,15 @@
 <mapper namespace="com.example.yeondodemo.repository.user.mapper.UserMapper">
 
     <insert id="save">
-        insert into WORKSPACE (workspaceId,description, title, studyField)
-        values (#{saveParam.workspaceId}, #{saveParam.description}, #{saveParam.title}, #{saveParam.studyField})
+        insert into WORKSPACE (workspaceId,description, title, studyField, editDate)
+        values (#{saveParam.workspaceId}, #{saveParam.description}, #{saveParam.title}, #{saveParam.studyField},  CURRENT_TIME)
     </insert>
     <update id="update">
         update WORKSPACE
-        set isfirst=#{updateParam.isFirst},
-            studyField = #{updateParam.studyField}
+        set description=#{updateParam.description},
+            title = #{updateParam.title},
+            studyField = #{updateParam.studyField},
+            editDate = CURRENT_TIME
         where workspaceId = #{updateParam.workspaceId}
     </update>
     <select id="clearStore" >
@@ -21,5 +23,14 @@
         SELECT *
         FROM WORKSPACE
         WHERE workspaceId = #{workspaceId}
+    </select>
+
+    <select id="findById" resultType="com.example.yeondodemo.entity.Workspace">
+        SELECT *
+        FROM WORKSPACE
+        WHERE workspaceId in
+        <foreach collection="workspaceIds" item="workspaceId" index="index" separator="," open="(" close=")" >
+            #{workspaceId}
+        </foreach>
     </select>
 </mapper>

@@ -5,20 +5,17 @@ import com.example.yeondodemo.entity.Workspace;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
- @Slf4j
+@Slf4j
 public class MemoryUserRepository implements UserRepository {
     private static final Map<Long, Workspace> store = new HashMap<>();
     private static final Map<Long, Long> name2id = new HashMap<>();
     private static Long sequence = 0L;
     @Override
-    public Workspace findById(Long id) {
+    public List<Workspace> findById(List<Long> id) {
         log.info("findByID: {}", id);
-        return store.get(id);
+        return null;
     }
     @Override
     public Workspace save(Workspace user){

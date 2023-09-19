@@ -8,5 +8,6 @@ import java.util.List;
 public interface KeywordMapper {
     void save(Long workspaceId, List<String> keywords);
     List<String> findByUsername(Long workspaceId);
+    void deleteByWorkspaceId(Long workspaceId);
 
 }
