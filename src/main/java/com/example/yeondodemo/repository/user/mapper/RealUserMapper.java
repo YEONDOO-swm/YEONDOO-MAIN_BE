@@ -11,4 +11,5 @@ public interface RealUserMapper {
     public Set<Long> findByName(String email);
     public String exist(String email);
     public void saveWorkspaceConnection(String email, Long workspaceId);
+    public void updateWorkspaceValidity(Long workspaceId);
 }

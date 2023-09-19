@@ -7,7 +7,9 @@ import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.dto.paper.Version;
 import com.example.yeondodemo.entity.Paper;
+import com.example.yeondodemo.entity.RefreshEntity;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
+import com.example.yeondodemo.repository.etc.RefreshRedisRepository;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
@@ -24,6 +26,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.opensearch.common.util.concurrent.ListenableFuture;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.*;
@@ -52,6 +55,8 @@ import java.rmi.server.RemoteRef;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 @Controller @RequiredArgsConstructor @Slf4j
 public class DbController {
     private final BatisAuthorRepository batisAuthorRepository;
@@ -60,6 +65,18 @@ public class DbController {
     private final BatisAuthorRepository authorRepository;
     private final PaperBufferRepository paperBufferRepository;
     private final PaperService paperService;
+    @Autowired
+    private RefreshRedisRepository repository;
+
+    @GetMapping("test/redis")
+    public ResponseEntity testRedis(){
+        String key = UUID.randomUUID().toString();
+        RefreshEntity refreshEntity = new RefreshEntity(key, "abcd1234");
+        repository.save(refreshEntity);
+        System.out.println(repository.findById(key));
+        repository.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     @GetMapping(value = "/getStreamFromFastAPI",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
     public Flux<ServerSentEvent<String>>  streamData() {

@@ -10,7 +10,7 @@ public interface QueryHistoryRepository {
     QueryHistory save(QueryHistory queryHistory);
     List<PaperHistory> findByUsernameAndPaperid(Long workspaceId, String paperid);
     List<PaperHistoryDTO> findByUsername(Long workspaceId);
-    Integer getLastIdx(Long workspaceId, String paperid);
+    Long getLastIdx(Long workspaceId, String paperid);
     List<PaperHistory> findByUsernameAndPaperIdOrderQA(Long workspaceId,String paperid);
     List<PaperHistory> findByUserAndIdOrderQA4Python(Long workspaceId, String paperIsd);
     PaperHistory findByUsernameAndId(Long workspaceId, Long id);

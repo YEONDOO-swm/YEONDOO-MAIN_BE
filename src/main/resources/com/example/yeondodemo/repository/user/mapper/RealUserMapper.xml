@@ -22,7 +22,12 @@
     <select id="findByName" resultType="Long">
         SELECT workspaceId
         FROM Workspaces
-        WHERE email = #{email}
+        WHERE email = #{email} and valid = 1;
     </select>
+    <update id="updateWorkspaceValidity">
+        update Workspaces
+        set valid = 0
+        where workspaceId = #{workspaceId}
+    </update>
 
 </mapper>

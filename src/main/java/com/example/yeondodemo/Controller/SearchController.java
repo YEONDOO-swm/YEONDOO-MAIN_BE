@@ -3,6 +3,7 @@ package com.example.yeondodemo.Controller;
 import com.example.yeondodemo.dto.LikeOnOffDTO;
 import com.example.yeondodemo.dto.SearchResultDTO;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
+import com.example.yeondodemo.filter.JwtValidation;
 import com.example.yeondodemo.service.search.SearchService;
 import com.example.yeondodemo.validation.PaperValidator;
 import com.example.yeondodemo.validation.SearchValidator;
@@ -37,7 +38,7 @@ public class SearchController {
         searchService.resultScore(paperResultRequest);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @PostMapping("/paperlikeonoff")
+    @PostMapping("/paperlikeonoff") @JwtValidation
     public ResponseEntity likeOnOff(@RequestHeader("Gauth") String jwt,@Validated @RequestBody LikeOnOffDTO likeOnOffDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             HttpStatus status = HttpStatus.UNAUTHORIZED;

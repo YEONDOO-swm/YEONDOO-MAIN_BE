@@ -17,7 +17,7 @@
 
 
 
-    <select id="getLastIdx" resultType="Integer">
+    <select id="getLastIdx" resultType="Long">
         select idx
         from QUERYHISTORY
         where paperId = #{paperId} and workspaceId= #{workspaceId}

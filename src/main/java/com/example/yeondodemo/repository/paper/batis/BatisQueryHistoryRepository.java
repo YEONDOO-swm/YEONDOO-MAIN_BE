@@ -32,7 +32,7 @@ public class BatisQueryHistoryRepository implements QueryHistoryRepository {
     }
 
     @Override
-    public Integer getLastIdx(Long workspaceId, String paperid) {
+    public Long getLastIdx(Long workspaceId, String paperid) {
         return queryHistoryMapper.getLastIdx(workspaceId, paperid);
     }
 

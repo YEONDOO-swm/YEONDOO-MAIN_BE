@@ -12,8 +12,10 @@ import com.example.yeondodemo.repository.user.*;
 import com.example.yeondodemo.dto.LoginUserDTO;
 import com.example.yeondodemo.dto.UserProfileDTO;
 import com.example.yeondodemo.repository.user.batis.BatisLikePaperRepository;
+import com.example.yeondodemo.repository.user.batis.BatisRealUserRepository;
 import com.example.yeondodemo.repository.user.batis.BatisUserRepository;
 import com.example.yeondodemo.service.login.LoginService;
+import com.example.yeondodemo.service.login.TokenType;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.Updater;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(LoginController.class)@AutoConfigureMybatis
-@AutoConfigureWebMvc @Import({RealUserRepository.class, JwtTokenProvider.class,Updater.class, BatisQueryHistoryRepository.class,BatisKeywordRepository.class, BatisSearchHistoryRepository.class, LoginService.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisPaperRepository.class, BatisLikePaperRepository.class})
+@AutoConfigureWebMvc @Import({BatisRealUserRepository.class, JwtTokenProvider.class,Updater.class, BatisQueryHistoryRepository.class,BatisKeywordRepository.class, BatisSearchHistoryRepository.class, LoginService.class, BatisUserRepository.class, BatisStudyFieldRepository.class, BatisPaperRepository.class, BatisLikePaperRepository.class})
 public class HttpLoginTest {
     @InjectMocks
     private LoginService loginService;
@@ -71,7 +73,7 @@ public class HttpLoginTest {
         Workspace user2 = new Workspace(1L, "testtest");
         realUserRepository.saveWorkspace(email, user1);
         realUserRepository.saveWorkspace(email, user2);
-        jwt = provider.createJwt(email);
+        jwt = provider.createJwt(email, TokenType.ACCESS);
     }
     @AfterEach
     public void afterEach(){

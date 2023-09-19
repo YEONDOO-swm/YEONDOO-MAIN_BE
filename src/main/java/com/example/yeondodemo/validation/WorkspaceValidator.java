@@ -21,6 +21,18 @@ public class WorkspaceValidator {
         login =  new ConcurrentHashMap<>();
     }
     public static boolean isValid(String jwt, Long workspaceId){
-        return login.get(jwt).contains(workspaceId);
+        Set<Long> userSet = login.get(jwt);
+        if(userSet != null){
+            return userSet.contains(workspaceId);
+        }
+        return false;
+    }
+    public static boolean logout(String jwt){
+        if(login.get(jwt)==null){
+            return false;
+        }else{
+            login.remove(jwt);
+            return true;
+        }
     }
 }

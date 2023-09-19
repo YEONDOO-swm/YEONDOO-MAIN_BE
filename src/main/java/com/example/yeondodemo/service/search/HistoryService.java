@@ -35,6 +35,12 @@ public class HistoryService {
         ret.put("results", results);
         return ret;
     }
+    public void historySearchRestoreTrash(Long workspaceId, List<String> papers){
+        for (String paper : papers) {
+            likePaperRepository.update(workspaceId, paper, true);
+            paperRepository.add(paper);
+        }
+    }
 
     public SearchResultDTO historySearchResult(Long workspaceId, Long rid){
         List<PaperSimpleIdTitleDTO> papers = searchHistoryRepository.findPapersById(rid);
@@ -51,12 +57,7 @@ public class HistoryService {
         List<PaperSimpleIdTitleDTO> papers =  likePaperRepository.findSimpleByUser(workspaceId);
         return new TrashContainerDTO(trashContainers, papers);
     }
-    public void historySearchRestoreTrash(Long workspaceId, List<String> papers){
-        for (String paper : papers) {
-            likePaperRepository.update(workspaceId, paper, true);
-            paperRepository.add(paper);
-        }
-    }
+
     public List<PaperHistoryDTO> historyPaper(Long workspaceId){
         return queryHistoryRepository.findByUsername(workspaceId);
     }

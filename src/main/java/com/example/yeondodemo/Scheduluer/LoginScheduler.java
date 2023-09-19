@@ -1,5 +1,6 @@
 package com.example.yeondodemo.Scheduluer;
 
+import com.example.yeondodemo.service.search.PaperService;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.validation.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
 @Component @Slf4j @RequiredArgsConstructor
 public class LoginScheduler {
     private final JwtTokenProvider provider;
+    private final PaperService paperService;
     @Scheduled(fixedDelay = 10000)
     public void loginGarbageCollector(){
         List<String> garbageList = new ArrayList<>();
@@ -25,5 +27,6 @@ public class LoginScheduler {
         for(String key:garbageList){
             WorkspaceValidator.login.remove(key);
         }
+        paperService.timeout();
     }
 }

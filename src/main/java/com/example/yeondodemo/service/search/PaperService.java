@@ -1,6 +1,7 @@
 package com.example.yeondodemo.service.search;
 
 import com.example.yeondodemo.dto.*;
+import com.example.yeondodemo.dto.paper.ExpiredKeyDTO;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;
 import com.example.yeondodemo.entity.Paper;
@@ -11,6 +12,7 @@ import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.utils.ConnectPythonServer;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +24,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service @RequiredArgsConstructor @Slf4j
 public class PaperService {
@@ -31,8 +34,32 @@ public class PaperService {
     private final PaperRepository paperRepository;
     private final LikePaperRepository likePaperRepository;
     private final BatisAuthorRepository authorRepository;
+    private Map<Long, ExpiredKeyDTO> answerIdMap;
     @Value("${python.address}")
     private String pythonapi;
+
+    @PostConstruct
+    public void init(){
+        answerIdMap = new ConcurrentHashMap<Long, ExpiredKeyDTO>();
+    }
+    public void timeout(){
+        List<Long>  timeoutList = new ArrayList<>();
+        for(Long key: answerIdMap.keySet()){
+            if (answerIdMap.get(key).getExpired()<System.currentTimeMillis()){
+                timeoutList.add(key);
+            }
+        }
+        for(Long key: timeoutList){
+            answerIdMap.remove(key);
+        }
+    }
+    public Long getResultId(Long key) throws IllegalAccessError{
+        if (answerIdMap.get(key) != null){
+            return answerIdMap.get(key).getRid();
+        }else{
+            throw new IllegalAccessError("Invalid Access Key");
+        }
+    }
     @Transactional
     public Map getPaperQuestion(String paperid, Long workspaceId, String query){
         List<PaperHistory> paperHistories = queryHistoryRepository.findByUserAndIdOrderQA4Python(workspaceId, paperid);
@@ -48,8 +75,8 @@ public class PaperService {
             }
         }
         PythonQuestionResponse answer = ConnectPythonServer.question(new PythonQuestionDTO(paperid, histories, query), pythonapi);
-        Integer idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
-        if(idx == null) {idx=0;}
+        Long idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
+        if(idx == null) {idx=0L;}
         queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
         queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
         Map<String, String> ret = new HashMap<>();
@@ -58,7 +85,7 @@ public class PaperService {
     }
 
     @Transactional
-    public Flux<ServerSentEvent<String>> getPaperQuestionStream(String paperid, Long workspaceId, String query){
+    public Flux<ServerSentEvent<String>> getPaperQuestionStream(String paperid, Long workspaceId, String query, Long key){
         List<PaperHistory> paperHistories = queryHistoryRepository.findByUserAndIdOrderQA4Python(workspaceId, paperid);
         List<List<String>>  histories = new ArrayList<>();
         List<String> t = null;
@@ -84,11 +111,13 @@ public class PaperService {
             return ServerSentEvent.builder(data).build();
         }).doOnComplete(
                        () -> {
-                           Integer idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
+                           Long idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
                            String answer = String.join("",answerList);
-                           if(idx == null) {idx=0;}
+                           if(idx == null) {idx=0L;}
                            queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
                            queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
+                           ExpiredKeyDTO expiredKeyDTO = new ExpiredKeyDTO(idx+2);
+                           answerIdMap.put(key, expiredKeyDTO);
                        }
                );
     }

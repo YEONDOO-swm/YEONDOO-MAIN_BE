@@ -41,4 +41,8 @@ public class BatisRealUserRepository implements RealUserRepository {
         userMapper.saveWorkspaceConnection(email, workspace.getWorkspaceId());
 
     }
+    @Override
+    public void updateWorkspaceValidity(Long workspaceId){
+        userMapper.updateWorkspaceValidity(workspaceId);
+    }
 }

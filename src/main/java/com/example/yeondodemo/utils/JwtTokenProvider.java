@@ -1,5 +1,6 @@
 package com.example.yeondodemo.utils;
 
+import com.example.yeondodemo.service.login.TokenType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,8 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
     public String secretKey;
     private Key key;
-    static long REFRESH_TOKEN_VALID_MILLISECOND = 3600000;
+    static long REFRESH_TOKEN_VALID_MILLISECOND = 172800000;
+    static long ACCESS_TOKEN_VALID_MILLISECOND = 360000;
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         this.secretKey = secretKey;
         this.key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
@@ -65,10 +67,16 @@ public class JwtTokenProvider {
         return parseClaims(token).getSubject();
     }
 
-    public String createJwt(String userPk) {
+    public String createJwt(String userPk, TokenType token) {
+        long expired = 0;
+        if(token==TokenType.ACCESS){
+            expired = ACCESS_TOKEN_VALID_MILLISECOND;
+        }else if(token ==TokenType.REFRESH){
+            expired = REFRESH_TOKEN_VALID_MILLISECOND;
+        }
         Claims claims = Jwts.claims().setSubject(userPk); // sub
         claims.setIssuedAt(new Date()); // iat
-        claims.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALID_MILLISECOND)); // exp
+        claims.setExpiration(new Date(System.currentTimeMillis() + expired)); // exp
 
         String jwt = Jwts.builder()
                 .setClaims(claims)
@@ -76,7 +84,6 @@ public class JwtTokenProvider {
                 .compact();
         return jwt;
     }
-
     private Claims parseClaims(String accessToken) {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
