@@ -39,7 +39,7 @@ out/
 ## log ##
 *.log
 *.gz
-**/src/main/resources/logback.xml
+**/src/main/**/*.xml
 ##propeties
 **/src/test/**/*.properties
 **/src/main/**/*.properties
