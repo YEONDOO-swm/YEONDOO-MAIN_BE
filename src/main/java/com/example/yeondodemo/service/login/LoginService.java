@@ -34,74 +34,30 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service @Slf4j  @RequiredArgsConstructor
 public class LoginService {
-    @Value("${spring.google.client_id}")
-    String clientId;
-    @Value("${spring.google.client_secret}")
-    String clientSecret;
     @Value("${jwt.secret}")
     String jwtSecret;
     private final RealUserRepository realUserRepository;
     private final JwtTokenProvider provider;
-    @Autowired
-    private final RefreshRedisRepository refreshRedisRepository;
+    private final ValidationService validationService;
     @Transactional
     public ResponseEntity updateRefreshToken(String jwt){
         log.info("Expried Token..");
         String email = provider.getUserName(jwt);
-        if(checkRefreshToken(jwt, email)){
-            return new ResponseEntity<>(setDefaultLoginSetting(email), HttpStatus.OK);
+        if(validationService.checkRefreshToken(jwt, email)){
+            return new ResponseEntity<>(validationService.setDefaultLoginSetting(email), HttpStatus.OK);
         }else{
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
     }
-    @Timer("Checking RefreshToken")
-    public boolean checkRefreshToken(String jwt,String key){
-        Optional<RefreshEntity> refreshEntity = refreshRedisRepository.findById(key);
-        if(refreshEntity.isPresent()){
-            RefreshEntity data = refreshEntity.get();
-            if(!data.getRefreshToken().equals(jwt) || data.getExpired() > System.currentTimeMillis()){
-                refreshRedisRepository.deleteById(key);
-                return false;
-            }
-            return true;
-        }else{
-            return false;
-        }
+
+    public HttpHeaders test(String email){
+        return validationService.setDefaultLoginSetting(email);
     }
 
-    @Timer("Google Authcode")
-    public String getJwtFromGoogle(String authCode, RestTemplate restTemplate){
-
-        GoogleRequest googleOAuthRequestParam = GoogleRequest
-                .builder()
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .code(authCode)
-                .redirectUri("postmessage")
-                .grantType("authorization_code").build();
-        ResponseEntity<GoogleResponse> response = restTemplate.postForEntity("https://oauth2.googleapis.com/token",
-                googleOAuthRequestParam, GoogleResponse.class);
-        return response.getBody().getId_token();
-    }
-
-    @Timer("Make jwt and saving to Redis")
-    public HttpHeaders setDefaultLoginSetting(String email){
-        String jwt = provider.createJwt(email, TokenType.ACCESS);
-        String refreshToken = provider.createJwt(email, TokenType.REFRESH);
-        RefreshEntity refreshEntity = new RefreshEntity(email,refreshToken);
-        refreshRedisRepository.save(refreshEntity);
-        Set<Long> userWorkspace = realUserRepository.findByName(email);
-        WorkspaceValidator.addLogin(jwt, userWorkspace);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Gauth", jwt);
-        headers.add("RefreshToken", refreshToken);
-        log.info("User {}'s workspaces: {}", email, userWorkspace);
-        return headers;
-    }
     @Transactional
     public ResponseEntity googleLogin(String authCode){
         RestTemplate restTemplate = new RestTemplate();
-        String jwtToken=getJwtFromGoogle(authCode, restTemplate);
+        String jwtToken=validationService.getJwtFromGoogle(authCode, restTemplate);
         Map<String, String> map=new HashMap<>();
         map.put("id_token",jwtToken);
         ResponseEntity<GoogleInfoResponse> infoResponse = restTemplate.postForEntity("https://oauth2.googleapis.com/tokeninfo",
@@ -113,7 +69,7 @@ public class LoginService {
         }
         Map ret = new HashMap<String, String>();
         ret.put("username", name);
-        return new ResponseEntity<>(ret, setDefaultLoginSetting(email), HttpStatus.OK);
+        return new ResponseEntity<>(ret, validationService.setDefaultLoginSetting(email), HttpStatus.OK);
     }
 
 }
