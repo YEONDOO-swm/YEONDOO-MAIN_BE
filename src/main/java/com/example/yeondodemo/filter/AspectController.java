@@ -77,19 +77,5 @@ public class AspectController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
-    @Around("@annotation(timer)")
-    public Object doTimer(ProceedingJoinPoint joinPoint, Timer timer) throws  Throwable{
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
-        // joinPoint.proceed() -> 실질적인 method 실행
-        Object result = joinPoint.proceed();
-
-        // 실행 후
-        stopWatch.stop();
-        // 총 걸린 시간 (초단위)
-        log.info("{} total time : {}",timer.value(), + stopWatch.getTotalTimeSeconds());
-        return result;
-    }
 
 }
