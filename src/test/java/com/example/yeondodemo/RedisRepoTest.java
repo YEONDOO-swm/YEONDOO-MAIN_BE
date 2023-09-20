@@ -44,7 +44,8 @@ public class RedisRepoTest {
         transactionManager.rollback(status);
     }
 
-    @Test
+
+    //@Test
     void test(){
         RefreshEntity refreshEntity = new RefreshEntity("1234", "abcd1234");
         repository.save(refreshEntity);

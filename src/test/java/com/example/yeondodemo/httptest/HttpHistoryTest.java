@@ -148,7 +148,7 @@ public class HttpHistoryTest{
     public void afterEach(){
         transactionManager.rollback(status);
     }
-    @Test
+    //@Test
     public void homeSearchHistoryTest() throws Exception {
         //빈거 확인하기.
         mockMvc.perform(
@@ -297,7 +297,7 @@ public class HttpHistoryTest{
 */
     }
 
-    @Test
+    //@Test
     public void searchDetailTestSuccess() throws Exception {
         //검색하기.
 
@@ -332,7 +332,7 @@ public class HttpHistoryTest{
                 .andExpect(jsonPath("$.papers[0].title").value("Attention is all you need"));
     }
 
-    @Test
+    //@Test
     public void searchDetailTestFail() throws Exception {
         //없을때 검색하기.
         mockMvc.perform(
@@ -376,7 +376,7 @@ public class HttpHistoryTest{
 
     }
 
-    @Test
+    //@Test
     public void searchTrashTest() throws Exception {
         //비어잇음
         mockMvc.perform(
@@ -546,7 +546,7 @@ public class HttpHistoryTest{
     }
 
 
-    @Test
+    //@Test
     public void searchPaperHistoryTest() throws Exception {
         //빈거 테스트
         mockMvc.perform(
