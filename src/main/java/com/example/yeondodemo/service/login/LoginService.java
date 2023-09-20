@@ -6,6 +6,7 @@ import com.example.yeondodemo.dto.login.GoogleRequest;
 import com.example.yeondodemo.dto.login.GoogleResponse;
 import com.example.yeondodemo.entity.RefreshEntity;
 import com.example.yeondodemo.entity.Workspace;
+import com.example.yeondodemo.filter.Timer;
 import com.example.yeondodemo.repository.etc.KeywordRepository;
 import com.example.yeondodemo.repository.etc.RefreshRedisRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
@@ -53,6 +54,7 @@ public class LoginService {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
     }
+    @Timer("Checking RefreshToken")
     public boolean checkRefreshToken(String jwt,String key){
         Optional<RefreshEntity> refreshEntity = refreshRedisRepository.findById(key);
         if(refreshEntity.isPresent()){
@@ -66,7 +68,10 @@ public class LoginService {
             return false;
         }
     }
+
+    @Timer("Google Authcode")
     public String getJwtFromGoogle(String authCode, RestTemplate restTemplate){
+
         GoogleRequest googleOAuthRequestParam = GoogleRequest
                 .builder()
                 .clientId(clientId)
@@ -78,6 +83,8 @@ public class LoginService {
                 googleOAuthRequestParam, GoogleResponse.class);
         return response.getBody().getId_token();
     }
+
+    @Timer("Make jwt and saving to Redis")
     public HttpHeaders setDefaultLoginSetting(String email){
         String jwt = provider.createJwt(email, TokenType.ACCESS);
         String refreshToken = provider.createJwt(email, TokenType.REFRESH);
