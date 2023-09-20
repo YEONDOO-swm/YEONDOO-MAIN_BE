@@ -66,6 +66,10 @@ dependencies {
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    //logging
+    implementation 'org.slf4j:slf4j-api:1.7.21'
+    implementation 'ca.pjer:logback-awslogs-appender:1.1.1'
+
 
 }
 
