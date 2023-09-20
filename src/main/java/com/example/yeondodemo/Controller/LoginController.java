@@ -53,7 +53,7 @@ public class LoginController {
     }
     @GetMapping("/test")
     public ResponseEntity testJoin(){
-        HttpHeaders headers = loginService.setDefaultLoginSetting("syleelsw@snu.ac.kr");
+        HttpHeaders headers = loginService.test("syleelsw@snu.ac.kr");
         return new ResponseEntity(headers,HttpStatus.OK);
     }
 
