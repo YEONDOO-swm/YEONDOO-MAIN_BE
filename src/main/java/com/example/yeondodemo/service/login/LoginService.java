@@ -44,24 +44,22 @@ public class LoginService {
         log.info("Expried Token..");
         String email = provider.getUserName(jwt);
         if(validationService.checkRefreshToken(jwt, email)){
-            return new ResponseEntity<>(validationService.setDefaultLoginSetting(email), HttpStatus.OK);
+            String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
+            return new ResponseEntity<>(validationService.getHeaders(email, refresh), HttpStatus.OK);
         }else{
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
     }
 
     public HttpHeaders test(String email){
-        return validationService.setDefaultLoginSetting(email);
+        String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
+        return validationService.getHeaders(email, refresh);
     }
 
     @Transactional
     public ResponseEntity googleLogin(String authCode){
         RestTemplate restTemplate = new RestTemplate();
-        String jwtToken=validationService.getJwtFromGoogle(authCode, restTemplate);
-        Map<String, String> map=new HashMap<>();
-        map.put("id_token",jwtToken);
-        ResponseEntity<GoogleInfoResponse> infoResponse = restTemplate.postForEntity("https://oauth2.googleapis.com/tokeninfo",
-                map, GoogleInfoResponse.class);
+        ResponseEntity<GoogleInfoResponse> infoResponse = validationService.getResponseFromGoogle(authCode, restTemplate);
         String email=infoResponse.getBody().getEmail();
         String name = infoResponse.getBody().getName();
         if(realUserRepository.exist(email)==null){
@@ -69,7 +67,8 @@ public class LoginService {
         }
         Map ret = new HashMap<String, String>();
         ret.put("username", name);
-        return new ResponseEntity<>(ret, validationService.setDefaultLoginSetting(email), HttpStatus.OK);
+        String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
+        return new ResponseEntity<>(ret, validationService.getHeaders(email, refresh), HttpStatus.OK);
     }
 
 }

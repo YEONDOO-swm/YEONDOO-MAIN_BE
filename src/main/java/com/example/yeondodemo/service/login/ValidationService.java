@@ -1,5 +1,6 @@
 package com.example.yeondodemo.service.login;
 
+import com.example.yeondodemo.dto.login.GoogleInfoResponse;
 import com.example.yeondodemo.dto.login.GoogleRequest;
 import com.example.yeondodemo.dto.login.GoogleResponse;
 import com.example.yeondodemo.entity.RefreshEntity;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 @Service @RequiredArgsConstructor @Slf4j
@@ -30,7 +33,7 @@ public class ValidationService {
     @Value("${spring.google.client_secret}")
     String clientSecret;
     @Timer("Google Authcode")
-    public String getJwtFromGoogle(String authCode, RestTemplate restTemplate){
+    public ResponseEntity<GoogleInfoResponse> getResponseFromGoogle(String authCode, RestTemplate restTemplate){
 
         GoogleRequest googleOAuthRequestParam = GoogleRequest
                 .builder()
@@ -41,7 +44,11 @@ public class ValidationService {
                 .grantType("authorization_code").build();
         ResponseEntity<GoogleResponse> response = restTemplate.postForEntity("https://oauth2.googleapis.com/token",
                 googleOAuthRequestParam, GoogleResponse.class);
-        return response.getBody().getId_token();
+        String jwtToken = response.getBody().getId_token();
+        Map<String, String> map=new HashMap<>();
+        map.put("id_token",jwtToken);
+        return restTemplate.postForEntity("https://oauth2.googleapis.com/tokeninfo",
+                map, GoogleInfoResponse.class);
     }
     @Timer("Checking RefreshToken")
     public boolean checkRefreshToken(String jwt,String key){
@@ -58,12 +65,16 @@ public class ValidationService {
         }
     }
 
-    @Timer("Make jwt and saving to Redis")
-    public HttpHeaders setDefaultLoginSetting(String email){
-        String jwt = provider.createJwt(email, TokenType.ACCESS);
+    @Timer("saving to Redis")
+    public String makeRefreshTokenAndSaveToRedis(String email) {
         String refreshToken = provider.createJwt(email, TokenType.REFRESH);
-        RefreshEntity refreshEntity = new RefreshEntity(email,refreshToken);
+        RefreshEntity refreshEntity = new RefreshEntity(email, refreshToken);
         refreshRedisRepository.save(refreshEntity);
+        return refreshToken;
+    }
+     @Timer("getHeadersFromDB")
+     public HttpHeaders getHeaders(String email, String refreshToken){
+        String jwt = provider.createJwt(email, TokenType.ACCESS);
         Set<Long> userWorkspace = realUserRepository.findByName(email);
         WorkspaceValidator.addLogin(jwt, userWorkspace);
         HttpHeaders headers = new HttpHeaders();
