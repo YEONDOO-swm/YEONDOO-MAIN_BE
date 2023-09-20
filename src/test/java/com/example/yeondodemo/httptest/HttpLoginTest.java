@@ -80,21 +80,21 @@ public class HttpLoginTest {
         transactionManager.rollback(status);
     }
 
-    @Test
+    //@Test
     public void loginSuccessTest() throws Exception {
     }
-    @Test
+    //@Test
     public void loginFailNotPasswordNotMatch() throws Exception {
 
     }
-    @Test
+    //@Test
     public void loginFailNotPasswordValidationError() throws Exception {
     }
-    @Test
+    //@Test
     public void loginSuccessAndNotFirstCase() throws Exception {
 
     }
-    @Test
+    //@Test
     public void studyFieldTestSuccess() throws Exception {
         List<String> fields = new ArrayList<String>(Arrays.asList("abcd","abcd5","abcd6","abcd7"));
         /*mockMvc.perform(
@@ -111,7 +111,7 @@ public class HttpLoginTest {
                 .andDo(print());*/
 
     }
-    @Test
+    //@Test
     public void studyFieldTestFailNOTFOUND() throws Exception {
         /*mockMvc.perform(
                 get("http://localhost:8080/userprofile/api/testtest3")
@@ -119,7 +119,7 @@ public class HttpLoginTest {
                 status().isNotFound()
         ).andDo(print());*/
     }
-    @Test
+    //@Test
     public void studyFieldTestFailUNAUTHORIZED() throws Exception {
 /*        mockMvc.perform(
                 get("http://localhost:8080/api/userprofile/testtest2")
@@ -127,7 +127,7 @@ public class HttpLoginTest {
                 status().isUnauthorized()
         ).andDo(print());*/
     }
-    @Test
+    //@Test
     public void studyFieldPostSuccess() throws Exception {
         /*UserProfileDTO userProfileDTO = new UserProfileDTO();
         userProfileDTO.setStudyField("HI");
@@ -143,7 +143,7 @@ public class HttpLoginTest {
             status().isOk()
         ).andDo(print());*/
     }
-    @Test
+    //@Test
     public void studyFieldPostFailBadRequest() throws Exception {
         /*UserProfileDTO userProfileDTO = new UserProfileDTO();
         userProfileDTO.setStudyField("");
