@@ -54,3 +54,15 @@ jobs:
         --acl private \
         ./deploy.tar.gz \
         s3://yeondoobe-cicd/deploy.tar.gz  \
+      # Deploy
+      - name: Deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws deploy create-deployment \
+          --application-name yeondoo-BE \
+          --deployment-group-name BE-SERVER \
+          --file-exists-behavior OVERWRITE \
+          --s3-location bucket=yeondoobe-cicd,bundleType=zip,key=deploy.tar.gz \
+          --region ap-northeast-2
