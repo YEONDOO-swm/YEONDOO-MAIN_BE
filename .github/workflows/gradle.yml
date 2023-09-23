@@ -37,6 +37,12 @@ jobs:
     - name: Copy jar
       run: cp ./build/libs/*.jar ./dist/
 
+    - name: Copy yml
+      run: cp ./*.yml ./dist/
+
+    - name: Copy sh
+      run: cp -r ./scripts ./dist/
+
     - name: zip
       run: tar -zcvf deploy.tar.gz ./dist
 
