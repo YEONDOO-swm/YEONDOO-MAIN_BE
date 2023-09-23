@@ -66,6 +66,7 @@ jobs:
         --application-name yeondoo-BE \
         --deployment-config-name CodeDeployDefault.AllAtOnce \
         --deployment-group-name BE-SERVER \
+        --ignore-application-stop-failures \
         --file-exists-behavior OVERWRITE \
         --s3-location bucket=yeondoobe-cicd,bundleType=tar,key=deploy.tar.gz \
         --region ap-northeast-2

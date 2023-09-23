@@ -59,12 +59,15 @@ public class LoginService {
     @Transactional
     public ResponseEntity googleLogin(String authCode){
         RestTemplate restTemplate = new RestTemplate();
+        //트라이 익셉션. 
         ResponseEntity<GoogleInfoResponse> infoResponse = validationService.getResponseFromGoogle(authCode, restTemplate);
         String email=infoResponse.getBody().getEmail();
         String name = infoResponse.getBody().getName();
+
         if(realUserRepository.exist(email)==null){
             realUserRepository.save(email);
         }
+
         Map ret = new HashMap<String, String>();
         ret.put("username", name);
         String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
