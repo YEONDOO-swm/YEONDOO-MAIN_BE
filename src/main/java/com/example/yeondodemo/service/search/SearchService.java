@@ -62,7 +62,7 @@ public class SearchService {
 
     @Transactional
     public SearchResultDTO search(String query, Long workspaceId, Integer searchType){
-        StopWatch stopWatch = new StopWatch();\
+        StopWatch stopWatch = new StopWatch();
         SearchResultDTO searchResultDTO = new SearchResultDTO(query);
         PythonResultDTO pythonResultDTO = checkSearchResultCanCached(query, workspaceId, searchType);
         
