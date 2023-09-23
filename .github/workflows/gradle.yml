@@ -26,6 +26,12 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+
+    - uses: actions/checkout@v3
+    - run: touch ./src/main/resources/application.properties
+    - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
+    - run: cat ./src/main/resources/application.properties
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
@@ -33,6 +39,9 @@ jobs:
         
     - name: Make Directory
       run: mkdir dist
+      
+    - name: Copy properties
+      run: cp ./src/main/resources/application.properties ./dist/
 
     - name: Copy jar
       run: cp ./build/libs/*.jar ./dist/
@@ -44,7 +53,7 @@ jobs:
       run: cp -r ./scripts ./dist/
 
     - name: zip
-      run: tar -zcvf deploy.tar.gz ./dist
+      run: tar -zcvf deploy.tar.gz ./distz
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
