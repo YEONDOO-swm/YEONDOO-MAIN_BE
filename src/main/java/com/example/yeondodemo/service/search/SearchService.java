@@ -38,13 +38,11 @@ public class SearchService {
     public void resultScore(PaperResultRequest paperResultRequest){
         searchHistoryRepository.updateScore(paperResultRequest.getId(), paperResultRequest.getScore());
     }
-    @Transactional
-    public SearchResultDTO search(String query, Long workspaceId, Integer searchType){
-        StopWatch stopWatch = new StopWatch();
-        SearchResultDTO searchResultDTO = new SearchResultDTO(query);
+
+    public PythonResultDTO checkSearchResultCanCached(String query, Long workspaceId, Integer searchType){
         PythonResultDTO pythonResultDTO = null;
-        Long rid = searchHistoryRepository.canCached(workspaceId, query, searchType);
-        stopWatch.start("if ...");
+        Long rid = searchHistoryRepository.canCached(workspaceId, query, searchType); //마이에스큐엘 캐쉬여부 찾기. 레디스로 캐쉬 옮기기 
+
         if(rid > 0){
             log.info("cached.. ");
             List<PaperSimpleIdTitleDTO> paperTitles = searchHistoryRepository.findPapersById(rid);
@@ -56,9 +54,18 @@ public class SearchService {
             pythonResultDTO = new PythonResultDTO(answer, papers);
         }else{
             log.info("not cached.. ");
-            pythonResultDTO = ConnectPythonServer.request(query, searchType, pythonapi);
+            pythonResultDTO = ConnectPythonServer.request(query, searchType, pythonapi); //들어오게 정리. 변수명 직관적이게
         }
-        stopWatch.stop();
+        return pythonResultDTO;
+
+    }
+
+    @Transactional
+    public SearchResultDTO search(String query, Long workspaceId, Integer searchType){
+        StopWatch stopWatch = new StopWatch();
+        SearchResultDTO searchResultDTO = new SearchResultDTO(query);
+        PythonResultDTO pythonResultDTO = checkSearchResultCanCached(query, workspaceId, searchType);
+        
 
         stopWatch.start("Setting");
         searchResultDTO.setAnswer(pythonResultDTO.getAnswer());
@@ -69,6 +76,8 @@ public class SearchService {
         List<String> userSet = likePaperRepository.findByUser(workspace.getWorkspaceId());
         List<PaperSimpleIdTitleDTO> paperList = new ArrayList<>();
         stopWatch.stop();
+
+
         stopWatch.start("for ..");
         for (TestPython tPaper : papers) {
             Paper paper = paperRepository.findById(tPaper.getPaperId());
@@ -99,6 +108,7 @@ public class SearchService {
         log.info(stopWatch.prettyPrint());
         return searchResultDTO;
     }
+
     @Transactional
     public void likeonoff(LikeOnOffDTO likeOnOffDTO){
         Long workspaceId = likeOnOffDTO.getWorkspaceId();
