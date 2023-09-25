@@ -41,7 +41,7 @@ jobs:
         arguments: build
         
     - name: Make Directory
-      run: mkdir dist
+      run: mkdir -p dist/src/main/resources
       
     - name: Copy properties
       run: cp ./src/main/resources/application.properties ./dist/
