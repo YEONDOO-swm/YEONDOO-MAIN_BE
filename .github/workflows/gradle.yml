@@ -31,8 +31,6 @@ jobs:
     - run: touch ./src/main/resources/application.properties
     - run: echo "${{ secrets.APPLICATION }}" > ./src/main/resources/application.properties
     - run: cat ./src/main/resources/application.properties
-
-    - uses: actions/checkout@v3
     - run: touch ./src/main/resources/logback.xml
     - run: echo "${{ secrets.LOGBACK }}" > ./src/main/resources/logback.xml
     - run: cat ./src/main/resources/logback.xml
@@ -47,7 +45,6 @@ jobs:
       
     - name: Copy properties
       run: cp ./src/main/resources/application.properties ./dist/
-
 
     - name: Copy Log
       run: cp ./src/main/resources/logback.xml ./dist/src/main/resources/logback.xml
