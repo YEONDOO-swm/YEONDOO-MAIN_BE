@@ -1,5 +1,6 @@
 package com.example.yeondodemo.repository.user.mapper;
 
+import com.example.yeondodemo.dto.workspace.WorkspacePutDTO;
 import com.example.yeondodemo.entity.Workspace;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,5 +14,5 @@ public interface UserMapper {
     public Workspace findByName(Long workspaceId);
     public List<Workspace> findById(List<Long> workspaceIds);
     public void clearStore();
-    public void update(@Param("updateParam") Workspace workspace);
+    public void update(@Param("updateParam") WorkspacePutDTO workspace);
 }

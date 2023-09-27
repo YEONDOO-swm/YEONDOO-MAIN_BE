@@ -1,5 +1,6 @@
 package com.example.yeondodemo.repository.user;
 
+import com.example.yeondodemo.dto.workspace.WorkspacePutDTO;
 import com.example.yeondodemo.entity.Workspace;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +14,5 @@ public interface UserRepository  {
     public List<Workspace> findAll();
     public Workspace findByName(Long name);
     public void clearStore();
-    public Workspace update(Workspace user);
+    public WorkspacePutDTO update(WorkspacePutDTO user);
 }

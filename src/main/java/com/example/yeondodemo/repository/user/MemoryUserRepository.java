@@ -1,6 +1,7 @@
 package com.example.yeondodemo.repository.user;
 
 
+import com.example.yeondodemo.dto.workspace.WorkspacePutDTO;
 import com.example.yeondodemo.entity.Workspace;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -47,7 +48,7 @@ public class MemoryUserRepository implements UserRepository {
         name2id.clear();
     }
     @Override
-    public Workspace update(Workspace user){
+    public WorkspacePutDTO update(WorkspacePutDTO user){
         return user;
     }
 }

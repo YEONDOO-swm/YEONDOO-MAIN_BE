@@ -1,5 +1,6 @@
 package com.example.yeondodemo.Controller;
 
+import com.example.yeondodemo.dto.workspace.WorkspacePutDTO;
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.filter.JwtValidation;
 import com.example.yeondodemo.filter.WorkspaceAdd;
@@ -40,7 +41,7 @@ public class WorkspaceController {
     }
 
     @PutMapping("/workspaceCRUD")
-    public ResponseEntity putWorkspace(@RequestHeader("Gauth") String jwt,@RequestParam Long workspaceId, @RequestBody Workspace workspace){
+    public ResponseEntity putWorkspace(@RequestHeader("Gauth") String jwt,@RequestParam Long workspaceId, @RequestBody WorkspacePutDTO workspace){
         workspaceService.updateWorkspace(workspace);
         return new ResponseEntity<>(HttpStatus.OK);
 

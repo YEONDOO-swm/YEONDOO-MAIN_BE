@@ -1,5 +1,6 @@
 package com.example.yeondodemo.repository.user.batis;
 
+import com.example.yeondodemo.dto.workspace.WorkspacePutDTO;
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.etc.mapper.KeywordMapper;
 import com.example.yeondodemo.repository.user.UserRepository;
@@ -42,7 +43,7 @@ public class BatisUserRepository implements UserRepository {
     }
 
     @Override
-    public Workspace update(Workspace user) {
+    public WorkspacePutDTO update(WorkspacePutDTO user) {
         userMapper.update(user);
         keywordMapper.deleteByWorkspaceId(user.getWorkspaceId());
         keywordMapper.save(user.getWorkspaceId(), user.getKeywords());

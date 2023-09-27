@@ -1,9 +1,6 @@
 package com.example.yeondodemo.service;
 
-import com.example.yeondodemo.dto.workspace.GetWorkspaceMetaDTO;
-import com.example.yeondodemo.dto.workspace.UserSpaceDTO;
-import com.example.yeondodemo.dto.workspace.UserSpaceResponseDTO;
-import com.example.yeondodemo.dto.workspace.WorkspaceEnterDTO;
+import com.example.yeondodemo.dto.workspace.*;
 import com.example.yeondodemo.entity.Keywords;
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.etc.KeywordRepository;
@@ -29,7 +26,7 @@ public class WorkspaceService {
     private final RealUserRepository realUserRepository;
     private final JwtTokenProvider provider;
     @Transactional
-    public void updateWorkspace(Workspace workspace){
+    public void updateWorkspace(WorkspacePutDTO workspace){
         userRepository.update(workspace);
     }
     public WorkspaceEnterDTO getWorkspaceHome(Long workspaceId){
@@ -78,6 +75,7 @@ public class WorkspaceService {
         ret.put("workspaceId", key);
         ret.put("editDate", new Date());
         WorkspaceValidator.login.get(jwt).add(key);
+        log.info("long sate: {}", WorkspaceValidator.login.get(jwt).toString());
         return ret;
     }
     @Transactional
