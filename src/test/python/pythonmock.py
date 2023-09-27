@@ -67,8 +67,10 @@ async def post_chat(data: PythonQuestionDTO):
         content=generate_chunks_default(),
         media_type="text/plain;charset=utf-8"
     )
-@app.get("/process")
-def process_query(question: str, searchType: int):
+
+
+@app.get("/papers")
+def process_query(question: str):
     print(question)
     if searchType == 1: #searchType 1: Searching title,
         ret = {

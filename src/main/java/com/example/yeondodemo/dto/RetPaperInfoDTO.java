@@ -11,8 +11,8 @@ import java.util.List;
 public class RetPaperInfoDTO {
     private DetailPaperInfo paperInfo;
     private List<PaperHistory> paperHistory;
-    public RetPaperInfoDTO(Paper paper, PythonPaperInfoDTO pythonPaperInfoDTO, List<PaperHistory> paperHistories){
+    public RetPaperInfoDTO(Paper paper, String welcomeAnswer, List<PaperHistory> paperHistories){
         this.paperHistory = paperHistories;
-        this.paperInfo = new DetailPaperInfo(paper, pythonPaperInfoDTO);
+        this.paperInfo = new DetailPaperInfo(paper, welcomeAnswer);
     }
 }

@@ -7,5 +7,5 @@ import java.util.List;
 public interface PaperInfoRepository {
     public PaperInfo save(PaperInfo paperInfo);
     public void update(int id, String content);
-    public List<String> findByPaperIdAndType(String paperid, String infotype);
+    public String findByPaperIdAndType(String paperid, String infotype);
 }

@@ -103,7 +103,7 @@ public class PaperService {
 
        return WebClient.create()
                 .post()
-                .uri(pythonapi + "/question")
+                .uri(pythonapi + "/chat")
                 .body(Mono.just(new PythonQuestionDTO(paperid, histories, query)), PythonQuestionDTO.class)
                 .retrieve()
                 .bodyToFlux(String.class).map(data -> {
@@ -136,25 +136,26 @@ public class PaperService {
 //        }
         paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
     }
+
+    public void updateInfoRepositoryV2(String pythonPaperInfoDTO, String paperid){
+        paperInfoRepository.save(new PaperInfo(paperid, "welcomeAnswer", pythonPaperInfoDTO));
+        paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
+    }
     @Transactional
     public RetPaperInfoDTO getPaperInfo(String paperid, Long workspaceId){
         log.info("getPaperInfo... ");
         if((!paperBufferRepository.isHit(paperid))){
             //goto python server and get data
             log.info("go to python server.... ");
-            PythonPaperInfoDTO pythonPaperInfoDTO = ConnectPythonServer.requestPaperInfo(paperid, pythonapi);
+            String pythonPaperInfoDTO = ConnectPythonServer.requestPaperInfo(paperid, pythonapi);
 
             log.info("python return : {}", pythonPaperInfoDTO);
             if(pythonPaperInfoDTO == null) {
                 return null;
             }
-            updateInfoRepository(pythonPaperInfoDTO, paperid);
+            updateInfoRepositoryV2(pythonPaperInfoDTO, paperid);
         };
-        PythonPaperInfoDTO pythonPaperInfoDTO = new PythonPaperInfoDTO();
-        pythonPaperInfoDTO.setInsights(paperInfoRepository.findByPaperIdAndType(paperid, "insight"));
-        // pythonPaperInfoDTO.setReferences(paperInfoRepository.findByPaperIdAndType(paperid, "reference"));
-        pythonPaperInfoDTO.setQuestions(paperInfoRepository.findByPaperIdAndType(paperid, "question"));
-        pythonPaperInfoDTO.setSubjectRecommends(paperInfoRepository.findByPaperIdAndType(paperid, "subjectrecommend"));
+        String pythonPaperInfoDTO = paperInfoRepository.findByPaperIdAndType(paperid, "welcomeAnswer");
         Paper paper = paperRepository.findById(paperid);
         RetPaperInfoDTO paperInfoDTO = new RetPaperInfoDTO(paper, pythonPaperInfoDTO, queryHistoryRepository.findByUsernameAndPaperIdOrderQA(workspaceId, paperid));
         if(likePaperRepository.isLike(workspaceId, paperid)){paperInfoDTO.getPaperInfo().setIsLike(true);};

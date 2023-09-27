@@ -25,21 +25,21 @@ public class ConnectPythonServer {
         HttpHeaders httpHeaders = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<PythonResultDTO> response = restTemplate.exchange(
-                pythonApiServer + "/process?question="+query + "&searchType=" + searchType,
+                pythonApiServer + "/papers?query="+query,
                 HttpMethod.GET,
                 new HttpEntity<>(httpHeaders),
                 PythonResultDTO.class
         );
         return response.getBody();
     }
-    public static PythonPaperInfoDTO requestPaperInfo(String paperid, String pythonApiServer){
+    public static String requestPaperInfo(String paperid, String pythonApiServer){
         HttpHeaders httpHeaders = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<PythonPaperInfoDTO> response = restTemplate.exchange(
-                pythonApiServer + "/getpaperinfo?paperId="+paperid,
+        ResponseEntity<String> response = restTemplate.exchange(
+                pythonApiServer + "/chat?paperId="+paperid,
                 HttpMethod.GET,
                 new HttpEntity<>(httpHeaders),
-                PythonPaperInfoDTO.class
+                String.class
         );
         return response.getBody();
     }

@@ -62,14 +62,15 @@ public class WorkspaceService {
     }
 
     @Transactional
-    public Map<String, Long> setWorkspace(String jwt, Workspace workspace){
+    public Map setWorkspace(String jwt, Workspace workspace){
         Long key = makeWorkspaceId();
         workspace.setWorkspaceId(key);
         String email = provider.getUserName(jwt);
         realUserRepository.saveWorkspace(email, workspace);
         keywordRepository.save(key, workspace.getKeywords());
-        Map<String, Long> ret = new HashMap<>();
+        Map ret = new HashMap<>();
         ret.put("workspaceId", key);
+        ret.put("editDate", new Date());
         WorkspaceValidator.login.get(jwt).add(key);
         return ret;
     }

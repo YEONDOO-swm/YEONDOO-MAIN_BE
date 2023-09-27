@@ -12,5 +12,5 @@ import java.util.List;
 public interface PaperInfoMapper {
     void save(@Param("paperId") String paperId, @Param("saveParam") PaperInfo paperInfo);
     void update(@Param("id") int id, @Param("updateParam") String content);
-    List<String> findByPaperIdAndType(String paperid, String infotype); //info type can be insight, question, subjectrecommend, reference
+    String findByPaperIdAndType(String paperid, String infotype); //info type can be insight, question, subjectrecommend, reference
 }

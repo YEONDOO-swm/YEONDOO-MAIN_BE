@@ -54,6 +54,7 @@ public class ValidationService {
     public boolean checkRefreshToken(String jwt,String key){
         Optional<RefreshEntity> refreshEntity = refreshRedisRepository.findById(key);
         if(refreshEntity.isPresent()){
+            log.info("refresh Token data... {}", refreshEntity.get().toString());
             RefreshEntity data = refreshEntity.get();
             if(!data.getRefreshToken().equals(jwt) || data.getExpired() > System.currentTimeMillis()){
                 refreshRedisRepository.deleteById(key);

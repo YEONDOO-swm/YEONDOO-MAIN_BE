@@ -41,9 +41,10 @@ public class LoginService {
     private final ValidationService validationService;
     @Transactional
     public ResponseEntity updateRefreshToken(String jwt){
-        log.info("Expried Token..");
         String email = provider.getUserName(jwt);
+        log.info("Expried Token.. , email: {}", email);
         if(validationService.checkRefreshToken(jwt, email)){
+            log.info("Valid Expried Token.., email: {}", email);
             String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
             return new ResponseEntity<>(validationService.getHeaders(email, refresh), HttpStatus.OK);
         }else{

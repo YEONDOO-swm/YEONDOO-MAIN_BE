@@ -26,6 +26,7 @@ public class SearchController {
     @GetMapping("/homesearch")
     public ResponseEntity search(@RequestHeader("Gauth") String jwt,@RequestParam Long workspaceId,@RequestParam String query,  @RequestParam Integer searchType){
         //SearchType: 1: 논문 검색, 2: 개념 설명
+        searchType=1;
         if(SearchValidator.isNotValidateSearchQuery(query, searchType)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
         SearchResultDTO searchResultDTO = searchService.search(query, workspaceId, searchType);
         log.info("python search: {}",searchResultDTO.toString());

@@ -11,7 +11,8 @@ import java.util.List;
 @Getter @Setter @ToString
 public class WorkspaceEnterDTO {
     private List<PaperSimpleIdTitleDTO> recentlyPapers;
-    private List<PaperDTO> recommendedPapers;
+    private List<PaperDTO> recommendedPapers; //두개만
+
     private List<PaperDTO> recentlyTrends;
 
 }
