@@ -99,6 +99,8 @@ public class SearchService {
         stopWatch.stop();
         if(paperList == null || paperList.size() == 0){
             searchResultDTO.setAnswer("아니아니아니");
+        }else{
+            searchResultDTO.setAnswer("");
         }
         searchHistoryRepository.save(new SearchHistory(searchResultDTO, workspaceId, searchType));
         searchResultDTO.setId(searchHistoryRepository.getLastId());
