@@ -22,7 +22,6 @@ import static com.example.yeondodemo.validation.IntegrationValidator.inValidPape
 @RestController @Slf4j @RequiredArgsConstructor @RequestMapping("/api")
 public class SearchController {
     private final SearchService searchService;
-
     @GetMapping("/homesearch")
     public ResponseEntity search(@RequestHeader("Gauth") String jwt,@RequestParam Long workspaceId,@RequestParam String query){
         //SearchType: 1: 논문 검색, 2: 개념 설명

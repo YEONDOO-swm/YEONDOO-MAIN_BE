@@ -1,6 +1,7 @@
 package com.example.yeondodemo.service;
 
 import com.example.yeondodemo.dto.workspace.GetWorkspaceMetaDTO;
+import com.example.yeondodemo.dto.workspace.UserSpaceResponseDTO;
 import com.example.yeondodemo.dto.workspace.WorkspaceEnterDTO;
 import com.example.yeondodemo.entity.Keywords;
 import com.example.yeondodemo.entity.Workspace;
@@ -43,9 +44,15 @@ public class WorkspaceService {
             }
         }
     }
-    public List<Workspace> getUserSpaces(String jwt){
+    public Map getUserSpaces(String jwt){
         Set<Long> workspaceList = WorkspaceValidator.login.get(jwt);
-        return userRepository.findById(new ArrayList<>(workspaceList));
+        List<UserSpaceResponseDTO> workspaces = new ArrayList<>();
+        for(Workspace workspace: userRepository.findById(new ArrayList<>(workspaceList))){
+            workspaces.add(new UserSpaceResponseDTO(workspace));
+        }
+        Map ret = new HashMap();
+        ret.put("workspaces", workspaces);
+        return ret;
     }
 
     public GetWorkspaceMetaDTO getWorkspaceMeta(Long workspaceId){
