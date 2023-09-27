@@ -25,6 +25,7 @@ public class WorkspaceValidator {
         if(userSet != null){
             return userSet.contains(workspaceId);
         }
+        log.info("workspaceId is not valid");
         return false;
     }
     public static boolean logout(String jwt){
