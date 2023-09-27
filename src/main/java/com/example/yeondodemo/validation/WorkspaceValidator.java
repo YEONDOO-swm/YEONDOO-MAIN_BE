@@ -23,7 +23,7 @@ public class WorkspaceValidator {
     public static boolean isValid(String jwt, Long workspaceId){
         Set<Long> userSet = login.get(jwt);
         if(userSet != null){
-            log.info("there is no such workspaceId... {}", login)
+            log.info("there is no such workspaceId... {}", login);
             return userSet.contains(workspaceId);
         }
         log.info("workspaceId is not valid");
