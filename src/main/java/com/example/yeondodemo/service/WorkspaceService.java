@@ -4,8 +4,10 @@ import com.example.yeondodemo.dto.PaperDTO;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.dto.workspace.*;
 import com.example.yeondodemo.entity.Keywords;
+import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.etc.KeywordRepository;
+import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisRecentlyRepository;
 import com.example.yeondodemo.repository.paper.mapper.RecentlyPaperMapper;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
@@ -31,6 +33,7 @@ public class WorkspaceService {
     private final RealUserRepository realUserRepository;
     private final JwtTokenProvider provider;
     private final BatisRecentlyRepository recentlyRepository;
+    private final PaperRepository paperRepository;
     private Long MASK = 9007199254740991l;
     @Transactional
     public void updateWorkspace(WorkspacePutDTO workspace){
@@ -41,11 +44,41 @@ public class WorkspaceService {
         List<PaperSimpleIdTitleDTO> paperSimpleIdTitleDTOS = recentlyRepository.find3byWorkspaceId(workspaceId);
         List<PaperDTO> reccommendPapers = new ArrayList<>();
         List<TrendResponseDTO> recentlyTrends = new ArrayList<>();
+
         TrendResponseDTO trendResponseDTO = new TrendResponseDTO();
         trendResponseDTO.setTitle("forTest");
         trendResponseDTO.setUrl("test.test");
         trendResponseDTO.setYear(1999);
         recentlyTrends.add(trendResponseDTO);
+
+        trendResponseDTO.setTitle("forTest2");
+        trendResponseDTO.setUrl("test.test3");
+        trendResponseDTO.setYear(1999);
+        recentlyTrends.add(trendResponseDTO);
+
+        trendResponseDTO.setTitle("forTest3");
+        trendResponseDTO.setUrl("test.test3");
+        trendResponseDTO.setYear(1999);
+        recentlyTrends.add(trendResponseDTO);
+
+        trendResponseDTO.setTitle("forTest");
+        trendResponseDTO.setUrl("test.test");
+        trendResponseDTO.setYear(1999);
+        recentlyTrends.add(trendResponseDTO);
+
+        Paper paper = paperRepository.findById("1706.03762");
+        PaperDTO paperDTO = new PaperDTO(paper);
+        reccommendPapers.add(paperDTO);
+
+        paper = paperRepository.findById("1706.03761");
+        PaperDTO paperDTO2 = new PaperDTO(paper);
+        reccommendPapers.add(paperDTO2);
+
+        paper = paperRepository.findById("1706.03763");
+        PaperDTO paperDTO3 = new PaperDTO(paper);
+        reccommendPapers.add(paperDTO3);
+
+
         WorkspaceEnterDTO workspaceEnterDTO = new WorkspaceEnterDTO(paperSimpleIdTitleDTOS, reccommendPapers, recentlyTrends);
         return workspaceEnterDTO;
     }
