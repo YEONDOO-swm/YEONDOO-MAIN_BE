@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -77,7 +78,11 @@ public class WorkspaceService {
         keywordRepository.save(key, workspace.getKeywords());
         Map ret = new HashMap<>();
         ret.put("workspaceId", key);
-        ret.put("editDate", new Date());
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+        String formatted = df.format(new Date());
+        ret.put("editDate", formatted);
+
         WorkspaceValidator.login.get(jwt).add(key);
         log.info("long sate: {}", WorkspaceValidator.login.get(jwt).toString());
         return ret;
