@@ -35,12 +35,7 @@ public class WorkspaceService {
         return workspaceEnterDTO;
     }
     public Long makeWorkspaceId(){
-        while(true){
-            Long key = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
-            if(userRepository.findByName(key) == null){
-                return key;
-            }
-        }
+        return (UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE)+1;
     }
     public UserSpaceResponseDTO getUserSpaces(String jwt){
         Set<Long> workspaceList = WorkspaceValidator.login.get(jwt);
