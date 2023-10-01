@@ -72,7 +72,7 @@ public class DbController {
 
     private final WorkspaceService workspaceService;
 
-    @GetMapping("/workspaceEnter")
+    @GetMapping("api/workspaceEnter")
     public ResponseEntity getWorkspaceHome(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId){
         return new ResponseEntity(workspaceService.getWorkspaceHome(workspaceId), HttpStatus.OK);
     }
