@@ -41,6 +41,11 @@ public class WorkspaceService {
         List<PaperSimpleIdTitleDTO> paperSimpleIdTitleDTOS = recentlyRepository.find3byWorkspaceId(workspaceId);
         List<PaperDTO> reccommendPapers = new ArrayList<>();
         List<TrendResponseDTO> recentlyTrends = new ArrayList<>();
+        TrendResponseDTO trendResponseDTO = new TrendResponseDTO();
+        trendResponseDTO.setTitle("forTest");
+        trendResponseDTO.setUrl("test.test");
+        trendResponseDTO.setYear(1999);
+        recentlyTrends.add(trendResponseDTO);
         WorkspaceEnterDTO workspaceEnterDTO = new WorkspaceEnterDTO(paperSimpleIdTitleDTOS, reccommendPapers, recentlyTrends);
         return workspaceEnterDTO;
     }
