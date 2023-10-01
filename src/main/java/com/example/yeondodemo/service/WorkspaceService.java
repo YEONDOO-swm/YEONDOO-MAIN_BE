@@ -30,6 +30,7 @@ public class WorkspaceService {
     private final RealUserRepository realUserRepository;
     private final JwtTokenProvider provider;
     private final BatisRecentlyRepository recentlyRepository;
+    private Long MASK = 9007199254740991l;
     @Transactional
     public void updateWorkspace(WorkspacePutDTO workspace){
         userRepository.update(workspace);
@@ -43,7 +44,7 @@ public class WorkspaceService {
         return workspaceEnterDTO;
     }
     public Long makeWorkspaceId(){
-        return (UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE)+1;
+        return (UUID.randomUUID().getMostSignificantBits() & MASK)+1;
     }
     public UserSpaceResponseDTO getUserSpaces(String jwt){
         Set<Long> workspaceList = WorkspaceValidator.login.get(jwt);
