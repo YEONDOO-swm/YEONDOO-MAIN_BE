@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.paper.mapper.RecentlyPaperMapper">
+    <insert id="save">
+        insert into RECENTLY (workspaceId, paperId, readDate)
+        values (#{workspaceId},#{paperId}, CURRENT_TIMESTAMP)
+    </insert>
+    <select id="findbyworkspaceIdAndPaperId" resultType="String">
+        SELECT 'EXISTS'
+        FROM RECENTLY
+        WHERE paperId = #{paperId} and workspaceId = #{workspaceId};
+    </select>
+    <update id="updateByWorkspaceIdAndPaperId">
+        UPDATE RECENTLY
+        SET readDate = CURRENT_TIMESTAMP
+        WHERE paperId = #{paperId} and workspaceId = #{workspaceId};
+    </update>
+    <select id="find3byworkspaceId" resultType="com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO">
+        SELECT p.title, p.paperId
+        FROM PAPER as p
+        WHERE p.paperId IN
+              (SELECT * FROM
+        (
+            SELECT r.paperId
+            FROM RECENTLY as r
+            WHERE workspaceId = #{workspaceId}
+            ORDER BY readDate DESC
+            limit 3
+            ) as tmp);
+    </select>
+</mapper>
