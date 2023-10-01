@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UpdateController {
     private final LoginService loginService;
     @GetMapping("/token") @RefreshJwtValidation
-    public ResponseEntity updateToken(@RequestHeader("RefreshToken") String jwt){
+    public ResponseEntity updateToken(@RequestHeader("Refresh") String jwt){
         return loginService.updateRefreshToken(jwt);
     }
 }

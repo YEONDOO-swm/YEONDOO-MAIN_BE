@@ -5,6 +5,7 @@ import com.example.yeondodemo.dto.paper.ExpiredKeyDTO;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;
 import com.example.yeondodemo.entity.Paper;
+import com.example.yeondodemo.filter.ReadPaper;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperInfoRepository;
@@ -141,7 +142,7 @@ public class PaperService {
         paperInfoRepository.save(new PaperInfo(paperid, "welcomeAnswer", pythonPaperInfoDTO));
         paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
     }
-    @Transactional
+    @Transactional @ReadPaper
     public RetPaperInfoDTO getPaperInfo(String paperid, Long workspaceId){
         log.info("getPaperInfo... ");
         if((!paperBufferRepository.isHit(paperid))){

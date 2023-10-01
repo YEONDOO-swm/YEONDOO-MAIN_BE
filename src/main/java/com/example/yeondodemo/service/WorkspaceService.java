@@ -1,9 +1,13 @@
 package com.example.yeondodemo.service;
 
+import com.example.yeondodemo.dto.PaperDTO;
+import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.dto.workspace.*;
 import com.example.yeondodemo.entity.Keywords;
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.etc.KeywordRepository;
+import com.example.yeondodemo.repository.paper.batis.BatisRecentlyRepository;
+import com.example.yeondodemo.repository.paper.mapper.RecentlyPaperMapper;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.RealUserRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
@@ -25,13 +29,17 @@ public class WorkspaceService {
     private final StudyFieldRepository studyFieldRepository;
     private final RealUserRepository realUserRepository;
     private final JwtTokenProvider provider;
+    private final BatisRecentlyRepository recentlyRepository;
     @Transactional
     public void updateWorkspace(WorkspacePutDTO workspace){
         userRepository.update(workspace);
     }
     public WorkspaceEnterDTO getWorkspaceHome(Long workspaceId){
         //todo: 추천 로직 완료시 이부분 로직 짜기.
-        WorkspaceEnterDTO workspaceEnterDTO = new WorkspaceEnterDTO();
+        List<PaperSimpleIdTitleDTO> paperSimpleIdTitleDTOS = recentlyRepository.find3byWorkspaceId(workspaceId);
+        List<PaperDTO> reccommendPapers = new ArrayList<>();
+        List<TrendResponseDTO> recentlyTrends = new ArrayList<>();
+        WorkspaceEnterDTO workspaceEnterDTO = new WorkspaceEnterDTO(paperSimpleIdTitleDTOS, reccommendPapers, recentlyTrends);
         return workspaceEnterDTO;
     }
     public Long makeWorkspaceId(){

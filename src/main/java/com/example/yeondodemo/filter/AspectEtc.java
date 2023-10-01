@@ -1,11 +1,10 @@
 package com.example.yeondodemo.filter;
 
+import com.example.yeondodemo.repository.paper.batis.BatisRecentlyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -14,6 +13,7 @@ import org.springframework.util.StopWatch;
 @Component
 @Slf4j
 public class AspectEtc {
+    private final BatisRecentlyRepository recentlyRepository;
     @Pointcut("execution(* com.example.yeondodemo.service..*(..))")
     public void servicePointcut(){}
     @Around("servicePointcut() && @annotation(timer)")
@@ -29,5 +29,10 @@ public class AspectEtc {
         // 총 걸린 시간 (초단위)
         log.info("{} total time : {}",timer.value(), + stopWatch.getTotalTimeSeconds());
         return result;
+    }
+
+    @AfterReturning(pointcut= "servicePointcut() && args(paperId, workspaceId) && @annotation(ReadPaper)")
+    public void doService(String paperId, Long workspaceId) throws Throwable{
+        recentlyRepository.save(paperId, workspaceId);
     }
 }

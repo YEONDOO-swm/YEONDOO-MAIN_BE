@@ -14,6 +14,7 @@ import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
+import com.example.yeondodemo.service.WorkspaceService;
 import com.example.yeondodemo.service.search.PaperService;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -67,6 +68,14 @@ public class DbController {
     private final PaperService paperService;
     @Autowired
     private RefreshRedisRepository repository;
+
+
+    private final WorkspaceService workspaceService;
+
+    @GetMapping("/workspaceEnter")
+    public ResponseEntity getWorkspaceHome(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId){
+        return new ResponseEntity(workspaceService.getWorkspaceHome(workspaceId), HttpStatus.OK);
+    }
 
     @GetMapping("test/redis")
     public ResponseEntity testRedis(){

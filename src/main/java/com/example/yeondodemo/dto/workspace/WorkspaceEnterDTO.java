@@ -13,6 +13,11 @@ public class WorkspaceEnterDTO {
     private List<PaperSimpleIdTitleDTO> recentlyPapers;
     private List<PaperDTO> recommendedPapers; //두개만
 
-    private List<PaperDTO> recentlyTrends;
+    private List<TrendResponseDTO> recentlyTrends;
+    public WorkspaceEnterDTO(List<PaperSimpleIdTitleDTO> recentlyPapers, List<PaperDTO> recommendedPapers, List<TrendResponseDTO> recentlyTrends){
+        this.recentlyTrends = recentlyTrends;
+        this.recommendedPapers = recommendedPapers;
+        this.recentlyPapers = recentlyPapers;
+    }
 
 }

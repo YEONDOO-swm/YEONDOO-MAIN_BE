@@ -51,4 +51,5 @@ public class WorkspaceController {
         workspaceService.updateWorkspaceValidity(jwt, workspaceId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }
