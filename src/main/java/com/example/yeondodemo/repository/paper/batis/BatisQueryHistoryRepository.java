@@ -3,6 +3,7 @@ package com.example.yeondodemo.repository.paper.batis;
 import com.example.yeondodemo.dto.PaperHistory;
 import com.example.yeondodemo.dto.QueryHistory;
 import com.example.yeondodemo.dto.history.PaperHistoryDTO;
+import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.repository.history.mapper.QueryHistoryMapper;
 import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,11 @@ public class BatisQueryHistoryRepository implements QueryHistoryRepository {
     @Override
     public void updateScore(Long id, Integer score) {
         queryHistoryMapper.updateScore(id, score);
+    }
+
+    @Override
+    public void updateToken(Long id, Token token) {
+        queryHistoryMapper.updateToken(id, token);
     }
 
 

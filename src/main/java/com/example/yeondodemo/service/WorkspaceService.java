@@ -61,10 +61,6 @@ public class WorkspaceService {
         trendResponseDTO.setYear(1999);
         recentlyTrends.add(trendResponseDTO);
 
-        trendResponseDTO.setTitle("forTest");
-        trendResponseDTO.setUrl("test.test");
-        trendResponseDTO.setYear(1999);
-        recentlyTrends.add(trendResponseDTO);
 
         Paper paper = paperRepository.findById("1706.03762");
         PaperDTO paperDTO = new PaperDTO(paper);

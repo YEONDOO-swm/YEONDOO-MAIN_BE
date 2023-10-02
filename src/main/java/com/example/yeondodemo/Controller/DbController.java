@@ -6,6 +6,7 @@ import com.example.yeondodemo.dto.dbcontroll.AddStudyFieldDTO;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.dto.paper.Version;
+import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.RefreshEntity;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
@@ -71,6 +72,11 @@ public class DbController {
 
 
     private final WorkspaceService workspaceService;
+
+    @PostMapping("api/python/token")
+    public ResponseEntity storePythonToken(@RequestParam String key,@RequestParam Long historyId, @RequestBody Token track){
+        return paperService.storePythonToken(key, historyId, track);
+    }
 
     @GetMapping("api/workspaceEnter")
     public ResponseEntity getWorkspaceHome(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId){

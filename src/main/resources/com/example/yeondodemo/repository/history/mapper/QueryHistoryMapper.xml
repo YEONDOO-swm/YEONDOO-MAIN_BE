@@ -3,9 +3,12 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.yeondodemo.repository.history.mapper.QueryHistoryMapper">
 
-    <insert id="save">
-        insert into QUERYHISTORY (workspaceId,paperId, idx, content, who, totalCost, totalTokens, promptTokens, completionTokens)
-        values (#{workspaceId}, #{paperid}, #{idx}, #{content}, #{who}, #{totalCost}, #{totalTokens},#{promptTokens}, #{completionTokens})
+    <insert id="save" parameterType="com.example.yeondodemo.dto.QueryHistory">
+        insert into QUERYHISTORY (workspaceId,paperId, idx, content, who,  editDate)
+        values (#{workspaceId}, #{paperid}, #{idx}, #{content}, #{who}, CURRENT_DATE);
+        <selectKey keyProperty="id" resultType="Long">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
     </insert>
 
     <select id="findByUsernameAndPaperid" resultType="com.example.yeondodemo.dto.PaperHistory">
@@ -61,6 +64,15 @@
     <update id="updateScore">
         update QUERYHISTORY
         set score = #{score}
+        where id = #{id};
+    </update>
+
+    <update id="updateToken">
+        update QUERYHISTORY
+        set  totalCost= #{token.totalCost},
+             totalTokens= #{token.totalTokens},
+             promptTokens=#{token.promptTokens},
+             completionTokens=#{token.completionTokens}
         where id = #{id};
     </update>
 

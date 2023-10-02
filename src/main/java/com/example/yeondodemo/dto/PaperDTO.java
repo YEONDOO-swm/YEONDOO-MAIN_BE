@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString
@@ -20,9 +21,7 @@ public class PaperDTO {
     private int cites;
     private String summary;
     private String url;
-    public boolean getIslLike(){
-        return isLike;
-    }
+    private List<String> subject;
     public void setIsLike(boolean isLike){
         this.isLike = isLike;
     }
@@ -39,6 +38,12 @@ public class PaperDTO {
         this.cites=paper.getCites();
         this.url=paper.getUrl();
         this.summary = paper.getSummary();
+        this.subject = new ArrayList<>();
+        if(paper.getCategories()!=null){
+            for(String category: paper.getCategories().split(" ")){
+                this.subject.add(category);
+            }
+        }
     }
     public PaperDTO(TestPython testPython, PaperWithOutMeta paper){
         this.paperId = paper.getPaperId();

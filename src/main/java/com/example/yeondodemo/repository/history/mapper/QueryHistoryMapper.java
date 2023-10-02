@@ -3,6 +3,7 @@ package com.example.yeondodemo.repository.history.mapper;
 import com.example.yeondodemo.dto.PaperHistory;
 import com.example.yeondodemo.dto.QueryHistory;
 import com.example.yeondodemo.dto.history.PaperHistoryDTO;
+import com.example.yeondodemo.dto.python.Token;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -17,5 +18,6 @@ public interface QueryHistoryMapper {
     List<PaperHistory> findByUserAndIdOrderQA4Python(Long workspaceId, String paperIsd);
     PaperHistory findByUsernameAndId(Long workspaceId, Long id);
     void updateScore(Long id, Integer score);
+    void updateToken(Long id, Token token);
 
 }

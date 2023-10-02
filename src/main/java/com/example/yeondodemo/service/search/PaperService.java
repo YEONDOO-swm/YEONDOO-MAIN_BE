@@ -4,6 +4,7 @@ import com.example.yeondodemo.dto.*;
 import com.example.yeondodemo.dto.paper.ExpiredKeyDTO;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;
+import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.filter.ReadPaper;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
@@ -17,9 +18,12 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -38,6 +42,8 @@ public class PaperService {
     private Map<Long, ExpiredKeyDTO> answerIdMap;
     @Value("${python.address}")
     private String pythonapi;
+    @Value("${python.key}")
+    private String pythonKey;
 
     @PostConstruct
     public void init(){
@@ -60,6 +66,14 @@ public class PaperService {
         }else{
             throw new IllegalAccessError("Invalid Access Key");
         }
+    }
+    @Transactional
+    public ResponseEntity storePythonToken(String key,Long rid, Token track){
+        if(!key.equals(pythonKey)){
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
+        queryHistoryRepository.updateToken(rid, track);
+        return new ResponseEntity(HttpStatus.OK);
     }
     @Transactional
     public Map getPaperQuestion(String paperid, Long workspaceId, String query){
@@ -102,21 +116,26 @@ public class PaperService {
         //Flux<String> answerStream = ConnectPythonServer.questionStream(new PythonQuestionDTO(paperid, histories, query), pythonapi);
         List<String> answerList = new ArrayList<>();
 
-       return WebClient.create()
+        Long lastIdx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
+        final long idx = (lastIdx == null) ? 0l : lastIdx;
+        QueryHistory queryHistory = new QueryHistory(workspaceId, paperid, idx+1, true, query);
+        queryHistoryRepository.save(queryHistory);
+        log.info("History Id is... {}", queryHistory.getId());
+
+       return WebClient.create()//todo: 파이썬쪽 작업 완료되면 id추가해서 보내기.
                 .post()
                 .uri(pythonapi + "/chat")
                 .body(Mono.just(new PythonQuestionDTO(paperid, histories, query)), PythonQuestionDTO.class)
                 .retrieve()
                 .bodyToFlux(String.class).map(data -> {
-            answerList.add(data);
-            return ServerSentEvent.builder(data).build();
+                   int lastIndex = data.lastIndexOf("\n");
+                   String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
+                   answerList.add(trimmedData);
+                   return ServerSentEvent.builder(trimmedData).build();
         }).doOnComplete(
                        () -> {
-                           Long idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
                            String answer = String.join("",answerList);
-                           if(idx == null) {idx=0L;}
                            queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
-                           queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
                            ExpiredKeyDTO expiredKeyDTO = new ExpiredKeyDTO(idx+2);
                            answerIdMap.put(key, expiredKeyDTO);
                        }
