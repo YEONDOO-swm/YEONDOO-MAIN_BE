@@ -45,22 +45,12 @@ public class WorkspaceService {
         List<PaperDTO> reccommendPapers = new ArrayList<>();
         List<TrendResponseDTO> recentlyTrends = new ArrayList<>();
 
-        TrendResponseDTO trendResponseDTO = new TrendResponseDTO();
-        trendResponseDTO.setTitle("forTest");
-        trendResponseDTO.setUrl("test.test");
-        trendResponseDTO.setYear(1999);
-        recentlyTrends.add(trendResponseDTO);
-
-        trendResponseDTO.setTitle("forTest2");
-        trendResponseDTO.setUrl("test.test3");
-        trendResponseDTO.setYear(1999);
-        recentlyTrends.add(trendResponseDTO);
-
-        trendResponseDTO.setTitle("forTest3");
-        trendResponseDTO.setUrl("test.test3");
-        trendResponseDTO.setYear(1999);
-        recentlyTrends.add(trendResponseDTO);
-
+        TrendResponseDTO trendResponseDTO1 = new TrendResponseDTO("forTest",new Date(1999,8,22), "test.test1");
+        TrendResponseDTO trendResponseDTO2 = new TrendResponseDTO("forTest",new Date(2023,10,03), "test.test2");
+        TrendResponseDTO trendResponseDTO3 = new TrendResponseDTO("forTest",new Date(2029,10,22), "test.test3");
+        recentlyTrends.add(trendResponseDTO1);
+        recentlyTrends.add(trendResponseDTO2);
+        recentlyTrends.add(trendResponseDTO3);
 
         Paper paper = paperRepository.findById("1706.03762");
         PaperDTO paperDTO = new PaperDTO(paper);
@@ -85,6 +75,8 @@ public class WorkspaceService {
         Set<Long> workspaceList = WorkspaceValidator.login.get(jwt);
         List<UserSpaceDTO> workspaces = new ArrayList<>();
         for(Workspace workspace: userRepository.findById(new ArrayList<>(workspaceList))){
+            List<String> keywords = keywordRepository.findByUsername(workspace.getWorkspaceId());
+            workspace.setKeywords(keywords);
             workspaces.add(new UserSpaceDTO(workspace));
         }
         return new UserSpaceResponseDTO(workspaces);
