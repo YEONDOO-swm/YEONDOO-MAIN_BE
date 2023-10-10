@@ -22,7 +22,7 @@
             color= #{updateParam.color},
             comment= #{updateParam.comment},
             pageLabel = #{updateParam.pageLabel},
-            position = #{updateParam.positionString},
+            positionString = #{updateParam.positionString},
             dateCreated = #{updateParam.dateCreated},
             dateModified = #{updateParam.dateModified}
         where itemId = #{updateParam.itemId} AND workspaceId = #{updateParam.workspaceId} AND paperId = #{updateParam.paperId};
