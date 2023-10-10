@@ -17,14 +17,14 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        response.setHeader("Access-Control-Allow-Origin", "https://yeondoo.net");
+        response.setHeader("Access-Control-Allow-Origin", "https://yeondoo.net,https://reader.yeondoo.net");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods","*");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers",
                 "Origin, X-Requested-With, Content-Type, Accept, Authorization, Gauth, RefreshToken, refresh, Refresh");
         response.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-        response.setHeader("Access-Control-Expose-Headers","Gauth, RefreshToken, refresh, Refresh" );
+        response.setHeader("Access-Control-Expose-ㅇHeaders","Gauth, RefreshToken, refresh, Refresh" );
         if("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
         }else {
