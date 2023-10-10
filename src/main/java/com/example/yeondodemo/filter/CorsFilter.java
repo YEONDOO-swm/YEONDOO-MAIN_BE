@@ -16,8 +16,12 @@ public class CorsFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
-
-        response.setHeader("Access-Control-Allow-Origin", "https://yeondoo.net,https://reader.yeondoo.net");
+        String origin = request.getHeader("Origin");
+        if (origin != null && origin.equals("https://reader.yeondoo.net")) {
+            response.setHeader("Access-Control-Allow-Origin", "https://reader.yeondoo.net");
+        } else {
+            response.setHeader("Access-Control-Allow-Origin", "https://yeondoo.net");
+        }
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods","*");
         response.setHeader("Access-Control-Max-Age", "3600");
