@@ -4,7 +4,7 @@
 <mapper namespace="com.example.yeondodemo.repository.paper.item.mapper.ItemAnnotationMapper">
 
     <insert id="save" parameterType="com.example.yeondodemo.dto.paper.item.ItemAnnotation">
-        insert into ItemAnnotation (paperId, itemId, workspaceId, itemType, text, color, comment, pageLabel, positionString, dateCreated, dateModified)
+        insert into ITEMANNOTATION (paperId, itemId, workspaceId, itemType, text, color, comment, pageLabel, positionString, dateCreated, dateModified)
         values (#{paperId}, #{itemId}, #{workspaceId}, #{itemType}, #{text}, #{color}, #{comment}, #{pageLabel}, #{positionString}, #{dateCreated}, #{dateModified})
 
         <selectKey keyProperty="id" resultType="Long">
@@ -15,7 +15,7 @@
 
 
     <update id="update">
-        update ItemAnnotation
+        update ITEMANNOTATION
         set
             itemType =#{updateParam.itemType},
             text =#{updateParam.text},
@@ -30,7 +30,7 @@
 
     <select id="findByPaperIdAndWorkspaceId" resultType="com.example.yeondodemo.dto.paper.item.ItemAnnotation">
         select *
-        from ItemAnnotation
+        from ITEMANNOTATION
         where paperId = #{paperId} and workspaceId = #{workspaceId}
     </select>
 
@@ -38,11 +38,11 @@
 
     <select id="findByItemId" resultType="com.example.yeondodemo.dto.paper.item.ItemAnnotation">
         select *
-        from ItemAnnotation
+        from ITEMANNOTATION
         where itemId = #{itemId} AND workspaceId = #{workspaceId} AND paperId = #{paperId};
     </select>
     <delete id="delete">
-        DELETE FROM ItemAnnotation
+        DELETE FROM ITEMANNOTATION
         WHERE itemId = #{itemId} AND workspaceId = #{workspaceId} AND paperId = #{paperId};
     </delete>
 </mapper>

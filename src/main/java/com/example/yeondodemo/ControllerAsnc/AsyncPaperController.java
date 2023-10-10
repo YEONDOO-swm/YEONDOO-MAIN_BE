@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api/paper")
+//@RequestMapping("/api/paper")
 public class AsyncPaperController {
 
     private final PaperService paperService;

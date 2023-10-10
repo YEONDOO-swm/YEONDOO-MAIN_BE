@@ -27,9 +27,6 @@ public class HistoryService {
     private final PaperRepository paperRepository;
     private final QueryHistoryRepository queryHistoryRepository;
     public Map<String, List<SearchHistoryResponseDTO>> historySearch(Long workspaceId){
-        /*List<SearchHistoryResponseDTO> results = searchHistoryRepository.findByUsername(workspaceId);
-        List<PaperSimpleIdTitleDTO> papers =  likePaperRepository.findSimpleByUser(workspaceId);
-        return new HistorySearchDTO(results, papers);*/
         List<SearchHistoryResponseDTO> results = searchHistoryRepository.findByUsername(workspaceId);
         Map<String, List<SearchHistoryResponseDTO>> ret = new HashMap<>();
         ret.put("results", results);
