@@ -31,4 +31,8 @@ public class BatisPaperInfoRepository implements PaperInfoRepository {
         log.info("findbypaperidandtype, paperid: {} , type: {}", paperid, infotype);
         return paperInfoMapper.findByPaperIdAndType(paperid, infotype);
     }
+    @Override
+    public List<String> findManyByPaperIdAndType(String paperid, String infotype){
+        return paperInfoMapper.findManyByPaperIdAndType(paperid, infotype);
+    }
 }

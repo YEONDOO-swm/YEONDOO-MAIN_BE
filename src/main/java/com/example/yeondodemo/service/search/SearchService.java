@@ -65,7 +65,7 @@ public class SearchService {
         StopWatch stopWatch = new StopWatch();
         SearchResultDTO searchResultDTO = new SearchResultDTO(query);
         PythonResultDTO pythonResultDTO = checkSearchResultCanCached(query, workspaceId, searchType);
-        
+
 
         stopWatch.start("Setting");
         searchResultDTO.setAnswer(pythonResultDTO.getAnswer());
@@ -80,11 +80,14 @@ public class SearchService {
 
         stopWatch.start("for ..");
         for (TestPython tPaper : papers) {
+            //check and Save
             Paper paper = paperRepository.findById(tPaper.getPaperId());
             if(paper == null){
                 log.info("new Paper.. save..");
                 paper = new Paper(tPaper);
                 paperRepository.save(paper);
+
+                //set Author
                 for (String author : paper.getAuthors()) {
                     authorRepository.save(paper.getPaperId(), author);
                 }
@@ -102,9 +105,12 @@ public class SearchService {
         }else{
             searchResultDTO.setAnswer("");
         }
+
+        //save
         searchHistoryRepository.save(new SearchHistory(searchResultDTO, workspaceId, searchType));
         searchResultDTO.setId(searchHistoryRepository.getLastId());
         searchHistoryRepository.savePapers(paperList);
+
         log.info(stopWatch.shortSummary());
         log.info(String.valueOf(stopWatch.getTotalTimeMillis()));
         log.info(stopWatch.prettyPrint());

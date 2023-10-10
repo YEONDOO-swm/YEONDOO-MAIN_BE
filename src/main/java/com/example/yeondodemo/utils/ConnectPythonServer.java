@@ -4,7 +4,9 @@ import com.example.yeondodemo.dto.PythonPaperInfoDTO;
 import com.example.yeondodemo.dto.PythonQuestionDTO;
 import com.example.yeondodemo.dto.PythonResultDTO;
 import com.example.yeondodemo.dto.TestPython;
+import com.example.yeondodemo.dto.python.PaperPythonFirstResponseDTO;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;
+import com.example.yeondodemo.exceptions.TokenNotEnoughException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import org.springframework.http.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -32,17 +35,26 @@ public class ConnectPythonServer {
         );
         return response.getBody();
     }
-    public static String requestPaperInfo(String paperid, String pythonApiServer){
-        HttpHeaders httpHeaders = new HttpHeaders();
+    public static PaperPythonFirstResponseDTO requestPaperInfo(String paperid, String pythonApiServer){
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(
-                pythonApiServer + "/chat?paperId="+paperid,
-                HttpMethod.GET,
-                new HttpEntity<>(httpHeaders),
-                String.class
-        );
-        return response.getBody();
+        try {
+            ResponseEntity<PaperPythonFirstResponseDTO> response = restTemplate.exchange(
+                    pythonApiServer + "/chat?paperId=" + paperid,
+                    HttpMethod.GET,
+                    null,
+                    PaperPythonFirstResponseDTO.class
+            );
+            return response.getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().value() == 402) {
+                // 402 에러가 발생한 경우 처리할 코드
+                throw new TokenNotEnoughException("Not Enough Token");
+            }
+            // 다른 HTTP 클라이언트 오류 처리
+            throw e;
+        }
     }
+
     public static PythonQuestionResponse question(PythonQuestionDTO pythonQuestionDTO, String pythonApiServer){
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();

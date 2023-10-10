@@ -4,63 +4,40 @@ import com.example.yeondodemo.dto.PaperBuffer;
 import com.example.yeondodemo.dto.dbcontroll.AddAuthorDTO;
 import com.example.yeondodemo.dto.dbcontroll.AddStudyFieldDTO;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
-import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.dto.paper.Version;
 import com.example.yeondodemo.dto.python.Token;
-import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.RefreshEntity;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.etc.RefreshRedisRepository;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
-import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.service.WorkspaceService;
 import com.example.yeondodemo.service.search.PaperService;
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.opensearch.common.util.concurrent.ListenableFuture;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.socket.WebSocketMessage;
-import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient;
-import org.springframework.web.reactive.socket.client.WebSocketClient;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBodyReturnValueHandler;
 import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Schedulers;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.rmi.server.RemoteRef;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Controller @RequiredArgsConstructor @Slf4j
-public class DbController {
+public class YeondooDbController {
     private final BatisAuthorRepository batisAuthorRepository;
     private final StudyFieldRepository studyFieldRepository;
     private final PaperRepository paperRepository;
@@ -74,7 +51,7 @@ public class DbController {
     private final WorkspaceService workspaceService;
 
     @PostMapping("api/python/token")
-    public ResponseEntity storePythonToken(@RequestParam String key,@RequestParam Long historyId, @RequestBody Token track){
+    public ResponseEntity storePythonToken(@RequestParam String key,@RequestParam long historyId, @RequestBody Token track){
         return paperService.storePythonToken(key, historyId, track);
     }
 

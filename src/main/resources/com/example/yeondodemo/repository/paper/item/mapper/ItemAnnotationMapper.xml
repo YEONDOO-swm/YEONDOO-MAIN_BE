@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.paper.item.mapper.ItemAnnotationMapper">
+
+    <insert id="save" parameterType="com.example.yeondodemo.dto.paper.item.ItemAnnotation">
+        insert into ItemAnnotation (paperId, itemId, workspaceId, itemType, text, color, comment, pageLabel, positionString, dateCreated, dateModified)
+        values (#{paperId}, #{itemId}, #{workspaceId}, #{itemType}, #{text}, #{color}, #{comment}, #{pageLabel}, #{positionString}, #{dateCreated}, #{dateModified})
+
+        <selectKey keyProperty="id" resultType="Long">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+    </insert>
+
+
+
+    <update id="update">
+        update ItemAnnotation
+        set
+            itemType =#{updateParam.itemType},
+            text =#{updateParam.text},
+            color= #{updateParam.color},
+            comment= #{updateParam.comment},
+            pageLabel = #{updateParam.pageLabel},
+            position = #{updateParam.positionString},
+            dateCreated = #{updateParam.dateCreated},
+            dateModified = #{updateParam.dateModified}
+        where itemId = #{updateParam.itemId} AND workspaceId = #{updateParam.workspaceId} AND paperId = #{updateParam.paperId};
+    </update>
+
+    <select id="findByPaperIdAndWorkspaceId" resultType="com.example.yeondodemo.dto.paper.item.ItemAnnotation">
+        select *
+        from ItemAnnotation
+        where paperId = #{paperId} and workspaceId = #{workspaceId}
+    </select>
+
+
+
+    <select id="findByItemId" resultType="com.example.yeondodemo.dto.paper.item.ItemAnnotation">
+        select *
+        from ItemAnnotation
+        where itemId = #{itemId} AND workspaceId = #{workspaceId} AND paperId = #{paperId};
+    </select>
+    <delete id="delete">
+        DELETE FROM ItemAnnotation
+        WHERE itemId = #{itemId} AND workspaceId = #{workspaceId} AND paperId = #{paperId};
+    </delete>
+</mapper>

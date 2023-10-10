@@ -3,13 +3,11 @@ package com.example.yeondodemo.service;
 import com.example.yeondodemo.dto.PaperDTO;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.dto.workspace.*;
-import com.example.yeondodemo.entity.Keywords;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.etc.KeywordRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisRecentlyRepository;
-import com.example.yeondodemo.repository.paper.mapper.RecentlyPaperMapper;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.RealUserRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
@@ -69,7 +67,7 @@ public class WorkspaceService {
         return workspaceEnterDTO;
     }
     public Long makeWorkspaceId(){
-        return (UUID.randomUUID().getMostSignificantBits() & MASK)+1;
+        return UUID.randomUUID().getMostSignificantBits() & MASK;
     }
     public UserSpaceResponseDTO getUserSpaces(String jwt){
         Set<Long> workspaceList = WorkspaceValidator.login.get(jwt);

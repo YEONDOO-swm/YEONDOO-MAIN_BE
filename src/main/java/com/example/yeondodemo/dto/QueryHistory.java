@@ -36,6 +36,6 @@ public class QueryHistory {
         this.totalCost = response.getTrack().getTotalCost();
         this.promptTokens = response.getTrack().getPromptTokens();
         this.completionTokens = response.getTrack().getCompletionTokens();
-        this.totalTokens = response.getTrack().getTotalTokens();
+        //this.totalTokens = response.getTrack().getTotalTokens();
     }
 }

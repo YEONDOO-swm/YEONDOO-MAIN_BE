@@ -19,4 +19,11 @@
         from PAPERINFO
         where paperId = #{paperid} and infotype = #{infotype}
     </select>
+
+
+    <select id="findManyByPaperIdAndType" resultType="String">
+        select content
+        from PAPERINFO
+        where paperId = #{paperid} and infotype = #{infotype}
+    </select>
 </mapper>

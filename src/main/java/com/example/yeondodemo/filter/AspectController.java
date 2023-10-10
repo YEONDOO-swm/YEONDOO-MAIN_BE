@@ -1,21 +1,19 @@
 package com.example.yeondodemo.filter;
 
+import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.validation.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
-import org.opensearch.cluster.ClusterState;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpHeaders;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StopWatch;
 
 import java.util.Map;
 
@@ -24,7 +22,17 @@ import java.util.Map;
 public class AspectController {
     private final JwtTokenProvider provider;
     private Map login = WorkspaceValidator.login;
+    @Before("com.example.yeondodemo.filter.PointCuts.allController() && @annotation(ItemSetting) && args(jwt,workspaceId,paperId,paperItem,..)")
+    @Order(value = 2)
+    public void settingItem(String jwt, Long workspaceId, String paperId, ItemAnnotation paperItem) throws Throwable {
+        log.info("Aop: setting item");
+        paperItem.setPaperId(paperId);
+        paperItem.setWorkspaceId(workspaceId);
+        paperItem.setPositionString(paperItem.getPosition().toString());
+        log.info("Item complete: {}", paperItem);
+    }
     @Around("com.example.yeondodemo.filter.PointCuts.allController() && args(jwt,workspaceId,..)")
+    @Order(value = 1)
     public ResponseEntity<?> doFilter(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOP");
         if(provider.validateToken(jwt) && WorkspaceValidator.isValid(jwt, workspaceId)){
@@ -38,6 +46,8 @@ public class AspectController {
     }
 
     @Around("com.example.yeondodemo.filter.PointCuts.targetWorkspaceAdd() && args(jwt,workspaceId,..)")
+    @Order(value = 1)
+
     public Object doFilter3(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOP22");
         if(workspaceId==null){
