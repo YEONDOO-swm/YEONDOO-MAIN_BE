@@ -9,6 +9,7 @@ import com.example.yeondodemo.dto.python.PaperPythonFirstResponseDTO;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;
 import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.entity.Paper;
+import com.example.yeondodemo.exceptions.PythonServerException;
 import com.example.yeondodemo.filter.ReadPaper;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
@@ -18,6 +19,7 @@ import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import com.example.yeondodemo.repository.paper.item.BatisItemAnnotationRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.utils.ConnectPythonServer;
+import com.example.yeondodemo.utils.ReturnUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +44,6 @@ public class PaperService {
     private final PaperBufferRepository paperBufferRepository;
     private final PaperRepository paperRepository;
     private final LikePaperRepository likePaperRepository;
-    private final BatisAuthorRepository authorRepository;
     private final BatisItemAnnotationRepository itemAnnotationRepository;
     private Map<Long, ExpiredKeyDTO> answerIdMap;
     @Value("${python.address}")
@@ -97,32 +98,7 @@ public class PaperService {
         queryHistoryRepository.updateToken(rid, track);
         return new ResponseEntity(HttpStatus.OK);
     }
-    @Transactional
-    public Map getPaperQuestion(String paperid, Long workspaceId, String query){
-        List<PaperHistory> paperHistories = queryHistoryRepository.findByUserAndIdOrderQA4Python(workspaceId, paperid);
-        List<List<String>>  histories = new ArrayList<>();
-        List<String> t = null;
-        for (PaperHistory paperHistory : paperHistories) {
-            if(paperHistory.isWho()){
-                 t = new ArrayList<>();
-            }
-            t.add(paperHistory.getContent());
-            if(!paperHistory.isWho()){
-                histories.add(t);
-            }
-        }
-        PythonQuestionResponse answer = ConnectPythonServer.question(new PythonQuestionDTO(paperid, histories, query), pythonapi);
-        Long idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
-        if(idx == null) {idx=0L;}
-        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
-        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
-        Map<String, String> ret = new HashMap<>();
-        ret.put("answer", answer.getAnswer());
-        return ret;
-    }
-
-    @Transactional
-    public Flux<ServerSentEvent<String>> getPaperQuestionStream(String paperid, Long workspaceId, String query, Long key){
+    public List<List<String>> getQuestionHistories(String paperid, Long workspaceId){
         List<PaperHistory> paperHistories = queryHistoryRepository.findByUserAndIdOrderQA4Python(workspaceId, paperid);
         List<List<String>>  histories = new ArrayList<>();
         List<String> t = null;
@@ -135,16 +111,34 @@ public class PaperService {
                 histories.add(t);
             }
         }
-        //Flux<String> answerStream = ConnectPythonServer.questionStream(new PythonQuestionDTO(paperid, histories, query), pythonapi);
+        return histories;
+    }
+    @Transactional
+    public Map getPaperQuestion(String paperid, Long workspaceId, String query){
+        List<List<String>> histories = getQuestionHistories(paperid, workspaceId);
+        PythonQuestionResponse answer = ConnectPythonServer.question(new PythonQuestionDTO(paperid, histories, query), pythonapi);
+
+        Long idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
+        if(idx == null) {idx=0L;}
+
+        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
+        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
+
+        return ReturnUtils.mapReturn("answer", answer.getAnswer());
+    }
+
+    @Transactional
+    public Flux<ServerSentEvent<String>> getPaperQuestionStream(String paperid, Long workspaceId, String query, Long key){
+        List<List<String>>  histories = getQuestionHistories(paperid, workspaceId);
         List<String> answerList = new ArrayList<>();
 
         Long lastIdx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
-        final long idx = (lastIdx == null) ? 0l : lastIdx;
+        final long idx = (lastIdx == null) ? 0L : lastIdx;
         QueryHistory queryHistory = new QueryHistory(workspaceId, paperid, idx+1, true, query);
         queryHistoryRepository.save(queryHistory);
         log.info("History Id is... {}", queryHistory.getId());
 
-       return WebClient.create()//todo: 파이썬쪽 작업 완료되면 id추가해서 보내기.
+       return WebClient.create()
                 .post()
                 .uri(pythonapi + "/chat?historyId="+queryHistory.getId())
                 .body(Mono.just(new PythonQuestionDTO(paperid, histories, query)), PythonQuestionDTO.class)
@@ -173,9 +167,6 @@ public class PaperService {
         for(String s: pythonPaperInfoDTO.getSubjectRecommends()){
             paperInfoRepository.save(new PaperInfo(paperid, "subjectrecommend", s));
         }
-//        for(String r: pythonPaperInfoDTO.getReferences()){
-//            paperInfoRepository.save(new PaperInfo(paperid, "reference", r));
-//        }
         paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
     }
 
@@ -193,9 +184,7 @@ public class PaperService {
         }
         paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
     }
-    @Transactional @ReadPaper
-    public RetPaperInfoDTO getPaperInfo(String paperid, Long workspaceId) throws JsonProcessingException {
-        log.info("getPaperInfo... ");
+    public void checkPaperCanCached(String paperid){
         if((!paperBufferRepository.isHit(paperid))){
             //goto python server and get data
             log.info("go to python server.... ");
@@ -203,12 +192,16 @@ public class PaperService {
 
             log.info("python return : {}", pythonPaperInfoDTO);
             if(pythonPaperInfoDTO == null) {
-                return null;
+                throw new PythonServerException("Get Null Data From python Server");
             }
             updateInfoRepositoryV3(pythonPaperInfoDTO, paperid);
         };
+    }
+    @Transactional @ReadPaper
+    public RetPaperInfoDTO getPaperInfo(String paperid, Long workspaceId) throws JsonProcessingException {
+        log.info("getPaperInfo... ");
+        checkPaperCanCached(paperid);
         RetPaperInfoDTO paperInfoDTO = makeRetPaperInfoDTO(paperid, workspaceId);
-        if(likePaperRepository.isLike(workspaceId, paperid)){paperInfoDTO.getPaperInfo().setIsLike(true);};
         log.info("paper info: {}", paperInfoDTO);
         return paperInfoDTO;
     }
@@ -218,7 +211,9 @@ public class PaperService {
         List<String> questions = paperInfoRepository.findManyByPaperIdAndType(paperid, "questions");
         Paper paper = paperRepository.findById(paperid);
         List<ItemAnnotation> paperItems = itemAnnotationRepository.findByPaperIdAndWorkspaceId(paperid, workspaceId);
-        return  new RetPaperInfoDTO(paper, pythonPaperInfoDTO, questions, queryHistoryRepository.findByUsernameAndPaperIdOrderQA(workspaceId, paperid), paperItems);
+        Boolean isLike = likePaperRepository.isLike(workspaceId, paperid);
+        List<PaperHistory> paperHistories = queryHistoryRepository.findByUsernameAndPaperIdOrderQA(workspaceId, paperid);
+        return  new RetPaperInfoDTO(paper, pythonPaperInfoDTO, questions, paperHistories, paperItems, isLike);
 
     }
     @Transactional

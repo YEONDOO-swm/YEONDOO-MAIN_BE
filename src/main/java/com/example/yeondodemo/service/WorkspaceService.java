@@ -72,6 +72,7 @@ public class WorkspaceService {
     public UserSpaceResponseDTO getUserSpaces(String jwt){
         Set<Long> workspaceList = WorkspaceValidator.login.get(jwt);
         List<UserSpaceDTO> workspaces = new ArrayList<>();
+
         for(Workspace workspace: userRepository.findById(new ArrayList<>(workspaceList))){
             List<String> keywords = keywordRepository.findByUsername(workspace.getWorkspaceId());
             workspace.setKeywords(keywords);

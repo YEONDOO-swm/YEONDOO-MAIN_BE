@@ -15,6 +15,7 @@ import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.dto.LoginUserDTO;
 import com.example.yeondodemo.dto.UserProfileDTO;
 import com.example.yeondodemo.utils.JwtTokenProvider;
+import com.example.yeondodemo.utils.ReturnUtils;
 import com.example.yeondodemo.validation.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,10 +44,11 @@ public class LoginService {
     public ResponseEntity updateRefreshToken(String jwt){
         String email = provider.getUserName(jwt);
         log.info("Expried Token.. , email: {}", email);
+
         if(validationService.checkRefreshToken(jwt, email)){
             log.info("Valid Expried Token.., email: {}", email);
             String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
-            return new ResponseEntity<>(validationService.getHeaders(email, refresh), HttpStatus.OK);
+            return new ResponseEntity<>(validationService.getJwtHeaders(email, refresh), HttpStatus.OK);
         }else{
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
@@ -54,7 +56,7 @@ public class LoginService {
 
     public HttpHeaders test(String email){
         String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
-        return validationService.getHeaders(email, refresh);
+        return validationService.getJwtHeaders(email, refresh);
     }
 
     @Transactional
@@ -62,17 +64,17 @@ public class LoginService {
         RestTemplate restTemplate = new RestTemplate();
         //트라이 익셉션. 
         ResponseEntity<GoogleInfoResponse> infoResponse = validationService.getResponseFromGoogle(authCode, restTemplate);
-        String email=infoResponse.getBody().getEmail();
+        
+        String email= infoResponse.getBody().getEmail();
         String name = infoResponse.getBody().getName();
 
-        if(realUserRepository.exist(email)==null){
-            realUserRepository.save(email);
-        }
+        if(realUserRepository.exist(email)==null) {join(email);}
 
-        Map ret = new HashMap<String, String>();
-        ret.put("username", name);
         String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
-        return new ResponseEntity<>(ret, validationService.getHeaders(email, refresh), HttpStatus.OK);
+        return new ResponseEntity<>(ReturnUtils.mapReturn("username", name), validationService.getJwtHeaders(email, refresh), HttpStatus.OK);
     }
 
+    public void join(String email){
+        realUserRepository.save(email);
+    }
 }

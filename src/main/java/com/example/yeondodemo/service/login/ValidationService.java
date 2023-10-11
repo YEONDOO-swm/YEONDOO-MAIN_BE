@@ -42,6 +42,7 @@ public class ValidationService {
                 .code(authCode)
                 .redirectUri("postmessage")
                 .grantType("authorization_code").build();
+
         ResponseEntity<GoogleResponse> response = restTemplate.postForEntity("https://oauth2.googleapis.com/token",
                 googleOAuthRequestParam, GoogleResponse.class);
         String jwtToken = response.getBody().getId_token();
@@ -74,14 +75,14 @@ public class ValidationService {
         return refreshToken;
     }
      @Timer("getHeadersFromDB")
-     public HttpHeaders getHeaders(String email, String refreshToken){
-        String jwt = provider.createJwt(email, TokenType.ACCESS);
+     public HttpHeaders getJwtHeaders(String email, String refreshToken){
+        String accessToken = provider.createJwt(email, TokenType.ACCESS);
         Set<Long> userWorkspace = realUserRepository.findByName(email);
-        WorkspaceValidator.addLogin(jwt, userWorkspace);
+
+        WorkspaceValidator.addLogin(accessToken, userWorkspace);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Gauth", jwt);
+        headers.add("Gauth", accessToken);
         headers.add("RefreshToken", refreshToken);
-        log.info("User {}'s workspaces: {}", email, userWorkspace);
         return headers;
     }
 }

@@ -12,8 +12,8 @@ import java.util.List;
 public class RetPaperInfoDTO {
     private DetailPaperInfo paperInfo;
     private List<PaperHistory> paperHistory;
-    public RetPaperInfoDTO(Paper paper, String summary, List<String> questions, List<PaperHistory> paperHistories, List<ItemAnnotation> paperItems){
+    public RetPaperInfoDTO(Paper paper, String summary, List<String> questions, List<PaperHistory> paperHistories, List<ItemAnnotation> paperItems, Boolean isLike){
         this.paperHistory = paperHistories;
-        this.paperInfo = new DetailPaperInfo(paper, summary, questions, paperItems);
+        this.paperInfo = new DetailPaperInfo(paper, summary, questions, paperItems, isLike);
     }
 }
