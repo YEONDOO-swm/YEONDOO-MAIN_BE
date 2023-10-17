@@ -55,7 +55,7 @@ public class YeondooDbController {
     private List<String> store;
     @PostConstruct
     public void makeStore(){
-        store = paperRepository.findAllNullPaperId()
+        store = paperRepository.findAllNullPaperId();
     }
     @GetMapping("/db/getNullPaper")
     public ResponseEntity getNullPaper(){
