@@ -17,6 +17,7 @@ import com.example.yeondodemo.service.WorkspaceService;
 import com.example.yeondodemo.service.search.PaperService;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +51,15 @@ public class YeondooDbController {
 
 
     private final WorkspaceService workspaceService;
+
+    private List<String> store;
+    @PostConstruct
+    public void makeStore(){
+        store = paperRepository.findAllNullPaperId()
+    }
     @GetMapping("/db/getNullPaper")
     public ResponseEntity getNullPaper(){
-        return new ResponseEntity(paperRepository.findAllNullPaperId(), HttpStatus.OK);
+        return new ResponseEntity(store, HttpStatus.OK);
     }
 
     @PostMapping("/api/python/token")
