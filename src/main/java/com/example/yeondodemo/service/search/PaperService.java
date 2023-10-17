@@ -2,7 +2,10 @@ package com.example.yeondodemo.service.search;
 
 import com.example.yeondodemo.dto.*;
 import com.example.yeondodemo.dto.paper.ExpiredKeyDTO;
+import com.example.yeondodemo.dto.paper.PaperAnswerResponseDTO;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
+import com.example.yeondodemo.dto.paper.item.ExportItemDTO;
+import com.example.yeondodemo.dto.paper.item.ExportItemResponse;
 import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
 import com.example.yeondodemo.dto.paper.item.DeleteItemDTO;
 import com.example.yeondodemo.dto.python.PaperPythonFirstResponseDTO;
@@ -11,7 +14,6 @@ import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.exceptions.PythonServerException;
 import com.example.yeondodemo.filter.ReadPaper;
-import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperInfoRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
@@ -19,7 +21,6 @@ import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import com.example.yeondodemo.repository.paper.item.BatisItemAnnotationRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.utils.ConnectPythonServer;
-import com.example.yeondodemo.utils.ReturnUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -78,6 +80,10 @@ public class PaperService {
         itemAnnotationRepository.update(paperItem);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    public ResponseEntity exportPaper(ExportItemDTO exportItemDTO){
+        //todo: 파이썬쪽 로직 짜여지면 통신하는거 추가할것.
+        return new ResponseEntity<>(new ExportItemResponse(), HttpStatus.OK);
+    }
     @Transactional
     public ResponseEntity postPaperItem(ItemAnnotation paperItem){
         log.info("Store Item: {}", paperItem);
@@ -98,37 +104,29 @@ public class PaperService {
         queryHistoryRepository.updateToken(rid, track);
         return new ResponseEntity(HttpStatus.OK);
     }
-    public List<List<String>> getQuestionHistories(String paperid, Long workspaceId){
+    public PythonQuestionDTO getPythonQuestionDTO(String paperid, Long workspaceId, QuestionDTO query){
         List<PaperHistory> paperHistories = queryHistoryRepository.findByUserAndIdOrderQA4Python(workspaceId, paperid);
-        List<List<String>>  histories = new ArrayList<>();
-        List<String> t = null;
-        for (PaperHistory paperHistory : paperHistories) {
-            if(paperHistory.isWho()){
-                t = new ArrayList<>();
-            }
-            t.add(paperHistory.getContent());
-            if(!paperHistory.isWho()){
-                histories.add(t);
-            }
-        }
-        return histories;
+        return new PythonQuestionDTO(paperid, query, paperHistories);
     }
     @Transactional
-    public Map getPaperQuestion(String paperid, Long workspaceId, String query){
-        List<List<String>> histories = getQuestionHistories(paperid, workspaceId);
-        PythonQuestionResponse answer = ConnectPythonServer.question(new PythonQuestionDTO(paperid, histories, query), pythonapi);
+    public PaperAnswerResponseDTO getPaperQuestion(String paperid, Long workspaceId, QuestionDTO query){
 
+        PythonQuestionDTO pythonQuestionDTO = getPythonQuestionDTO(paperid, workspaceId, query);
+        PythonQuestionResponse answer = ConnectPythonServer.question(pythonQuestionDTO, pythonapi);
+
+        log.info("Python response is.. {}", answer);
+        PaperAnswerResponseDTO paperAnswerResponseDTO = new PaperAnswerResponseDTO(answer);
         Long idx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
         if(idx == null) {idx=0L;}
 
-        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
+        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, paperAnswerResponseDTO));
         queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
 
-        return ReturnUtils.mapReturn("answer", answer.getAnswer());
+        return paperAnswerResponseDTO;
     }
 
-    @Transactional
-    public Flux<ServerSentEvent<String>> getPaperQuestionStream(String paperid, Long workspaceId, String query, Long key){
+   /* @Transactional
+    public Flux<ServerSentEvent<String>> getPaperQuestionStream(String paperid, Long workspaceId, QuestionDTO query){
         List<List<String>>  histories = getQuestionHistories(paperid, workspaceId);
         List<String> answerList = new ArrayList<>();
 
@@ -151,12 +149,10 @@ public class PaperService {
         }).doOnComplete(
                        () -> {
                            String answer = String.join("",answerList);
-                           queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
-                           ExpiredKeyDTO expiredKeyDTO = new ExpiredKeyDTO(idx+2);
-                           answerIdMap.put(key, expiredKeyDTO);
+                           //queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
                        }
                );
-    }
+    }*/
     public void updateInfoRepository(PythonPaperInfoDTO pythonPaperInfoDTO, String paperid){
         for(String insight: pythonPaperInfoDTO.getInsights()){
             paperInfoRepository.save(new PaperInfo(paperid, "insight", insight));

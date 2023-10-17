@@ -19,6 +19,12 @@ public class MemoryPaperRepository implements PaperRepository {
         log.info("findById id: {}", id);
         return store.get(id);
     }
+    public Paper findByIdForValid(String id){return null;}
+
+    @Override
+    public List<String> findAllNullPaperId() {
+        return null;
+    }
 
     @Override
     public Paper findById(String id, Boolean update) {

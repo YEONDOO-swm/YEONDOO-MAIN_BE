@@ -27,7 +27,7 @@ public class PaperFullMeta{
     private String reportNo;
     private String categories;
     private String license;
-    //@SerializedName("abstrct")
+    //@SerializedName("abstract")
     @JsonProperty(value="abstract")
     private String summary;
     private List<Version> versions;

@@ -12,7 +12,7 @@ import com.example.yeondodemo.repository.paper.*;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperBufferRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperInfoRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperRepository;
-import com.example.yeondodemo.repository.paper.batis.BatisQueryHistoryRepository;
+import com.example.yeondodemo.repository.history.BatisQueryHistoryRepository;
 import com.example.yeondodemo.repository.studyfield.BatisStudyFieldRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.RealUserRepository;
@@ -27,9 +27,6 @@ import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.Updater;
 import com.example.yeondodemo.validation.WorkspaceValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.AsyncContext;
-import jakarta.servlet.ServletInputStream;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.catalina.security.SecurityConfig;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
@@ -39,17 +36,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebM
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.MediaType;
-import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.util.*;
@@ -58,7 +50,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static util.utils.installFastApi;
 import static util.utils.isFastApiInstalled;
-import reactor.test.StepVerifier;
+
 @EnableAspectJAutoProxy
 @WebMvcTest({PaperController.class, AsyncPaperController.class}) @AutoConfigureWebMvc
 @AutoConfigureMybatis

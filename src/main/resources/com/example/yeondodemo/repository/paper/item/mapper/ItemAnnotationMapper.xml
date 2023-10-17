@@ -4,8 +4,8 @@
 <mapper namespace="com.example.yeondodemo.repository.paper.item.mapper.ItemAnnotationMapper">
 
     <insert id="save" parameterType="com.example.yeondodemo.dto.paper.item.ItemAnnotation">
-        insert into ITEMANNOTATION (paperId, itemId, workspaceId, itemType, text, color, comment, pageLabel, positionString, dateCreated, dateModified)
-        values (#{paperId}, #{itemId}, #{workspaceId}, #{itemType}, #{text}, #{color}, #{comment}, #{pageLabel}, #{positionString}, #{dateCreated}, #{dateModified})
+        insert into ITEMANNOTATION (paperId, itemId, workspaceId, itemType, text, color, comment, pageLabel, positionString, dateCreated, dateModified, sortIndex)
+        values (#{paperId}, #{itemId}, #{workspaceId}, #{itemType}, #{text}, #{color}, #{comment}, #{pageLabel}, #{positionString}, #{dateCreated}, #{dateModified}, #{sortIndex})
 
         <selectKey keyProperty="id" resultType="Long">
             SELECT LAST_INSERT_ID();

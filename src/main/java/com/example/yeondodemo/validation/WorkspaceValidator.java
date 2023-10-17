@@ -14,6 +14,7 @@ public class WorkspaceValidator {
     public static Map<String, Set<Long>> login;
     public static void addLogin(String jwt, Set workspaceList){
         login.put(jwt, workspaceList);
+        System.out.println(login);
     }
     public static void init(ApplicationContext context){
 

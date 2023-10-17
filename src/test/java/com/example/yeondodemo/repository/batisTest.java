@@ -3,7 +3,7 @@ package com.example.yeondodemo.repository;
 import com.example.yeondodemo.dto.PaperHistory;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperBufferRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperInfoRepository;
-import com.example.yeondodemo.repository.paper.batis.BatisQueryHistoryRepository;
+import com.example.yeondodemo.repository.history.BatisQueryHistoryRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -40,13 +40,12 @@ public class PaperValidator {
 
 
     public static boolean isValidPaper(String id){
-        boolean valid = Optional.ofNullable(paperRepository.findById(id)).isPresent();
-        log.info("Paper: {} is {}", id, valid);
-        return Optional.ofNullable(paperRepository.findById(id)).isPresent();
+        log.info("validity check {}", id);
+        return Optional.ofNullable(paperRepository.findByIdForValid(id)).isPresent();
     }
     public static boolean isValidOnOff(Long workspaceId, String id, boolean onoff){
         Workspace workspace = userRepository.findByName(workspaceId);
-        Paper paper = paperRepository.findById(id);
+        Paper paper = paperRepository.findByIdForValid(id);
         List<String> userSet = likePaperRepository.findByUser(workspace.getWorkspaceId());
         if(onoff){
             if(userSet!=null){

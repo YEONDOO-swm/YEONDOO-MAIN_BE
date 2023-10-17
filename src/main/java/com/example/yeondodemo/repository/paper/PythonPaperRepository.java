@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @RequiredArgsConstructor //@Repository
 public class PythonPaperRepository implements PaperRepository{
     private final PaperMapper paperMapper;
@@ -64,6 +66,13 @@ public class PythonPaperRepository implements PaperRepository{
     @Override
     public void saveF(PaperFullMeta paperFullMeta) {
 
+    }
+
+    public Paper findByIdForValid(String id){return null;}
+
+    @Override
+    public List<String> findAllNullPaperId() {
+        return null;
     }
 
 }

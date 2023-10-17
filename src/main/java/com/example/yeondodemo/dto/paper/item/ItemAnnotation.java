@@ -12,12 +12,13 @@ public class ItemAnnotation {
     private String itemType;
     private String paperId;
     private String color;
+    private String pageLabel;
     private String text;
     private long workspaceId;
     private String comment;
-    private String pageLabel;
     private ItemPosition position;
     private String positionString;
     private Date dateCreated;
     private Date dateModified;
+    private String sortIndex;
 }

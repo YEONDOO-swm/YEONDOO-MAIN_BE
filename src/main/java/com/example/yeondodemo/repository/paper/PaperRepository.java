@@ -15,5 +15,7 @@ public interface PaperRepository {
     void add(String id);
     void sub(String id);
     void saveF(PaperFullMeta paperFullMeta);
+    Paper findByIdForValid(String id);
+    List<String> findAllNullPaperId();
 
 }

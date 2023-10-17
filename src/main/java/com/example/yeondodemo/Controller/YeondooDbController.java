@@ -6,6 +6,7 @@ import com.example.yeondodemo.dto.dbcontroll.AddStudyFieldDTO;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.dto.paper.Version;
 import com.example.yeondodemo.dto.python.Token;
+import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.RefreshEntity;
 import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.etc.RefreshRedisRepository;
@@ -49,6 +50,10 @@ public class YeondooDbController {
 
 
     private final WorkspaceService workspaceService;
+    @GetMapping("db/getNullPaper")
+    public ResponseEntity getNullPaper(){
+        return new ResponseEntity(paperRepository.findAllNullPaperId(), HttpStatus.OK);
+    }
 
     @PostMapping("api/python/token")
     public ResponseEntity storePythonToken(@RequestParam String key,@RequestParam long historyId, @RequestBody Token track){
@@ -245,6 +250,71 @@ public class YeondooDbController {
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity updatePapers(@RequestBody List<PaperFullMeta> data) throws InterruptedException {
+
+        List<Version> versions = data.get(0).getVersions();
+        if (versions != null && !versions.isEmpty()) {
+            String lastVersion = versions.get(versions.size() - 1).getVersion();
+            data.get(0).setVersion(lastVersion);
+        }
+        Paper paper = paperRepository.findById(data.get(0).getPaperId());
+
+        convertToPaper(data.get(0), paper);
+        paperRepository.update(data.get(0).getPaperId(), paper);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    private static int parseYear(String paperId) {
+        // PaperId의 형식에 따라 Year 추출
+        if (paperId.matches("\\d{6}\\.\\d{5}")) {
+            int year = Integer.parseInt(paperId.substring(0, 2));
+            if (year >= 97) {
+                return 1900 + year;
+            } else {
+                return 2000 + year;
+            }
+        } else if (paperId.matches("\\d{4}\\.\\d{4}")) {
+            int year = Integer.parseInt(paperId.substring(0, 2));
+            if (year >= 97) {
+                return 1900 + year;
+            } else {
+                return 2000 + year;
+            }
+        } else if (paperId.matches(".*/\\d{6}\\d+")) {
+            int year = Integer.parseInt(paperId.substring(paperId.indexOf("/") + 1, paperId.indexOf("/") + 3));
+            if (year >= 97) {
+                return 1900 + year;
+            } else {
+                return 2000 + year;
+            }
+        } else {
+            return 0; // 알 수 없는 경우 0으로 설정
+        }
+    }
+
+    private static String generateUrl(String paperId, String version) {
+        // Url 생성
+        return "https://arxiv.org/abs/" + paperId + "/" + version;
+    }
+    public static Paper convertToPaper(PaperFullMeta paperFullMeta,Paper paper) {
+        paper.setPaperId(paperFullMeta.getPaperId());
+        paper.setTitle(paperFullMeta.getTitle());
+        paper.setUrl(generateUrl(paperFullMeta.getPaperId(), paperFullMeta.getVersion()));
+        paper.setAbs(paperFullMeta.getSummary()); // 또는 원하는 필드로 설정
+        paper.setLikes(0); // 기본값 설정
+        paper.setYear(parseYear(paperFullMeta.getPaperId()));
+        paper.setComments(paperFullMeta.getComments());
+        paper.setJournalRef(paperFullMeta.getJournalRef());
+        paper.setDoi(paperFullMeta.getDoi());
+        paper.setReportNo(paperFullMeta.getReportNo());
+        paper.setCategories(paperFullMeta.getCategories());
+        paper.setLicense(paperFullMeta.getLicense());
+        paper.setVersion(paperFullMeta.getVersion());
+        return paper;
     }
 
 

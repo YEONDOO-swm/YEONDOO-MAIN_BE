@@ -7,5 +7,5 @@ import lombok.ToString;
 @Getter @Setter @ToString
 public class PythonQuestionResponse {
     private String answer;
-    private Token track;
+    private PythonPaperPosition coordinates;
 }

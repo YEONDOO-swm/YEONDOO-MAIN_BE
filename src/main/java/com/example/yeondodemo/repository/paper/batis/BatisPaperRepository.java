@@ -10,33 +10,31 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Slf4j  @RequiredArgsConstructor @Repository
 public class BatisPaperRepository implements PaperRepository {
     private final PaperMapper paperMapper;
     private final Updater updater;
     private final AuthorMapper authorMapper;
     @Override
+    public Paper findByIdForValid(String id) {
+        return paperMapper.findById(id);
+    }
+
+    @Override
+    public List<String> findAllNullPaperId() {
+        return paperMapper.findAllNullPaperId();
+    }
+
+    @Override
     public Paper findById(String id) {
         Paper paper = paperMapper.findById(id);
         if(paper==null){
             return null;
         }else{
-            if(paper.getVersion() == null){paper.setUrl("https://arxiv.org/abs/" + paper.getPaperId());}
-            else{paper.setUrl("https://arxiv.org/abs/" + paper.getPaperId() + "/" +  paper.getVersion());}
-            try{
-                paper.setYear(2000 + Integer.parseInt(paper.getPaperId().substring(0,2)));
-            }catch (Exception e){
-                String[] split = paper.getPaperId().split("/");
-                int t = Integer.parseInt(split[1].substring(0, 2));
-                if(t< 10){
-                    paper.setYear(2000+t);
-                }else{
-                    paper.setYear(1900+t);
-                }
-            }
             paper.setAuthors(authorMapper.findByPaperId(paper.getPaperId()));
             //paper = updater.update(paper);
-
         }
         return paper;
     }

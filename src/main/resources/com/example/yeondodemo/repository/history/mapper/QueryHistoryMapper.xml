@@ -4,15 +4,15 @@
 <mapper namespace="com.example.yeondodemo.repository.history.mapper.QueryHistoryMapper">
 
     <insert id="save" parameterType="com.example.yeondodemo.dto.QueryHistory">
-        insert into QUERYHISTORY (workspaceId,paperId, idx, content, who,  editDate)
-        values (#{workspaceId}, #{paperid}, #{idx}, #{content}, #{who}, CURRENT_DATE);
+        insert into QUERYHISTORY (workspaceId,paperId, idx, content, who,  editDate, positionString, context, extraPaperId)
+        values (#{workspaceId}, #{paperid}, #{idx}, #{content}, #{who}, CURRENT_DATE, #{positionString},#{context}, #{extraPaperId});
         <selectKey keyProperty="id" resultType="Long">
             SELECT LAST_INSERT_ID();
         </selectKey>
     </insert>
 
     <select id="findByUsernameAndPaperid" resultType="com.example.yeondodemo.dto.PaperHistory">
-        select content, who, id, score
+        select content, who, id, score,positionString, context, extraPaperId
         from QUERYHISTORY
         where paperId = #{paperIsd} and workspaceId= #{workspaceId}
         order by id ASC
@@ -37,16 +37,16 @@
 
 
     <select id="findByUsernameAndPaperIdOrderQA" resultType="com.example.yeondodemo.dto.PaperHistory">
-        select content, who, id, score
+        select content, who, id, score, positionString, context, extraPaperId
         from QUERYHISTORY
         where paperId = #{paperIsd} and workspaceId= #{workspaceId}
         order by idx ASC
     </select>
 
     <select id="findByUserAndIdOrderQA4Python" resultType="com.example.yeondodemo.dto.PaperHistory">
-        SELECT content, who, id, score
+        SELECT content, who, id, score, positionString, context, extraPaperId
         FROM (
-                 SELECT content, who, id, idx, score
+                 SELECT content, who, id, idx, score, positionString, context, extraPaperId
                  FROM QUERYHISTORY AS q
                  WHERE paperId = #{paperIsd} AND workspaceId= #{workspaceId}
                  ORDER BY idx DESC
@@ -56,7 +56,7 @@
     </select>
 
     <select id="findByUsernameAndId" resultType="com.example.yeondodemo.dto.PaperHistory">
-        SELECT content, who, id, score
+        SELECT content, who, id, score, positionString, context, extraPaperId
         FROM QUERYHISTORY
         WHERE id = #{id} AND workspaceId = #{workspaceId};
     </select>

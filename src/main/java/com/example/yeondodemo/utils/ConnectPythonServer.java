@@ -33,6 +33,7 @@ public class ConnectPythonServer {
                 new HttpEntity<>(httpHeaders),
                 PythonResultDTO.class
         );
+        System.out.println("pythonpythonpython"+ response.getBody());
         return response.getBody();
     }
     public static PaperPythonFirstResponseDTO requestPaperInfo(String paperid, String pythonApiServer){
@@ -68,8 +69,9 @@ public class ConnectPythonServer {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         // HTTP POST 요청 보내기
+        //todo: post담는 부분 수정
         ResponseEntity<PythonQuestionResponse> response = restTemplate.exchange(
-                pythonApiServer + "/question",
+                pythonApiServer + "/chat",
                 HttpMethod.POST,
                 request,
                 PythonQuestionResponse.class

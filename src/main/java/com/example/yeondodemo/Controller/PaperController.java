@@ -2,6 +2,7 @@ package com.example.yeondodemo.Controller;
 
 import com.example.yeondodemo.dto.QuestionDTO;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
+import com.example.yeondodemo.dto.paper.item.ExportItemDTO;
 import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
 import com.example.yeondodemo.dto.paper.item.DeleteItemDTO;
 import com.example.yeondodemo.filter.ItemSetting;
@@ -22,6 +23,10 @@ import static com.example.yeondodemo.validation.IntegrationValidator.inValidPape
 @RequiredArgsConstructor @RequestMapping("/api/paper")
 public class PaperController {
     private final PaperService paperService;
+    @PostMapping("/export")
+    public ResponseEntity exportPaper(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId, @RequestBody ExportItemDTO exportItemDTO){
+        return paperService.exportPaper(exportItemDTO);
+    }
 
     @PostMapping("/item") @ItemSetting
     public ResponseEntity postPaperItem(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId,@RequestParam String paperId,  @RequestBody ItemAnnotation paperItem){
@@ -67,7 +72,7 @@ public class PaperController {
     public ResponseEntity paperQuestion(@RequestHeader("Gauth") String jwt, @PathVariable String paperid, @RequestParam Long workspaceId, @Validated @RequestBody QuestionDTO question, BindingResult bindingResult){
         ResponseEntity<Object> BAD_REQUEST = inValidPaperUserRequest(paperid, workspaceId, bindingResult);
         if (BAD_REQUEST != null) return BAD_REQUEST;
-        return new ResponseEntity<>(paperService.getPaperQuestion(paperid, workspaceId, question.getQuestion()), HttpStatus.OK);
+        return new ResponseEntity<>(paperService.getPaperQuestion(paperid, workspaceId, question), HttpStatus.OK);
     }
 
     @PostMapping("/result/score")

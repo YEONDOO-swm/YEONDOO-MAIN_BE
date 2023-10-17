@@ -13,7 +13,7 @@ import com.example.yeondodemo.repository.paper.*;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperBufferRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperInfoRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperRepository;
-import com.example.yeondodemo.repository.paper.batis.BatisQueryHistoryRepository;
+import com.example.yeondodemo.repository.history.BatisQueryHistoryRepository;
 import com.example.yeondodemo.repository.studyfield.BatisStudyFieldRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.*;

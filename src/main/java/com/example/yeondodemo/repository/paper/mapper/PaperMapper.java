@@ -19,5 +19,6 @@ public interface PaperMapper {
     void add(String id);
     void sub(String id);
     void saveF(PaperFullMeta paperFullMeta);
+    List<String> findAllNullPaperId();
 
 }

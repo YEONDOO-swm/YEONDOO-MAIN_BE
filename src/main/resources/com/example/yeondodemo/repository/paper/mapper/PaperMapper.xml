@@ -3,13 +3,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.yeondodemo.repository.paper.mapper.PaperMapper">
     <insert id="save">
-        insert into PAPER (paperId, conference, cites, likes, lastUpdate, title)
-        values (#{paperId}, #{conference},#{cites}, #{likes}, #{lastUpdate}, #{title})
+        insert into PAPER (paperId, conference, cites, likes, lastUpdate, title, url, year)
+        values (#{paperId}, #{conference},#{cites}, #{likes}, #{lastUpdate}, #{title}, #{url}, #{year})
     </insert>
 
     <insert id="saveF">
-        insert into PAPER (paperId,  title, submitter, comments, journalRef, doi,  categories, license, summary, version, update_date)
-        values (#{paperId},  #{title}, #{submitter}, #{comments}, #{journalRef}, #{doi}, #{categories}, #{license}, #{summary}, #{version}, #{update_date})
+        insert into PAPER (paperId,  title, submitter, comments, journalRef, doi,  categories, license, summary, version, update_date, url, year)
+        values (#{paperId},  #{title}, #{submitter}, #{comments}, #{journalRef}, #{doi}, #{categories}, #{license}, #{summary}, #{version}, #{update_date}, #{url}, #{year})
     </insert>
 
     <select id="clearStore">
@@ -21,7 +21,10 @@
             likes=#{updateParam.likes},
             conference=#{updateParam.conference},
             lastUpdate = #{updateParam.lastUpdate},
-            title = #{updateParam.title}
+            title = #{updateParam.title},
+            version = #{updateParam.version},
+            url = #{updateParam.url},
+            year = #{updateParam.year}
         where paperId = #{id}
     </update>
 
@@ -42,4 +45,11 @@
         set likes = likes - 1
         where paperId = #{id}
     </update>
+
+    <select id="findAllNullPaperId" resultType="String">
+        select paperId
+        from PAPER
+        where isNull(version)
+    </select>
+
 </mapper>
