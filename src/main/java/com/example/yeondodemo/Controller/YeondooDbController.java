@@ -50,22 +50,22 @@ public class YeondooDbController {
 
 
     private final WorkspaceService workspaceService;
-    @GetMapping("db/getNullPaper")
+    @GetMapping("/db/getNullPaper")
     public ResponseEntity getNullPaper(){
         return new ResponseEntity(paperRepository.findAllNullPaperId(), HttpStatus.OK);
     }
 
-    @PostMapping("api/python/token")
+    @PostMapping("/api/python/token")
     public ResponseEntity storePythonToken(@RequestParam String key,@RequestParam long historyId, @RequestBody Token track){
         return paperService.storePythonToken(key, historyId, track);
     }
 
-    @GetMapping("api/workspaceEnter")
+    @GetMapping("/api/workspaceEnter")
     public ResponseEntity getWorkspaceHome(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId){
         return new ResponseEntity(workspaceService.getWorkspaceHome(workspaceId), HttpStatus.OK);
     }
 
-    @GetMapping("test/redis")
+    @GetMapping("/test/redis")
     public ResponseEntity testRedis(){
         String key = UUID.randomUUID().toString();
         RefreshEntity refreshEntity = new RefreshEntity(key, "abcd1234");
