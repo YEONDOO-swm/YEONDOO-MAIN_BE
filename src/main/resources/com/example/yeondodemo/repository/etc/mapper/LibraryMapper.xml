@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yeondodemo.repository.etc.mapper.LibraryMapper">
+
+    <select id="findByUserName" resultType="com.example.yeondodemo.dto.LibraryDTO">
+        SELECT p.paperId, lp.workspaceId, p.title, p.year, p.url, ws.title AS workspaceTitle
+        FROM PAPER AS p
+                 JOIN LIKEPAPER AS lp ON p.paperId = lp.paperId
+                 JOIN Workspaces AS w ON lp.workspaceId = w.workspaceId
+                 JOIN WORKSPACE as ws ON ws.workspaceID = lp.workspaceId
+        WHERE w.email = #{username} AND w.valid = 1;
+    </select>
+</mapper>

@@ -55,7 +55,11 @@ public class YeondooDbController {
     private List<String> store;
     @PostConstruct
     public void makeStore(){
-        store = paperRepository.findAllNullPaperId();
+        //store = paperRepository.findAllNullPaperId();
+    }
+    @GetMapping("/api/python/test")
+    public ResponseEntity pythonTest(){
+        return new ResponseEntity(HttpStatus.OK);
     }
     @GetMapping("/db/getNullPaper")
     public ResponseEntity getNullPaper(){

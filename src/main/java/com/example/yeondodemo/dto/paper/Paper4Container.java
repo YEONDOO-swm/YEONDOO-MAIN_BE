@@ -7,7 +7,7 @@ import lombok.ToString;
 
 import java.util.List;
 
-@Getter @ToString
+@Getter @Setter @ToString
 public class Paper4Container {
     private String title;
     private String paperId;

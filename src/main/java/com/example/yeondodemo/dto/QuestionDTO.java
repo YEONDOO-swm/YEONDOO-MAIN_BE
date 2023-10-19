@@ -1,5 +1,6 @@
 package com.example.yeondodemo.dto;
 
+import com.example.yeondodemo.dto.paper.item.ItemPosition;
 import com.example.yeondodemo.validation.PaperValidator;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ public class QuestionDTO {
         private String question;
         private List<String> paperIds;
         private String context;
+        private ItemPosition position;
         @AssertTrue(message = "invalid paperId")
         public boolean isValidPaperId(){
             for (String paperId : paperIds) {

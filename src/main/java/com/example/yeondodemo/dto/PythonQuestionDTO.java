@@ -1,5 +1,6 @@
 package com.example.yeondodemo.dto;
 
+import com.example.yeondodemo.dto.paper.item.ItemPosition;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,8 +17,10 @@ public class PythonQuestionDTO {
     private List<List<String>> history;
     private String extraPaperId;
     private String underline;
+    private ItemPosition position;
     public PythonQuestionDTO(String paperid, QuestionDTO query, List<PaperHistory> paperHistories){
         this.history = new ArrayList<>();
+        this.position = query.getPosition();
         List<String> t = null;
         for (PaperHistory paperHistory : paperHistories) {
             if(paperHistory.isWho()){
@@ -26,6 +29,7 @@ public class PythonQuestionDTO {
             t.add(paperHistory.getContent());
             if(!paperHistory.isWho()){
                 history.add(t);
+
             }
         }
         //구분이 필요.

@@ -7,8 +7,8 @@ import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
 import com.example.yeondodemo.dto.paper.item.ItemPosition;
 import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.repository.history.mapper.QueryHistoryMapper;
-import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ public class BatisQueryHistoryRepository implements QueryHistoryRepository {
     }
     public void setPosition(PaperHistory history, String paperId){
         try {
-            history.setPosition(objectMapper.readValue(history.getPositionString(), ItemPosition.class));
+            history.setPositions(objectMapper.readValue(history.getPositionString(), new TypeReference<List<ItemPosition>>(){}));
             history.setPaperIds(List.of(history.getExtraPaperId(), paperId));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter @Setter @ToString
 public class PythonQuestionResponse {
     private String answer;
-    private PythonPaperPosition coordinates;
+    private List<PythonPaperPosition> coordinates;
 }

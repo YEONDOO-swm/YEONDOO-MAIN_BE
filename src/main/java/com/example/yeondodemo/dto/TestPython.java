@@ -15,6 +15,7 @@ public class TestPython {
     private List<String> authors;
     private String summary;
     private String url;
+    private List<String> categories;
     public TestPython(Paper paper){
         this.paperId = paper.getPaperId();
         this.title = paper.getTitle();

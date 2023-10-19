@@ -55,6 +55,7 @@ public class Paper extends PaperWithOutMeta{
         this.summary = testPython.getSummary();
         this.url = testPython.getUrl();
         this.year = testPython.getYear();
+        this.categories = String.join(" ", testPython.getCategories());
     }
     public Paper(){
 

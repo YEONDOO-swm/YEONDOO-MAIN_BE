@@ -209,7 +209,7 @@ public class PaperService {
         List<ItemAnnotation> paperItems = itemAnnotationRepository.findByPaperIdAndWorkspaceId(paperid, workspaceId);
         Boolean isLike = likePaperRepository.isLike(workspaceId, paperid);
         List<PaperHistory> paperHistories = queryHistoryRepository.findByUsernameAndPaperIdOrderQA(workspaceId, paperid);
-        return  new RetPaperInfoDTO(paper, pythonPaperInfoDTO, questions, paperHistories, paperItems, isLike);
+        return new RetPaperInfoDTO(paper, pythonPaperInfoDTO, questions, paperHistories, paperItems, isLike);
 
     }
     @Transactional

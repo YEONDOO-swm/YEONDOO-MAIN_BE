@@ -44,7 +44,7 @@ public class QueryHistory {
         this.idx = idx;
         this.content = response.getAnswer();
         this.who = who;
-        this.positionString = response.getPosition().toString();
+        this.positionString = response.getPositions().toString();
 /*
         this.totalCost = response.getTrack().getTotalCost();
         this.promptTokens = response.getTrack().getPromptTokens();

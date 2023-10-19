@@ -13,7 +13,7 @@ public class PaperHistory {
     private String content;
     private Integer score;
     private String positionString;
-    private ItemPosition position;
+    private List<ItemPosition> positions;
     private String context;
     private String extraPaperId;
     private List<String> paperIds;
