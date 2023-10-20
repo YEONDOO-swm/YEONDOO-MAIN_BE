@@ -57,10 +57,12 @@ public class PaperService {
         public Long expired;
         public Long workspaceId;
         public String paperId;
-        ExpiredPythonAnswerKey(Long idx, Long workspaceId, String paperId){
+        public QuestionDTO query;
+        ExpiredPythonAnswerKey(Long idx, Long workspaceId, String paperId, QuestionDTO query){
             this.expired = System.currentTimeMillis() + 10 * 60 * 1000; // 현재 시간에 10분을 더한 값
             this.idx = idx;
             this.paperId = paperId;
+            this.query = query;
             this.workspaceId = workspaceId;
             this.paperAnswerResponseDTO = new PaperAnswerResponseDTO();
         }
@@ -153,6 +155,7 @@ public class PaperService {
         ExpiredPythonAnswerKey expiredPythonAnswerKey = store.get(key);
         expiredPythonAnswerKey.paperAnswerResponseDTO.setPositions(paperAnswerResponseDTO.getPositions());
         queryHistoryRepository.save(new QueryHistory(expiredPythonAnswerKey.workspaceId, expiredPythonAnswerKey.paperId, expiredPythonAnswerKey.idx+2, false, paperAnswerResponseDTO));
+        queryHistoryRepository.save(new QueryHistory(expiredPythonAnswerKey.workspaceId, expiredPythonAnswerKey.paperId, expiredPythonAnswerKey.idx+1, true, expiredPythonAnswerKey.query));
     }
 
     public List<ItemPosition> getBasis(Long workspaceId, String paperid, String key){
@@ -171,8 +174,7 @@ public class PaperService {
         Long lastIdx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
         final long idx = (lastIdx == null) ? 0L : lastIdx;
 
-        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
-        store.put(query.getKey(),new ExpiredPythonAnswerKey(idx, workspaceId, paperid));
+        store.put(query.getKey(),new ExpiredPythonAnswerKey(idx, workspaceId, paperid, query));
 
        return WebClient.create()
                 .post()

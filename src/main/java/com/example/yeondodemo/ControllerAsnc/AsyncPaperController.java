@@ -16,7 +16,7 @@ import reactor.core.publisher.Flux;
 public class AsyncPaperController {
 
     private final PaperService paperService;
-    @PostMapping(value = "/{paperid}")
+    @PostMapping(value = "/{paperid}",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody @JwtValidation
     public Flux<ServerSentEvent<String>> paperQuestionStream(@RequestHeader("Gauth") String jwt, @PathVariable("paperid") String paperid, @RequestParam("workspaceId")Long workspaceId, @RequestBody QuestionDTO question) {
         return paperService.getPaperQuestionStream(paperid, workspaceId, question);
