@@ -21,6 +21,7 @@ import com.example.yeondodemo.utils.ConnectPythonServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,7 @@ public class PaperService {
     private String pythonKey;
 
     public static Map<String,ExpiredPythonAnswerKey> store;
+    @ToString
     class ExpiredPythonAnswerKey{
         public PaperAnswerResponseDTO paperAnswerResponseDTO;
         public Long idx;
@@ -149,7 +151,7 @@ public class PaperService {
         return paperAnswerResponseDTO;
     }
     @Transactional
-    public void setBasis(PythonQuestionResponse pythonQuestionResponse, Long key){
+    public void setBasis(PythonQuestionResponse pythonQuestionResponse, String key){
         log.info("Set Basis {}", pythonQuestionResponse);
         log.info("key: {}", key);
         log.info("SetBasis, store: {}", store);
@@ -192,6 +194,7 @@ public class PaperService {
                        () -> {
                            String answer = String.join("",answerList);
                            store.get(query.getKey()).paperAnswerResponseDTO.setAnswer(answer);
+
                        }
                );
     }

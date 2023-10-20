@@ -72,7 +72,7 @@ public class YeondooDbController {
         return new ResponseEntity(HttpStatus.OK);
     }
     @PostMapping("/api/coordinates")
-    public ResponseEntity setCoordinates(@RequestParam Long key, @RequestBody PythonQuestionResponse pythonQuestionResponse){
+    public ResponseEntity setCoordinates(@RequestParam String key, @RequestBody PythonQuestionResponse pythonQuestionResponse){
         paperService.setBasis(pythonQuestionResponse, key);
         return new ResponseEntity(HttpStatus.OK);
     }
