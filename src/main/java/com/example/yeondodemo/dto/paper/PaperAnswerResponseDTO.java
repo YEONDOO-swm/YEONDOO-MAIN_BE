@@ -21,7 +21,6 @@ public class PaperAnswerResponseDTO {
 
     }
     public PaperAnswerResponseDTO(PythonQuestionResponse pythonQuestionResponse){
-        this.answer  = pythonQuestionResponse.getAnswer();
         this.positions = new ArrayList<>();
         Map<Integer, ItemPosition> map = new HashMap<>();
         List<PythonPaperPosition> positions = pythonQuestionResponse.getCoordinates();
