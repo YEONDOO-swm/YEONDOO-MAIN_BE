@@ -8,10 +8,7 @@ import java.util.List;
 
 @Getter @Setter @ToString
 public class PaperPythonFirstResponseDTO {
-    private List<String> summary;
+    private String summary;
     private List<String> questions;
     private float embeddingTokens;
-    public String getSummary(){
-        return summary.get(0);
-    }
 }

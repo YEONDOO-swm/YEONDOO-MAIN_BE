@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 import static com.example.yeondodemo.validation.IntegrationValidator.inValidPaperUserRequest;
 
 @RestController @Slf4j
@@ -55,20 +57,9 @@ public class PaperController {
             log.info("Invalid access: key: {}", key);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
-
-/*        String fastApiStreamingEndpoint = "http://localhost:8000/test/stream";
-        return WebClient.create()
-                .get()
-                .uri(fastApiStreamingEndpoint)
-                .retrieve()
-                .bodyToFlux(String.class)x
-                .map(data -> ServerSentEvent.builder(data).build());*/
-
-
-    @PostMapping("/{paperid}")
+    //@PostMapping("/{paperid}")
     public ResponseEntity paperQuestion(@RequestHeader("Gauth") String jwt, @PathVariable String paperid, @RequestParam Long workspaceId, @Validated @RequestBody QuestionDTO question, BindingResult bindingResult){
         ResponseEntity<Object> BAD_REQUEST = inValidPaperUserRequest(paperid, workspaceId, bindingResult);
         if (BAD_REQUEST != null) return BAD_REQUEST;
@@ -80,6 +71,10 @@ public class PaperController {
         if(bindingResult.hasErrors()|| PaperValidator.isNotValidResultId(workspaceId, paperResultRequest)){return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
         paperService.resultScore(paperResultRequest);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/result/chat")
+    public ResponseEntity getChatResult(@RequestHeader("Gauth") String jwt,  @RequestParam String paperId, @RequestParam Long workspaceId, @RequestParam String key){
+        return new ResponseEntity(Map.of("positions", paperService.getBasis(workspaceId, paperId, key)), HttpStatus.OK);
     }
 
 }

@@ -4,10 +4,7 @@ import com.example.yeondodemo.dto.*;
 import com.example.yeondodemo.dto.paper.ExpiredKeyDTO;
 import com.example.yeondodemo.dto.paper.PaperAnswerResponseDTO;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
-import com.example.yeondodemo.dto.paper.item.ExportItemDTO;
-import com.example.yeondodemo.dto.paper.item.ExportItemResponse;
-import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
-import com.example.yeondodemo.dto.paper.item.DeleteItemDTO;
+import com.example.yeondodemo.dto.paper.item.*;
 import com.example.yeondodemo.dto.python.PaperPythonFirstResponseDTO;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;
 import com.example.yeondodemo.dto.python.Token;
@@ -53,9 +50,25 @@ public class PaperService {
     @Value("${python.key}")
     private String pythonKey;
 
+    public static Map<String,ExpiredPythonAnswerKey> store;
+    class ExpiredPythonAnswerKey{
+        public PaperAnswerResponseDTO paperAnswerResponseDTO;
+        public Long idx;
+        public Long expired;
+        public Long workspaceId;
+        public String paperId;
+        ExpiredPythonAnswerKey(Long idx, Long workspaceId, String paperId){
+            this.expired = System.currentTimeMillis() + 10 * 60 * 1000; // 현재 시간에 10분을 더한 값
+            this.idx = idx;
+            this.paperId = paperId;
+            this.workspaceId = workspaceId;
+            this.paperAnswerResponseDTO = new PaperAnswerResponseDTO();
+        }
+    }
     @PostConstruct
     public void init(){
-        answerIdMap = new ConcurrentHashMap<Long, ExpiredKeyDTO>();
+        store = new ConcurrentHashMap();
+        answerIdMap = new ConcurrentHashMap();
     }
     public void timeout(){
         List<Long>  timeoutList = new ArrayList<>();
@@ -66,6 +79,15 @@ public class PaperService {
         }
         for(Long key: timeoutList){
             answerIdMap.remove(key);
+        }
+        List<String>  timeoutList2 = new ArrayList<>();
+        for(String key: store.keySet()){
+            if (store.get(key).expired<System.currentTimeMillis()){
+                timeoutList2.add(key);
+            }
+        }
+        for(String key: timeoutList2){
+            store.remove(key);
         }
     }
 
@@ -124,22 +146,38 @@ public class PaperService {
 
         return paperAnswerResponseDTO;
     }
+    @Transactional
+    public void setBasis(PythonQuestionResponse pythonQuestionResponse, Long key){
+        log.info("Set Basis {}", pythonQuestionResponse);
+        PaperAnswerResponseDTO paperAnswerResponseDTO = new PaperAnswerResponseDTO(pythonQuestionResponse);
+        ExpiredPythonAnswerKey expiredPythonAnswerKey = store.get(key);
+        expiredPythonAnswerKey.paperAnswerResponseDTO.setPositions(paperAnswerResponseDTO.getPositions());
+        queryHistoryRepository.save(new QueryHistory(expiredPythonAnswerKey.workspaceId, expiredPythonAnswerKey.paperId, expiredPythonAnswerKey.idx+2, false, paperAnswerResponseDTO));
+    }
 
-   /* @Transactional
+    public List<ItemPosition> getBasis(Long workspaceId, String paperid, String key){
+        log.info("getBasis, store: {}", store);
+        PaperAnswerResponseDTO paperAnswerResponseDTO = store.get(key).paperAnswerResponseDTO;
+        log.info("getBasis, paperAnswerResnponseDTO: {}", store.get(key).paperAnswerResponseDTO);
+        store.remove(key);
+        return paperAnswerResponseDTO.getPositions();
+    }
+
+    @Transactional
     public Flux<ServerSentEvent<String>> getPaperQuestionStream(String paperid, Long workspaceId, QuestionDTO query){
-        List<List<String>>  histories = getQuestionHistories(paperid, workspaceId);
-        List<String> answerList = new ArrayList<>();
+        PythonQuestionDTO pythonQuestionDTO = getPythonQuestionDTO(paperid, workspaceId, query);
 
+        List<String> answerList = new ArrayList<>();
         Long lastIdx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
         final long idx = (lastIdx == null) ? 0L : lastIdx;
-        QueryHistory queryHistory = new QueryHistory(workspaceId, paperid, idx+1, true, query);
-        queryHistoryRepository.save(queryHistory);
-        log.info("History Id is... {}", queryHistory.getId());
+
+        queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
+        store.put(query.getKey(),new ExpiredPythonAnswerKey(idx, workspaceId, paperid));
 
        return WebClient.create()
                 .post()
-                .uri(pythonapi + "/chat?historyId="+queryHistory.getId())
-                .body(Mono.just(new PythonQuestionDTO(paperid, histories, query)), PythonQuestionDTO.class)
+                .uri(pythonapi + "/chat?query=", query.getQuestion())
+                .body(Mono.just(pythonQuestionDTO), PythonQuestionDTO.class)
                 .retrieve()
                 .bodyToFlux(String.class).map(data -> {
                    int lastIndex = data.lastIndexOf("\n");
@@ -149,10 +187,10 @@ public class PaperService {
         }).doOnComplete(
                        () -> {
                            String answer = String.join("",answerList);
-                           //queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, answer));
+                           store.get(query.getKey()).paperAnswerResponseDTO.setAnswer(answer);
                        }
                );
-    }*/
+    }
     public void updateInfoRepository(PythonPaperInfoDTO pythonPaperInfoDTO, String paperid){
         for(String insight: pythonPaperInfoDTO.getInsights()){
             paperInfoRepository.save(new PaperInfo(paperid, "insight", insight));
@@ -180,6 +218,13 @@ public class PaperService {
         }
         paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
     }
+
+    public void updateInfoRepositoryV4(PaperPythonFirstResponseDTO pythonPaperInfoDTO, String paperid){
+        String summary = pythonPaperInfoDTO.getSummary();
+        List<String> questions = pythonPaperInfoDTO.getQuestions();
+        paperInfoRepository.save(new PaperInfo(paperid, "summary", summary));
+        paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
+    }
     public void checkPaperCanCached(String paperid){
         if((!paperBufferRepository.isHit(paperid))){
             //goto python server and get data
@@ -190,7 +235,7 @@ public class PaperService {
             if(pythonPaperInfoDTO == null) {
                 throw new PythonServerException("Get Null Data From python Server");
             }
-            updateInfoRepositoryV3(pythonPaperInfoDTO, paperid);
+            updateInfoRepositoryV4(pythonPaperInfoDTO, paperid);
         };
     }
     @Transactional @ReadPaper

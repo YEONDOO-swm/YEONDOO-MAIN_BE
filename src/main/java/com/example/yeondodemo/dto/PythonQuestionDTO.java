@@ -18,9 +18,11 @@ public class PythonQuestionDTO {
     private String extraPaperId;
     private String underline;
     private ItemPosition position;
+    private String key;
     public PythonQuestionDTO(String paperid, QuestionDTO query, List<PaperHistory> paperHistories){
         this.history = new ArrayList<>();
         this.position = query.getPosition();
+        this.key = query.getKey();
         List<String> t = null;
         for (PaperHistory paperHistory : paperHistories) {
             if(paperHistory.isWho()){

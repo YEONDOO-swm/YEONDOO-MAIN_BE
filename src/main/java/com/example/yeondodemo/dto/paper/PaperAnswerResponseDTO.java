@@ -17,6 +17,9 @@ import java.util.Map;
 public class PaperAnswerResponseDTO {
     private String answer;
     private List<ItemPosition> positions;
+    public PaperAnswerResponseDTO(){
+
+    }
     public PaperAnswerResponseDTO(PythonQuestionResponse pythonQuestionResponse){
         this.answer  = pythonQuestionResponse.getAnswer();
         this.positions = new ArrayList<>();

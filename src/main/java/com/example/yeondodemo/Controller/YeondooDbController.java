@@ -1,10 +1,12 @@
 package com.example.yeondodemo.Controller;
 
 import com.example.yeondodemo.dto.PaperBuffer;
+import com.example.yeondodemo.dto.arxiv.ArxivResponseDTO;
 import com.example.yeondodemo.dto.dbcontroll.AddAuthorDTO;
 import com.example.yeondodemo.dto.dbcontroll.AddStudyFieldDTO;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.dto.paper.Version;
+import com.example.yeondodemo.dto.python.PythonQuestionResponse;
 import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.RefreshEntity;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.codec.ServerSentEvent;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +36,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import reactor.core.publisher.Flux;
 
+import javax.xml.transform.Source;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +60,21 @@ public class YeondooDbController {
     @PostConstruct
     public void makeStore(){
         //store = paperRepository.findAllNullPaperId();
+    }
+    @GetMapping("api/test/arxiv")
+    public ResponseEntity testArxiv(){
+        RestTemplate restTemplate = new RestTemplate();
+        String xmlUrl = "http://export.arxiv.org/api/query?id_list=1706.03762,1705.03122"; // 실제 Atom 피드 URL로 대체해야 합니다.
+        String xmlResponse = restTemplate.getForObject(xmlUrl, String.class);
+
+        // Atom XML을 DTO로 파싱
+        ArxivResponseDTO feedResponse = AtomXmlParser.parse(xmlResponse);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+    @GetMapping("/api/coordinates")
+    public ResponseEntity setCoordinates(@RequestParam Long key, @RequestBody PythonQuestionResponse pythonQuestionResponse){
+        paperService.setBasis(pythonQuestionResponse, key);
+        return new ResponseEntity(HttpStatus.OK);
     }
     @GetMapping("/api/python/test")
     public ResponseEntity pythonTest(){
@@ -351,5 +370,14 @@ public class YeondooDbController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    public class AtomXmlParser {
+        public static ArxivResponseDTO parse(String xml) {
+            Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+            marshaller.setClassesToBeBound(ArxivResponseDTO.class);
+
+            Source source = null;
+            return (ArxivResponseDTO) marshaller.unmarshal(source);
+        }
+    }
 
 }

@@ -12,14 +12,13 @@ import reactor.core.publisher.Flux;
 
 @Controller
 @RequiredArgsConstructor
-//@RequestMapping("/api/paper")
+@RequestMapping("/api/paper")
 public class AsyncPaperController {
 
     private final PaperService paperService;
-    //@PostMapping(value = "/{paperid}",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/{paperid}")
     @ResponseBody @JwtValidation
     public Flux<ServerSentEvent<String>> paperQuestionStream(@RequestHeader("Gauth") String jwt, @PathVariable("paperid") String paperid, @RequestParam("workspaceId")Long workspaceId, @RequestBody QuestionDTO question) {
-        //return paperService.getPaperQuestionStream(paperid, workspaceId, question.getQuestion());
-        return null;
+        return paperService.getPaperQuestionStream(paperid, workspaceId, question);
     }
 }
