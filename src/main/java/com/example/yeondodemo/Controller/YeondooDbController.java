@@ -71,7 +71,7 @@ public class YeondooDbController {
         ArxivResponseDTO feedResponse = AtomXmlParser.parse(xmlResponse);
         return new ResponseEntity(HttpStatus.OK);
     }
-    @GetMapping("/api/coordinates")
+    @PostMapping("/api/coordinates")
     public ResponseEntity setCoordinates(@RequestParam Long key, @RequestBody PythonQuestionResponse pythonQuestionResponse){
         paperService.setBasis(pythonQuestionResponse, key);
         return new ResponseEntity(HttpStatus.OK);
