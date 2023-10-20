@@ -75,6 +75,11 @@ dependencies {
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'org.springframework:spring-oxm:5.3.9' // Spring Framework 버전에 맞게 업데이트
 
+    //pdf
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.27' // 최신 버전을 사용하세요
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0' // 최신 버전을 사용하세요
+
+
 
 
 }
