@@ -151,6 +151,8 @@ public class PaperService {
     @Transactional
     public void setBasis(PythonQuestionResponse pythonQuestionResponse, Long key){
         log.info("Set Basis {}", pythonQuestionResponse);
+        log.info("key: {}", key);
+        log.info("SetBasis, store: {}", store);
         PaperAnswerResponseDTO paperAnswerResponseDTO = new PaperAnswerResponseDTO(pythonQuestionResponse);
         ExpiredPythonAnswerKey expiredPythonAnswerKey = store.get(key);
         expiredPythonAnswerKey.paperAnswerResponseDTO.setPositions(paperAnswerResponseDTO.getPositions());
