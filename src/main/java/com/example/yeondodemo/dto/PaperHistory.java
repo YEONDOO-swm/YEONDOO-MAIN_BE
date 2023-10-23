@@ -1,5 +1,6 @@
 package com.example.yeondodemo.dto;
 
+import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.dto.paper.item.ItemPosition;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +17,5 @@ public class PaperHistory {
     private List<ItemPosition> positions;
     private String context;
     private String extraPaperId;
-    private List<String> paperIds;
+    private List<PaperSimpleIdTitleDTO> paperDetailList;
 }

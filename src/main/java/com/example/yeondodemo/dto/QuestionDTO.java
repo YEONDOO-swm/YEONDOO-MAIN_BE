@@ -19,7 +19,7 @@ public class QuestionDTO {
         private String key;
         private List<String> paperIds;
         private String context;
-        private ItemPosition position;
+        private Integer paperIndex;
         @AssertTrue(message = "invalid paperId")
         public boolean isValidPaperId(){
             for (String paperId : paperIds) {

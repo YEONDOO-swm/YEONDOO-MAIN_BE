@@ -1,6 +1,7 @@
 package com.example.yeondodemo.repository.paper.batis;
 
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
+import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.repository.etc.mapper.AuthorMapper;
 import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
@@ -76,6 +77,16 @@ public class BatisPaperRepository implements PaperRepository {
     @Override
     public void saveF(PaperFullMeta paperFullMeta) {
         paperMapper.saveF(paperFullMeta);
+    }
+
+    @Override
+    public void saveReferences(List<String> references, String paperid){
+        paperMapper.saveReferences(references, paperid);
+    }
+
+    @Override
+    public List<PaperSimpleIdTitleDTO> findReferenceById(String paperid) {
+        return paperMapper.findReferenceById(paperid);
     }
 
 

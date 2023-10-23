@@ -52,4 +52,20 @@
         where isNull(version)
     </select>
 
+    <insert id="saveReferences">
+        insert into REFERENCE (paperId, referenceId)
+        VALUES
+        <foreach collection="references" index="reference" item="reference" separator=",">
+            (${paperid}, #{reference})
+        </foreach>
+    </insert>
+
+    <select id="findReferenceById" resultType="PaperSimpleIdTitleDTO">
+        SELECT paperId, title
+        FROM PAPER
+        WHERE paperId in (select referenceId
+                          from REFERENCE
+                          where paperId = #{paperid})
+    </select>
+
 </mapper>

@@ -1,6 +1,7 @@
 package com.example.yeondodemo.dto;
 
 import com.example.yeondodemo.dto.paper.DetailPaperInfo;
+import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
 import com.example.yeondodemo.entity.Paper;
 import lombok.Getter;
@@ -12,8 +13,8 @@ import java.util.List;
 public class RetPaperInfoDTO {
     private DetailPaperInfo paperInfo;
     private List<PaperHistory> paperHistory;
-    public RetPaperInfoDTO(Paper paper, String summary, List<String> questions, List<PaperHistory> paperHistories, List<ItemAnnotation> paperItems, Boolean isLike){
+    public RetPaperInfoDTO(Paper paper, String summary, List<String> questions, List<PaperHistory> paperHistories, List<ItemAnnotation> paperItems, Boolean isLike, List<PaperSimpleIdTitleDTO> references){
         this.paperHistory = paperHistories;
-        this.paperInfo = new DetailPaperInfo(paper, summary, questions, paperItems, isLike);
+        this.paperInfo = new DetailPaperInfo(paper, summary, questions, paperItems, isLike, references);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.yeondodemo.repository.paper;
 
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
+import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.PaperWithOutMeta;
 
@@ -17,5 +18,7 @@ public interface PaperRepository {
     void saveF(PaperFullMeta paperFullMeta);
     Paper findByIdForValid(String id);
     List<String> findAllNullPaperId();
+    void saveReferences(List<String> references, String paperid);
+    List<PaperSimpleIdTitleDTO> findReferenceById(String paperid);
 
 }

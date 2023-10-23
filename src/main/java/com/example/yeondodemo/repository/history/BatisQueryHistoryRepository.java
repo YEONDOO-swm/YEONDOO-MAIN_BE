@@ -3,22 +3,28 @@ package com.example.yeondodemo.repository.history;
 import com.example.yeondodemo.dto.PaperHistory;
 import com.example.yeondodemo.dto.QueryHistory;
 import com.example.yeondodemo.dto.history.PaperHistoryDTO;
+import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
 import com.example.yeondodemo.dto.paper.item.ItemPosition;
 import com.example.yeondodemo.dto.python.Token;
+import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.repository.history.mapper.QueryHistoryMapper;
+import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j @Repository @RequiredArgsConstructor
 public class BatisQueryHistoryRepository implements QueryHistoryRepository {
     private final QueryHistoryMapper queryHistoryMapper;
+    private final PaperMapper paperMapper;
     private static final ObjectMapper objectMapper = new ObjectMapper();
     @Override
     public QueryHistory save(QueryHistory queryHistory){
@@ -47,7 +53,13 @@ public class BatisQueryHistoryRepository implements QueryHistoryRepository {
         try {
             log.info("PositonString: {}", history.getPositionString());
             if(history.getPositionString()!=null)history.setPositions(objectMapper.readValue(history.getPositionString(), new TypeReference<List<ItemPosition>>(){}));
-            if(history.getExtraPaperId()!=null) history.setPaperIds(List.of(history.getExtraPaperId(), paperId));
+            history.setPaperDetailList(new ArrayList<PaperSimpleIdTitleDTO>());
+            Paper paper = paperMapper.findById(paperId);
+            history.getPaperDetailList().add(new PaperSimpleIdTitleDTO(paper));
+            if(history.getExtraPaperId()!=null){
+                Paper paperExtra = paperMapper.findById(history.getExtraPaperId());
+                history.getPaperDetailList().add(new PaperSimpleIdTitleDTO(paperExtra));
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

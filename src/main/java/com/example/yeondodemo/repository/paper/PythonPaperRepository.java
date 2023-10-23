@@ -2,6 +2,7 @@ package com.example.yeondodemo.repository.paper;
 
 import com.example.yeondodemo.dto.TestPython;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
+import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
 import com.example.yeondodemo.utils.ConnectPythonServer;
@@ -72,6 +73,16 @@ public class PythonPaperRepository implements PaperRepository{
 
     @Override
     public List<String> findAllNullPaperId() {
+        return null;
+    }
+
+    @Override
+    public void saveReferences(List<String> references, String paperid) {
+
+    }
+
+    @Override
+    public List<PaperSimpleIdTitleDTO> findReferenceById(String paperid) {
         return null;
     }
 

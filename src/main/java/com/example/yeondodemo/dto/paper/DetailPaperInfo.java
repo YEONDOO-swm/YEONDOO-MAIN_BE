@@ -22,8 +22,9 @@ public class DetailPaperInfo {
     private String welcomeAnswer;
     private String summary;
     private List<String> questions;
+    private List<PaperSimpleIdTitleDTO> references;
     private List<ItemAnnotation> paperItems;
-    public DetailPaperInfo(Paper paper, String summary, List<String> questions, List<ItemAnnotation> paperItems, Boolean isLike){
+    public DetailPaperInfo(Paper paper, String summary, List<String> questions, List<ItemAnnotation> paperItems, Boolean isLike, List<PaperSimpleIdTitleDTO> references){
         this.paperId = paper.getPaperId();
         this.title = paper.getTitle();
         this.year = paper.getYear();
@@ -35,6 +36,7 @@ public class DetailPaperInfo {
         this.questions = questions;
         this.paperItems = paperItems;
         this.isLike = isLike;
+        this.references = references;
 
     }
 }
