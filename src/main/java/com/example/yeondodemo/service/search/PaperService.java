@@ -184,7 +184,7 @@ public class PaperService {
         List<String> answerList = new ArrayList<>();
         Long lastIdx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
         final long idx = (lastIdx == null) ? 0L : lastIdx;
-
+        log.info("Python RequestBody: {}",pythonQuestionDTO);
         store.put(query.getKey(),new ExpiredPythonAnswerKey(idx, workspaceId, paperid, query));
         Duration timeoutDuration = Duration.ofSeconds(50); // 10초로 설정 (원하는 시간으로 변경 가능)
 
