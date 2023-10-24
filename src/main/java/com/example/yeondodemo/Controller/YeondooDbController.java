@@ -17,10 +17,15 @@ import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.service.WorkspaceService;
 import com.example.yeondodemo.service.search.PaperService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -34,8 +39,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+import org.springframework.xml.transform.StringSource;
 import reactor.core.publisher.Flux;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.Source;
 import java.io.*;
 import java.util.ArrayList;
@@ -61,12 +69,16 @@ public class YeondooDbController {
     public void makeStore(){
         //store = paperRepository.findAllNullPaperId();
     }
+    @GetMapping("/testReference")
+    public ResponseEntity testReference(@RequestParam String p1, @RequestParam String p2,@RequestParam String p3){
+        paperRepository.saveReferences(List.of(p2,p3), p1);
+        return new ResponseEntity(HttpStatus.OK);
+    }
     @GetMapping("api/test/arxiv")
     public ResponseEntity testArxiv(){
         RestTemplate restTemplate = new RestTemplate();
         String xmlUrl = "http://export.arxiv.org/api/query?id_list=1706.03762,1705.03122"; // 실제 Atom 피드 URL로 대체해야 합니다.
         String xmlResponse = restTemplate.getForObject(xmlUrl, String.class);
-
         // Atom XML을 DTO로 파싱
         ArxivResponseDTO feedResponse = AtomXmlParser.parse(xmlResponse);
         return new ResponseEntity(HttpStatus.OK);
@@ -375,9 +387,19 @@ public class YeondooDbController {
             Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
             marshaller.setClassesToBeBound(ArxivResponseDTO.class);
 
-            Source source = null;
+            Source source = new StringSource(xml);
             return (ArxivResponseDTO) marshaller.unmarshal(source);
         }
+    }
+
+
+    public static void main(String[] args) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        String xmlUrl = "http://export.arxiv.org/api/query?id_list=1706.03762,1705.03122"; // 실제 Atom 피드 URL로 대체해야 합니다.
+        String xmlResponse = restTemplate.getForObject(xmlUrl, String.class);
+        // Atom XML을 DTO로 파싱
+        ArxivResponseDTO feedResponse = YeondooDbController.AtomXmlParser.parse(xmlResponse);
+        System.out.println(feedResponse);
     }
 
 }

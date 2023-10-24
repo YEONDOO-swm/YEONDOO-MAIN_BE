@@ -3,8 +3,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.yeondodemo.repository.paper.mapper.PaperMapper">
     <insert id="save">
-        insert into PAPER (paperId, conference, cites, likes, lastUpdate, title, url, year)
-        values (#{paperId}, #{conference},#{cites}, #{likes}, #{lastUpdate}, #{title}, #{url}, #{year})
+        insert into PAPER (paperId, conference, cites, likes, lastUpdate, title, url, year, categories, summary)
+        values (#{paperId}, #{conference},#{cites}, #{likes}, #{lastUpdate}, #{title}, #{url}, #{year}, #{categories}, #{abs})
     </insert>
 
     <insert id="saveF">
@@ -58,6 +58,12 @@
         <foreach collection="references" index="reference" item="reference" separator=",">
             (${paperid}, #{reference})
         </foreach>
+    </insert>
+
+    <insert id="saveReference">
+        insert into REFERENCE (paperId, referenceId)
+        VALUES
+        (${paperid}, #{reference})
     </insert>
 
     <select id="findReferenceById" resultType="PaperSimpleIdTitleDTO">

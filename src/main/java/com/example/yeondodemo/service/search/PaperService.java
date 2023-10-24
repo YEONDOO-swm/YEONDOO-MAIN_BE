@@ -187,12 +187,12 @@ public class PaperService {
         log.info("Python RequestBody: {}",pythonQuestionDTO);
         store.put(query.getKey(),new ExpiredPythonAnswerKey(idx, workspaceId, paperid, query));
         Duration timeoutDuration = Duration.ofSeconds(50); // 10초로 설정 (원하는 시간으로 변경 가능)
-
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         WebClient webClient = WebClient.builder()
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 설정은 선택사항
                         .build())
-                .baseUrl(pythonapi + "/chat")
+                .baseUrl(pythonapi + "/chat"+"?key="+query.getKey())
                 .defaultHeader("Content-Type", "application/json")
                 .build();
        return webClient

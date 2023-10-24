@@ -9,8 +9,11 @@ import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.utils.Updater;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j  @RequiredArgsConstructor @Repository
@@ -81,7 +84,25 @@ public class BatisPaperRepository implements PaperRepository {
 
     @Override
     public void saveReferences(List<String> references, String paperid){
-        paperMapper.saveReferences(references, paperid);
+        List<String> notInList = new ArrayList<>();
+        for (String reference : references) {
+            try{
+                paperMapper.saveReference(reference, paperid);
+            }catch (Exception e){
+                if(e.getClass()==SQLIntegrityConstraintViolationException.class || e.getClass() == DataIntegrityViolationException.class){
+                    notInList.add(reference);
+                }
+                System.out.println(e.getClass());
+            }
+        }
+        if(!notInList.isEmpty()){
+            log.info("There is None - Registered Paper.., {}", notInList);
+            List<Paper> paperMeta = updater.getPaperMeta(notInList);
+            for (Paper paper : paperMeta) {
+                authorMapper.saveAll(paper.getPaperId(), paper.getAuthors());
+                paperMapper.saveReference(paper.getPaperId(), paperid);
+            }
+        }
     }
 
     @Override

@@ -2,16 +2,23 @@ package com.example.yeondodemo.entity;
 
 import com.example.yeondodemo.dto.ScholarDTO;
 import com.example.yeondodemo.dto.TestPython;
+import com.example.yeondodemo.dto.arxiv.ArxivEntryDTO;
+import com.example.yeondodemo.dto.arxiv.ArxivResponseDTO;
+import com.example.yeondodemo.dto.arxiv.AuthorDTO;
+import com.example.yeondodemo.dto.arxiv.CategoryDTO;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.joda.time.DateTime;
+import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter @Setter @ToString
 public class Paper extends PaperWithOutMeta{
@@ -43,6 +50,21 @@ public class Paper extends PaperWithOutMeta{
         this.title = testPython.getTitle();
         this.url = testPython.getUrl();
         this.authors = testPython.getAuthors();
+    }
+    public Paper(ArxivEntryDTO arxivEntryDTO, String paperId){
+        this.title = arxivEntryDTO.getTitle();
+        this.abs = arxivEntryDTO.getSummary();
+        this.paperId = paperId;
+        this.authors = arxivEntryDTO.getAuthors().stream()
+                .map(AuthorDTO::getName)
+                .collect(Collectors.toList());
+        this.categories = arxivEntryDTO.getCategories().stream()
+                .map(CategoryDTO::getTerm)
+                .collect(Collectors.joining(" "));
+        this.url = "https://arxiv.org/pdf/" + this.paperId + ".pdf";
+
+        DateTime dateTime = new DateTime(arxivEntryDTO.getPublished());
+        this.year = dateTime.getYear();
     }
     public Paper(String id){
         this.paperId = id;
