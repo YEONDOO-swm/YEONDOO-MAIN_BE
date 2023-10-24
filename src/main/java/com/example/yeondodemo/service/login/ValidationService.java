@@ -34,7 +34,7 @@ public class ValidationService {
     String clientSecret;
     @Timer("Google Authcode")
     public ResponseEntity<GoogleInfoResponse> getResponseFromGoogle(String authCode, RestTemplate restTemplate){
-
+        log.info("authcode: {}", authCode);
         GoogleRequest googleOAuthRequestParam = GoogleRequest
                 .builder()
                 .clientId(clientId)

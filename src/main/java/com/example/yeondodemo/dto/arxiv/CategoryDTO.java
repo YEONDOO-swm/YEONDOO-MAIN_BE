@@ -1,6 +1,5 @@
 package com.example.yeondodemo.dto.arxiv;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,7 +8,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 @ToString
 @XmlRootElement(name = "category", namespace = "http://www.w3.org/2005/Atom")
 public class CategoryDTO {

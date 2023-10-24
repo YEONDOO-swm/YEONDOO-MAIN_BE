@@ -10,7 +10,6 @@ import com.example.yeondodemo.dto.python.PaperPythonFirstResponseDTO;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;
 import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.entity.Paper;
-import com.example.yeondodemo.exceptions.PythonServerException;
 import com.example.yeondodemo.filter.ReadPaper;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperInfoRepository;

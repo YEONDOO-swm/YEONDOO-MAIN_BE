@@ -18,7 +18,6 @@ import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.service.WorkspaceService;
 import com.example.yeondodemo.service.search.PaperService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import jakarta.annotation.PostConstruct;
