@@ -191,7 +191,7 @@ public class PaperService {
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 설정은 선택사항
                         .build())
-                .baseUrl(pythonapi + "/chat"+"?key="+query.getKey())
+                .baseUrl(pythonapi + "/chat")
                 .defaultHeader("Content-Type", "application/json")
                 .build();
        return webClient
