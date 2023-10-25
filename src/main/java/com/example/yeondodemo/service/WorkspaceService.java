@@ -9,6 +9,7 @@ import com.example.yeondodemo.repository.etc.KeywordRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisRecentlyRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
+import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.repository.user.RealUserRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.utils.JwtTokenProvider;
@@ -20,6 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+@FunctionalInterface
+interface likeCheck {
+    public void check(Paper paper);
+}
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +37,7 @@ public class WorkspaceService {
     private final JwtTokenProvider provider;
     private final BatisRecentlyRepository recentlyRepository;
     private final PaperRepository paperRepository;
+    private final LikePaperRepository likePaperRepository;
     private Long MASK = 9007199254740991l;
     @Transactional
     public void updateWorkspace(WorkspacePutDTO workspace){
@@ -50,15 +56,28 @@ public class WorkspaceService {
         recentlyTrends.add(trendResponseDTO2);
         recentlyTrends.add(trendResponseDTO3);
 
+        List<String> userSet = likePaperRepository.findByUser(workspaceId);
+
+        likeCheck isLike = (Paper paper) -> {
+            if(userSet.contains(paper.getPaperId())){
+                paper.setLikes(1);
+            }
+        };
+
+
+
         Paper paper = paperRepository.findById("1706.03762");
+        isLike.check(paper);
         PaperDTO paperDTO = new PaperDTO(paper);
         reccommendPapers.add(paperDTO);
 
         paper = paperRepository.findById("1706.03761");
+        isLike.check(paper);
         PaperDTO paperDTO2 = new PaperDTO(paper);
         reccommendPapers.add(paperDTO2);
 
         paper = paperRepository.findById("1706.03763");
+        isLike.check(paper);
         PaperDTO paperDTO3 = new PaperDTO(paper);
         reccommendPapers.add(paperDTO3);
 
