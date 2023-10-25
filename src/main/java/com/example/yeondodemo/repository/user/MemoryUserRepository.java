@@ -51,4 +51,9 @@ public class MemoryUserRepository implements UserRepository {
     public WorkspacePutDTO update(WorkspacePutDTO user){
         return user;
     }
+
+    @Override
+    public void updateDate(Long workspaceId) {
+
+    }
 }

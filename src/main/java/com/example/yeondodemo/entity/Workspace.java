@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +18,7 @@ public class Workspace {
     private String title;
     private String studyField;
     private Date editDate;
+    private Date editDateTime;
     private List<String> keywords=new ArrayList<>();
     private List<Paper> likePapers=new ArrayList<>();
     public Workspace(Long workspaceId, String description){

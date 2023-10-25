@@ -52,9 +52,9 @@ public class WorkspaceService {
 
 
 
-        TrendResponseDTO trendResponseDTO1 = new TrendResponseDTO("forTest",new LocalDate(1999,8,22), "test.test1");
-        TrendResponseDTO trendResponseDTO2 = new TrendResponseDTO("forTest",new LocalDate(2023,10,03), "test.test2");
-        TrendResponseDTO trendResponseDTO3 = new TrendResponseDTO("forTest",new LocalDate(2029,10,22), "test.test3");
+        TrendResponseDTO trendResponseDTO1 = new TrendResponseDTO("forTest",LocalDate.of(1999,8,22), "test.test1");
+        TrendResponseDTO trendResponseDTO2 = new TrendResponseDTO("forTest",LocalDate.of(2023,10,03), "test.test2");
+        TrendResponseDTO trendResponseDTO3 = new TrendResponseDTO("forTest",LocalDate.of(2029,10,22), "test.test3");
         recentlyTrends.add(trendResponseDTO1);
         recentlyTrends.add(trendResponseDTO2);
         recentlyTrends.add(trendResponseDTO3);

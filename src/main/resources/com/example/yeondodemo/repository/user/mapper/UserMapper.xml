@@ -7,6 +7,12 @@
         insert into WORKSPACE (workspaceId,description, title, studyField, editDate)
         values (#{saveParam.workspaceId}, #{saveParam.description}, #{saveParam.title}, #{saveParam.studyField},  CURRENT_TIME)
     </insert>
+    <update id="updateDate">
+        update WORKSPACE
+        set editDate = CURRENT_DATE,
+            editDateTime = CURRENT_TIME
+        WHERE workspaceId = #{workspaceId}
+    </update>
     <update id="update">
         update WORKSPACE
         set description=#{updateParam.description},
@@ -32,5 +38,6 @@
         <foreach collection="workspaceIds" item="workspaceId" index="index" separator="," open="(" close=")" >
             #{workspaceId}
         </foreach>
+        ORDER BY editDateTIme DESC
     </select>
 </mapper>

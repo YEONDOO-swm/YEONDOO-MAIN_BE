@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Set;
 
-@Repository
 public interface UserRepository  {
     public Workspace save(Workspace workspace);
     public List<Workspace> findById(List<Long> workspaceIds);
@@ -15,4 +14,5 @@ public interface UserRepository  {
     public Workspace findByName(Long name);
     public void clearStore();
     public WorkspacePutDTO update(WorkspacePutDTO user);
+    void updateDate(Long workspaceId);
 }

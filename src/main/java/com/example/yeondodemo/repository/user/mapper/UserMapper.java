@@ -15,4 +15,5 @@ public interface UserMapper {
     public List<Workspace> findById(List<Long> workspaceIds);
     public void clearStore();
     public void update(@Param("updateParam") WorkspacePutDTO workspace);
+    void updateDate(Long workspaceId);
 }

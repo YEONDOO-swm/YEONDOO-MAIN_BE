@@ -49,4 +49,8 @@ public class BatisUserRepository implements UserRepository {
         keywordMapper.save(user.getWorkspaceId(), user.getKeywords());
         return user;
     }
+    @Override
+    public void updateDate(Long workspaceId){
+        userMapper.updateDate(workspaceId);
+    }
 }
