@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 @FunctionalInterface
 interface likeCheck {
@@ -49,9 +50,11 @@ public class WorkspaceService {
         List<PaperDTO> reccommendPapers = new ArrayList<>();
         List<TrendResponseDTO> recentlyTrends = new ArrayList<>();
 
-        TrendResponseDTO trendResponseDTO1 = new TrendResponseDTO("forTest",new Date(1999,8,22), "test.test1");
-        TrendResponseDTO trendResponseDTO2 = new TrendResponseDTO("forTest",new Date(2023,10,03), "test.test2");
-        TrendResponseDTO trendResponseDTO3 = new TrendResponseDTO("forTest",new Date(2029,10,22), "test.test3");
+
+
+        TrendResponseDTO trendResponseDTO1 = new TrendResponseDTO("forTest",new LocalDate(1999,8,22), "test.test1");
+        TrendResponseDTO trendResponseDTO2 = new TrendResponseDTO("forTest",new LocalDate(2023,10,03), "test.test2");
+        TrendResponseDTO trendResponseDTO3 = new TrendResponseDTO("forTest",new LocalDate(2029,10,22), "test.test3");
         recentlyTrends.add(trendResponseDTO1);
         recentlyTrends.add(trendResponseDTO2);
         recentlyTrends.add(trendResponseDTO3);
