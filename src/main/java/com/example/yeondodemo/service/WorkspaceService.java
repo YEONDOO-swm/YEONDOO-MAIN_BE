@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 @FunctionalInterface
 interface likeCheck {
-    public void check(Paper paper);
+    public void check(PaperDTO paper);
 }
 
 @Service
@@ -58,27 +58,27 @@ public class WorkspaceService {
 
         List<String> userSet = likePaperRepository.findByUser(workspaceId);
 
-        likeCheck isLike = (Paper paper) -> {
+        likeCheck isLike = (PaperDTO paper) -> {
             if(userSet.contains(paper.getPaperId())){
-                paper.setLikes(1);
+                paper.setIsLike(true);
             }
         };
 
 
 
         Paper paper = paperRepository.findById("1706.03762");
-        isLike.check(paper);
         PaperDTO paperDTO = new PaperDTO(paper);
+        isLike.check(paperDTO);
         reccommendPapers.add(paperDTO);
 
         paper = paperRepository.findById("1706.03761");
-        isLike.check(paper);
         PaperDTO paperDTO2 = new PaperDTO(paper);
+        isLike.check(paperDTO);
         reccommendPapers.add(paperDTO2);
 
         paper = paperRepository.findById("1706.03763");
-        isLike.check(paper);
         PaperDTO paperDTO3 = new PaperDTO(paper);
+        isLike.check(paperDTO);
         reccommendPapers.add(paperDTO3);
 
 
