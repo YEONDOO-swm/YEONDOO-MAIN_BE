@@ -1,16 +1,18 @@
 package com.example.yeondodemo.service.search;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.yeondodemo.dto.*;
-import com.example.yeondodemo.dto.paper.ExpiredKeyDTO;
-import com.example.yeondodemo.dto.paper.PaperAnswerResponseDTO;
-import com.example.yeondodemo.dto.paper.PaperResultRequest;
-import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
+import com.example.yeondodemo.dto.paper.*;
 import com.example.yeondodemo.dto.paper.item.*;
 import com.example.yeondodemo.dto.python.PaperPythonFirstResponseDTO;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;
 import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.entity.Paper;
+import com.example.yeondodemo.exceptions.PythonServerException;
 import com.example.yeondodemo.filter.ReadPaper;
+import com.example.yeondodemo.repository.etc.BatisAuthorRepository;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperInfoRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
@@ -32,15 +34,19 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
+import java.io.*;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Service @RequiredArgsConstructor @Slf4j
 public class PaperService {
@@ -51,12 +57,15 @@ public class PaperService {
     private final LikePaperRepository likePaperRepository;
     private final BatisItemAnnotationRepository itemAnnotationRepository;
     private final Cache cacheService;
+    private final BatisAuthorRepository authorRepository;
+    private final AmazonS3 amazonS3;
     private Map<Long, ExpiredKeyDTO> answerIdMap;
     @Value("${python.address}")
     private String pythonapi;
     @Value("${python.key}")
     private String pythonKey;
 
+    private AtomicLong lastPaperId;
     public static Map<String,ExpiredPythonAnswerKey> store;
     @ToString
     class ExpiredPythonAnswerKey{
@@ -75,10 +84,39 @@ public class PaperService {
             this.paperAnswerResponseDTO = new PaperAnswerResponseDTO();
         }
     }
+    private long loadIdFromFile(String idFilePath) {
+        long id = 1L; // 기본값
+
+        File file = new File(idFilePath);
+
+        if (file.exists()) {
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String idStr = reader.readLine();
+                if (idStr != null) {
+                    id = Long.parseLong(idStr);
+                }
+            } catch (IOException e) {
+                // 파일 읽기 오류 처리
+                e.printStackTrace();
+            }
+        } else {
+            // 파일이 존재하지 않을 때, 새 파일을 생성하고 초기 ID 값 0을 기록
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write("1");
+            } catch (IOException e) {
+                // 파일 생성 또는 초기 ID 값 작성 오류 처리
+                e.printStackTrace();
+            }
+        }
+
+
+        return id;
+    }
     @PostConstruct
     public void init(){
         store = new ConcurrentHashMap();
         answerIdMap = new ConcurrentHashMap();
+        lastPaperId = new AtomicLong(loadIdFromFile("./idFile.txt"));
     }
     public void timeout(){
         List<Long>  timeoutList = new ArrayList<>();
@@ -184,9 +222,8 @@ public class PaperService {
         Long lastIdx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
         final long idx = (lastIdx == null) ? 0L : lastIdx;
         log.info("Python RequestBody: {}",pythonQuestionDTO);
-        store.put(query.getKey(),new ExpiredPythonAnswerKey(idx, workspaceId, paperid, query));
+        //store.put(query.getKey(),new ExpiredPythonAnswerKey(idx, workspaceId, paperid, query));
         Duration timeoutDuration = Duration.ofSeconds(50); // 10초로 설정 (원하는 시간으로 변경 가능)
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         WebClient webClient = WebClient.builder()
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 설정은 선택사항
@@ -209,8 +246,11 @@ public class PaperService {
         }).doOnComplete(
                        () -> {
                            String answer = String.join("",answerList);
-                           store.get(query.getKey()).paperAnswerResponseDTO.setAnswer(answer);
-
+                           //store.get(query.getKey()).paperAnswerResponseDTO.setAnswer(answer);
+                           PaperAnswerResponseDTO paperAnswerResponseDTO = new PaperAnswerResponseDTO();
+                           paperAnswerResponseDTO.setAnswer(answer);
+                           queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, paperAnswerResponseDTO));
+                           queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
                        }
                );
     }
@@ -267,6 +307,59 @@ public class PaperService {
     @Transactional
     public void resultScore(PaperResultRequest paperResultRequest){
         queryHistoryRepository.updateScore(paperResultRequest.getId(), paperResultRequest.getScore());
+    }
+
+    private String idFilePath = "./idFile.txt";
+
+    public long getNextId() {
+        long nextId = lastPaperId.incrementAndGet();
+        saveIdToFile(nextId);
+        return nextId;
+    }
+
+    private void saveIdToFile(long id) {
+        File file = new File(idFilePath);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(Long.toString(id));
+        } catch (IOException e) {
+            // 파일 쓰기 오류 처리
+            e.printStackTrace();
+        }
+    }
+
+
+    void storePaper(Paper paper){
+        String paperId = "9999."+ getNextId();
+        paper.setPaperId(paperId);
+        paper.setUrl("https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com"+"/"+paperId);
+        paperRepository.save(paper);
+        authorRepository.saveAll(paperId, paper.getAuthors());
+        paperBufferRepository.save(new PaperBuffer(paperId));
+    }
+    void uploadPaper(MultipartFile file, String paperId){
+        String bucketName = "yeondoo-upload-pdf";
+        String key = paperId;
+        try {
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
+
+            amazonS3.putObject(bucketName, key, file.getInputStream(), metadata);
+        } catch (Exception e) {
+            throw new PythonServerException("h");
+        }
+    }
+
+
+    @Transactional
+    public FileUploadResponse fileUploadAndStore(Long workspaceId,String title,List<String> authors,List<String> subject,MultipartFile file){
+        //paperId규칙: 2017 -> 9999.00001
+        //db에 index저장 필요.
+        Paper paper = Paper.builder().title(title).authors(authors).categories(String.join(" ", subject)).build();
+        storePaper(paper);
+        uploadPaper(file, paper.getPaperId());
+        return FileUploadResponse.builder().url(paper.getUrl()).paperId(paper.getPaperId()).build();
     }
 
 }

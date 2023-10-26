@@ -20,5 +20,7 @@ public class LibraryDTO{
     private String paperId;
     private List<String> authors;
     private String conference;
+    private List<String> subject;
+    private String categoryString;
     private int cites;
 }

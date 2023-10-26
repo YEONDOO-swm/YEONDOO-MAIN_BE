@@ -4,7 +4,7 @@
 <mapper namespace="com.example.yeondodemo.repository.etc.mapper.LibraryMapper">
 
     <select id="findByUserName" resultType="com.example.yeondodemo.dto.LibraryDTO">
-        SELECT p.paperId AS paperId, lp.workspaceId AS workspaceId, p.title AS title, p.year AS year, p.url AS url, ws.title AS workspaceTitle
+        SELECT p.paperId AS paperId, lp.workspaceId AS workspaceId, p.title AS title, p.year AS year, p.url AS url, ws.title AS workspaceTitle, p.categories as categoryString
         FROM PAPER AS p
             JOIN LIKEPAPER AS lp ON p.paperId = lp.paperId
             JOIN Workspaces AS w ON lp.workspaceId = w.workspaceId

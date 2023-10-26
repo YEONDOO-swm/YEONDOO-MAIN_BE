@@ -92,7 +92,7 @@ public class SearchService {
                     authorRepository.save(paper.getPaperId(), author);
                 }
             }
-            PaperDTO paperDTO = new PaperDTO(tPaper, paper);
+            PaperDTO paperDTO = new PaperDTO(paper);
             if (userSet != null && userSet.contains(paper.getPaperId())){ //userSEt null인부분 생각
                 paperDTO.setIsLike(true);
             }

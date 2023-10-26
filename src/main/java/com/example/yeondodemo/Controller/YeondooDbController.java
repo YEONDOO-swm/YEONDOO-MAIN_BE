@@ -36,6 +36,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import org.springframework.xml.transform.StringSource;
@@ -68,6 +69,21 @@ public class YeondooDbController {
     public void makeStore(){
         //store = paperRepository.findAllNullPaperId();
     }
+    @PostMapping("/file/upload")
+    public ResponseEntity uploadFile(
+            @RequestHeader("Gauth") String jwt,
+            @RequestParam("workspaceId") Long workspaceId,
+            @RequestParam("title") String title,
+            @RequestParam("authors") List<String> authors,
+            @RequestParam("subject") List<String> subject,
+            @RequestParam("file") MultipartFile file){
+        if (file.isEmpty()) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity(paperService.fileUploadAndStore(workspaceId, title, authors, subject, file), HttpStatus.OK);
+    }
+
     @GetMapping("/testReference")
     public ResponseEntity testReference(@RequestParam String p1, @RequestParam String p2,@RequestParam String p3){
         paperRepository.saveReferences(List.of(p2,p3), p1);

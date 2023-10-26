@@ -7,9 +7,7 @@ import com.example.yeondodemo.dto.arxiv.ArxivResponseDTO;
 import com.example.yeondodemo.dto.arxiv.AuthorDTO;
 import com.example.yeondodemo.dto.arxiv.CategoryDTO;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.joda.time.DateTime;
 import org.springframework.security.core.parameters.P;
 
@@ -20,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter @Setter @ToString
+@Getter @Setter @ToString @Builder @AllArgsConstructor
 public class Paper extends PaperWithOutMeta{
     private Long paperCode;
     private String paperId;

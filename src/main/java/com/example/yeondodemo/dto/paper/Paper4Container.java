@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter @Setter @ToString
@@ -16,6 +18,7 @@ public class Paper4Container {
     private String conference;
     private int cites;
     private String url;
+    private List<String> subject;
     public Paper4Container(Paper paper){
         this.title = paper.getTitle();
         this.paperId = paper.getPaperId();
@@ -24,5 +27,8 @@ public class Paper4Container {
         this.cites = paper.getCites();
         this.url = paper.getUrl();
         this.conference = paper.getConference();
+        this.subject = paper.getCategories() != null
+                ? Arrays.asList(paper.getCategories().split(" "))
+                : new ArrayList<>();
     }
 }
