@@ -39,6 +39,7 @@ public class Paper extends PaperWithOutMeta{
     private String categories;
     private String license;
     private String version;
+    private Boolean userPdf = false;
     public void setScholar(ScholarDTO scholarDTO){
         this.conference = scholarDTO.getConference();
         this.cites = scholarDTO.getCites();

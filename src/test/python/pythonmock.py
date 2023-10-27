@@ -12,7 +12,7 @@ async def generate_chunks_default():
     for i in range(1, 10):
         yield f"Message {i}\n"
         await asyncio.sleep(0.1)
-    yield "event: close\ndata: \n\n"
+    yield "event: close\ndata: \n"
 
 @app.get("/test/stream")
 async def post_chat():

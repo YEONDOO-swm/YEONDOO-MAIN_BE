@@ -19,6 +19,7 @@ public class Paper4Container {
     private int cites;
     private String url;
     private List<String> subject;
+    private Boolean userPdf;
     public Paper4Container(Paper paper){
         this.title = paper.getTitle();
         this.paperId = paper.getPaperId();
@@ -30,5 +31,6 @@ public class Paper4Container {
         this.subject = paper.getCategories() != null
                 ? Arrays.asList(paper.getCategories().split(" "))
                 : new ArrayList<>();
+        this.userPdf = paper.getUserPdf();
     }
 }

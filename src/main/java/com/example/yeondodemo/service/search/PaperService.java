@@ -239,8 +239,12 @@ public class PaperService {
                 .bodyToFlux(String.class)
                .timeout(timeoutDuration)
                .map(data -> {
+                   log.info("data is .. {}", data);
                    int lastIndex = data.lastIndexOf("\n");
                    String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
+                   if (data.startsWith("data: ")) {
+                       trimmedData = data.substring("data: ".length()).trim();
+                   }
                    answerList.add(trimmedData);
                    return ServerSentEvent.builder(trimmedData).build();
         }).doOnComplete(
@@ -281,12 +285,19 @@ public class PaperService {
         }
         paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
     }
+    public void updateInfoRepositoryV5(PaperPythonFirstResponseDTO pythonPaperInfoDTO, String paperid){
+        paperBufferRepository.update(paperid, new BufferUpdateDTO(true, new Date()));
+        paperRepository.saveReferences(pythonPaperInfoDTO.getReferences(), paperid);
+    }
 
 
     @ReadPaper
     public RetPaperInfoDTO getPaperInfo(String paperid, Long workspaceId) throws JsonProcessingException {
         log.info("getPaperInfo... ");
-        cacheService.checkPaperCanCached(paperid);
+        PaperPythonFirstResponseDTO paperPythonFirstResponseDTO = cacheService.checkPaperCanCached(paperid, "");
+        if(paperPythonFirstResponseDTO!=null){
+            updateInfoRepositoryV5(paperPythonFirstResponseDTO, paperid);
+        }
         RetPaperInfoDTO paperInfoDTO = makeRetPaperInfoDTO(paperid, workspaceId);
         log.info("paper info: {}", paperInfoDTO);
         return paperInfoDTO;
@@ -311,7 +322,7 @@ public class PaperService {
 
     private String idFilePath = "./idFile.txt";
 
-    public long getNextId() {
+    public Long getNextId() {
         long nextId = lastPaperId.incrementAndGet();
         saveIdToFile(nextId);
         return nextId;
@@ -329,17 +340,17 @@ public class PaperService {
     }
 
 
-    void storePaper(Paper paper){
-        String paperId = "9999."+ getNextId();
+    void storePaper(Long workspaceId, Paper paper){
+        String paperId = workspaceId.toString() + "/" + "9999."+ getNextId().toString();// workspaceId.toString() + "/" + "9999."+ getNextId().toString();
         paper.setPaperId(paperId);
-        paper.setUrl("https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com"+"/"+paperId);
+        paper.setUrl("https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com"+"/"+ paperId + ".pdf");
         paperRepository.save(paper);
         authorRepository.saveAll(paperId, paper.getAuthors());
         paperBufferRepository.save(new PaperBuffer(paperId));
     }
     void uploadPaper(MultipartFile file, String paperId){
         String bucketName = "yeondoo-upload-pdf";
-        String key = paperId;
+        String key = paperId + ".pdf";
         try {
 
             ObjectMetadata metadata = new ObjectMetadata();
@@ -356,9 +367,11 @@ public class PaperService {
     public FileUploadResponse fileUploadAndStore(Long workspaceId,String title,List<String> authors,List<String> subject,MultipartFile file){
         //paperId규칙: 2017 -> 9999.00001
         //db에 index저장 필요.
-        Paper paper = Paper.builder().title(title).authors(authors).categories(String.join(" ", subject)).build();
-        storePaper(paper);
+        // .pdf
+        Paper paper = Paper.builder().title(title).authors(authors).categories(String.join(" ", subject)).userPdf(true).build();
+        storePaper(workspaceId, paper);
         uploadPaper(file, paper.getPaperId());
+        cacheService.checkPaperCanCached(paper.getPaperId(), paper.getPaperId() + ".pdf");
         return FileUploadResponse.builder().url(paper.getUrl()).paperId(paper.getPaperId()).build();
     }
 

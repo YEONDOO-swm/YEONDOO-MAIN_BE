@@ -17,8 +17,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
@@ -37,43 +40,19 @@ public class Cache {
     }
 
     @Transactional
-    public void checkPaperCanCached(String paperid){
+    public PaperPythonFirstResponseDTO checkPaperCanCached(String paperid, String fileName){
         if((!paperBufferRepository.isHit(paperid))){
             //goto python server and get data
             log.info("go to python server.... ");
+
             Paper paper = paperRepository.findById(paperid);
-            Thread apiRequestThread = new Thread(
-                    () -> {
-
-                        PaperPythonFirstResponseDTO pythonPaperInfoDTO = ConnectPythonServer.requestPaperInfo(paperid, pythonapi);
-                        log.info("python return : {}", pythonPaperInfoDTO);
-                        if(pythonPaperInfoDTO == null) {
-                            throw new PythonServerException("Get Null Data From python Server");
-                        }
-                        updateInfoRepositoryV4(pythonPaperInfoDTO, paperid);
-                    }
-            );
-
-
-            // 두 번째 작업: PDF 레퍼런스 추출
-            Thread pdfExtractionThread = new Thread(
-                    () -> {
-                        List<String> references = PDFReferenceExtractor.ExtractReference(paper.getUrl());
-                        paperRepository.saveReferences(references, paperid);
-                    }
-            );
-
-            apiRequestThread.start();
-            pdfExtractionThread.start();
-            try {
-                // 두 스레드가 모두 완료될 때까지 대기
-                apiRequestThread.join();
-                pdfExtractionThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                throw new PythonServerException("Python server Error");
-            }
-
-        };
+            PaperPythonFirstResponseDTO pythonPaperInfoDTO = ConnectPythonServer.requestPaperInfo(paperid, pythonapi, paper.getUserPdf(), fileName);
+            log.info("python return : {}", pythonPaperInfoDTO);
+                            if(pythonPaperInfoDTO == null) {
+                                throw new RuntimeException("Get Null Data From python Server");
+                            }
+            return pythonPaperInfoDTO;
+        }
+        return null;
     }
 }

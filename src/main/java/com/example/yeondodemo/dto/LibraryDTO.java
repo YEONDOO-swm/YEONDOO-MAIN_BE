@@ -23,4 +23,5 @@ public class LibraryDTO{
     private List<String> subject;
     private String categoryString;
     private int cites;
+    private Boolean userPdf;
 }

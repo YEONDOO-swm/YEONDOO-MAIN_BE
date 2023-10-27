@@ -10,4 +10,6 @@ public class PaperHistoryDTO {
     private String content;
     private String title;
     private Boolean who;
+    private String url;
+    private Boolean userPdf;
 }

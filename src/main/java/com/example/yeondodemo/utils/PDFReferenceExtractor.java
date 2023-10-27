@@ -19,10 +19,8 @@ public class PDFReferenceExtractor {
     public static List<String> ExtractReference(String pdfUrl){
         List<String> ret = new ArrayList<>();
         try {
-            // PDF 파일 다운로드
             InputStream pdfInputStream = new URL(pdfUrl).openStream();
 
-            // PDF에서 텍스트 추출
             PDDocument document = PDDocument.load(pdfInputStream);
             PDFTextStripper pdfTextStripper = new PDFTextStripper();
             String pdfText = pdfTextStripper.getText(document);

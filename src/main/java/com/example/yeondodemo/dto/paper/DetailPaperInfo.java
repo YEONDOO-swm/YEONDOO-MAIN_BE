@@ -24,6 +24,7 @@ public class DetailPaperInfo {
     private List<String> questions;
     private List<PaperSimpleIdTitleDTO> references;
     private List<ItemAnnotation> paperItems;
+    private Boolean userPdf;
     public DetailPaperInfo(Paper paper, String summary, List<String> questions, List<ItemAnnotation> paperItems, Boolean isLike, List<PaperSimpleIdTitleDTO> references){
         this.paperId = paper.getPaperId();
         this.title = paper.getTitle();
@@ -37,6 +38,7 @@ public class DetailPaperInfo {
         this.paperItems = paperItems;
         this.isLike = isLike;
         this.references = references;
+        this.userPdf = paper.getUserPdf();
 
     }
 }

@@ -69,7 +69,7 @@ public class YeondooDbController {
     public void makeStore(){
         //store = paperRepository.findAllNullPaperId();
     }
-    @PostMapping("/file/upload")
+    @PostMapping("api/file/upload")
     public ResponseEntity uploadFile(
             @RequestHeader("Gauth") String jwt,
             @RequestParam("workspaceId") Long workspaceId,

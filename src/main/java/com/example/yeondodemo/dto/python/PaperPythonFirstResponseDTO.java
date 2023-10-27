@@ -11,4 +11,5 @@ public class PaperPythonFirstResponseDTO {
     private String summary;
     private List<String> questions;
     private float embeddingTokens;
+    private List<String> references;
 }
