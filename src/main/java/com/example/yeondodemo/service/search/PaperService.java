@@ -340,7 +340,7 @@ public class PaperService {
         paper.setPaperId(paperId);
         paper.setUrl("https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com"+"/"+ paperId + ".pdf");
         paperRepository.save(paper);
-        authorRepository.saveAll(paperId, paper.getAuthors());
+        if(paper.getAuthors()!=null && paper.getAuthors().size()!=0){authorRepository.saveAll(paperId, paper.getAuthors());}
         paperBufferRepository.save(new PaperBuffer(paperId));
     }
     void uploadPaper(MultipartFile file, String paperId){
