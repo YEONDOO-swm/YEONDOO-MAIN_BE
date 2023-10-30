@@ -26,7 +26,7 @@
         SELECT paperId
         FROM LIKEPAPER
         WHERE workspaceId= #{workspaceId} and isValid = 1
-        ORDER BY id ASC
+        ORDER BY editDateTime DESC
     </select>
 
     <select id="findAllByUser" resultType="String">
