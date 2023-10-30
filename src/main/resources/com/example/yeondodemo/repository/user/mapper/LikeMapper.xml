@@ -4,12 +4,13 @@
 <mapper namespace="com.example.yeondodemo.repository.user.mapper.LikeMapper">
 
     <insert id="save">
-        insert into LIKEPAPER (workspaceId,paperId, isValid)
-        values (#{workspaceId}, #{paperId}, #{isValid})
+        insert into LIKEPAPER (workspaceId,paperId, isValid, editDateTime)
+        values (#{workspaceId}, #{paperId}, #{isValid}, CURRENT_TIME)
     </insert>
     <update id="update">
         update LIKEPAPER
-        set isValid=#{isValid}
+        set isValid=#{isValid},
+            editDateTime = CURRENT_TIME
         where workspaceId= #{workspaceId} AND paperId = #{paperId}
     </update>
     <select id="clear" >
@@ -27,7 +28,7 @@
         SELECT paperId
         FROM LIKEPAPER
         WHERE workspaceId = #{workspaceId}
-        ORDER BY id ASC
+        ORDER BY editDateTime DESC
     </select>
 
     <select id="findSimpleByUser" resultType="com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO">
