@@ -240,8 +240,11 @@ public class PaperService {
                .timeout(timeoutDuration)
                .map(data -> {
                    log.info("data is .. {}", data);
-                   answerList.add(data);
-                   return ServerSentEvent.builder(data).build();
+
+                   int lastIndex = data.lastIndexOf("\n");
+                   String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
+                   answerList.add(trimmedData);
+                   return ServerSentEvent.builder(trimmedData).build();
         }).doOnComplete(
                        () -> {
                            String answer = String.join("",answerList);
