@@ -51,6 +51,7 @@ public class Paper extends PaperWithOutMeta{
         this.title = testPython.getTitle();
         this.url = testPython.getUrl();
         this.authors = testPython.getAuthors();
+        this.userPdf = false;
     }
     public Paper(ArxivEntryDTO arxivEntryDTO, String paperId){
         this.title = arxivEntryDTO.getTitle();
@@ -66,6 +67,7 @@ public class Paper extends PaperWithOutMeta{
 
         DateTime dateTime = new DateTime(arxivEntryDTO.getPublished());
         this.year = dateTime.getYear();
+        this.userPdf = false;
     }
     public Paper(String id){
         this.paperId = id;
@@ -79,6 +81,7 @@ public class Paper extends PaperWithOutMeta{
         this.url = testPython.getUrl();
         this.year = testPython.getYear();
         this.categories = String.join(" ", testPython.getCategories());
+        this.userPdf = false;
     }
     public Paper(){
 

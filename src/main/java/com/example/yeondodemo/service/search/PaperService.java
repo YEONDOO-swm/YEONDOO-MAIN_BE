@@ -290,6 +290,7 @@ public class PaperService {
     public RetPaperInfoDTO getPaperInfo(String paperid, Long workspaceId) throws JsonProcessingException {
         log.info("getPaperInfo... ");
         PaperPythonFirstResponseDTO paperPythonFirstResponseDTO = cacheService.checkPaperCanCached(paperid);
+
         if(paperPythonFirstResponseDTO!=null){
             updateInfoRepositoryV5(paperPythonFirstResponseDTO, paperid);
         }
