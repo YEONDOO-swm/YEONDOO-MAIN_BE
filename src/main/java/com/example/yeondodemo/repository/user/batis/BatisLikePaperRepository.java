@@ -53,6 +53,11 @@ public class BatisLikePaperRepository implements LikePaperRepository {
     }
 
     @Override
+    public void updateDate(Long workspaceId, String paperId) {
+        likeMapper.updateDate(workspaceId, paperId);
+    }
+
+    @Override
     public void clear() {
         likeMapper.clear();
     }

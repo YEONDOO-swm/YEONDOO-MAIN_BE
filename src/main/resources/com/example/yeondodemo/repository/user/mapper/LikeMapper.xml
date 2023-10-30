@@ -13,6 +13,11 @@
             editDateTime = CURRENT_TIME
         where workspaceId= #{workspaceId} AND paperId = #{paperId}
     </update>
+    <update id="updateDate">
+        update LIKEPAPER
+        set editDateTime = CURRENT_TIME
+        where workspaceId= #{workspaceId} AND paperId = #{paperId};
+    </update>
     <select id="clear" >
         TRUNCATE TABLE LIKEPAPER
     </select>

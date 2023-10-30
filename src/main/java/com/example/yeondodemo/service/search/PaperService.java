@@ -293,6 +293,7 @@ public class PaperService {
         if(paperPythonFirstResponseDTO!=null){
             updateInfoRepositoryV5(paperPythonFirstResponseDTO, paperid);
         }
+        likePaperRepository.updateDate(workspaceId, paperid);
         RetPaperInfoDTO paperInfoDTO = makeRetPaperInfoDTO(paperid, workspaceId);
         log.info("paper info: {}", paperInfoDTO);
         return paperInfoDTO;

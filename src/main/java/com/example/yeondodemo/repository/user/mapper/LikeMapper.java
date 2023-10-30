@@ -15,5 +15,6 @@ public interface LikeMapper {
     List<PaperSimpleIdTitleDTO> findSimpleByUser(Long workspaceId);
     List<PaperSimpleIdTitleDTO> findSimpleTrashByUser(Long workspaceId);
     Boolean isLike(Long workspaceId, String paperId);
+    void updateDate(Long workspaceId, String paperId);
     void clear();
 }

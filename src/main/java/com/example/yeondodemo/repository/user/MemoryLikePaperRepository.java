@@ -52,6 +52,12 @@ public class MemoryLikePaperRepository implements LikePaperRepository{
     }
 
     @Override
+    public void updateDate(Long workspaceId, String paperId) {
+
+    }
+
+
+    @Override
     public void clear() {
         store.clear();
     }
