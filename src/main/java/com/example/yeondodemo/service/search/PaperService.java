@@ -361,6 +361,10 @@ public class PaperService {
         }
     }
 
+    void likeOn(String paperId, Long workspaceId){
+        likePaperRepository.save(workspaceId, paperId, true);
+    }
+
 
     @Transactional
     public FileUploadResponse fileUploadAndStore(Long workspaceId,String title, MultipartFile file){
@@ -372,6 +376,7 @@ public class PaperService {
         uploadPaper(file, paper.getPaperId());
         PaperPythonFirstResponseDTO paperPythonFirstResponseDTO = cacheService.checkPaperCanCached(paper.getPaperId());
         updateInfoRepositoryV5(paperPythonFirstResponseDTO, paper.getPaperId());
+        likeOn(paper.getPaperId(), workspaceId);
         return FileUploadResponse.builder().url(paper.getUrl()).paperId(paper.getPaperId()).build();
     }
 
