@@ -16,7 +16,6 @@ import java.util.List;
 public class QuestionDTO {
         @Size(min=1, max = 300)
         private String question;
-        private String key;
         private List<String> paperIds;
         private String context;
         private Integer paperIndex;

@@ -223,7 +223,7 @@ public class PaperService {
         final long idx = (lastIdx == null) ? 0L : lastIdx;
         log.info("Python RequestBody: {}",pythonQuestionDTO);
         //store.put(query.getKey(),new ExpiredPythonAnswerKey(idx, workspaceId, paperid, query));
-        Duration timeoutDuration = Duration.ofSeconds(50); // 10초로 설정 (원하는 시간으로 변경 가능)
+        Duration timeoutDuration = Duration.ofSeconds(50);
         WebClient webClient = WebClient.builder()
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 설정은 선택사항
@@ -240,13 +240,8 @@ public class PaperService {
                .timeout(timeoutDuration)
                .map(data -> {
                    log.info("data is .. {}", data);
-                   int lastIndex = data.lastIndexOf("\n");
-                   String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
-                   if (data.startsWith("data: ")) {
-                       trimmedData = data.substring("data: ".length()).trim();
-                   }
-                   answerList.add(trimmedData);
-                   return ServerSentEvent.builder(trimmedData).build();
+                   answerList.add(data);
+                   return ServerSentEvent.builder(data).build();
         }).doOnComplete(
                        () -> {
                            String answer = String.join("",answerList);

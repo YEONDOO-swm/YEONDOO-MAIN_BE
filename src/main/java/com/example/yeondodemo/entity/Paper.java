@@ -28,6 +28,7 @@ public class Paper extends PaperWithOutMeta{
     private String url;
     private String abs = "Default Abastract";
     private String summary = "Default Abastract";
+    @Builder.Default
     private List<String> authors = new ArrayList<>();
     private int likes=0;
     private int year;
@@ -39,6 +40,7 @@ public class Paper extends PaperWithOutMeta{
     private String categories;
     private String license;
     private String version;
+    @Builder.Default
     private Boolean userPdf = false;
     public void setScholar(ScholarDTO scholarDTO){
         this.conference = scholarDTO.getConference();

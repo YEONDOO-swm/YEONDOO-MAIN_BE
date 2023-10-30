@@ -27,13 +27,13 @@ public class AspectController {
     private Map login = WorkspaceValidator.login;
 
     @AfterReturning("com.example.yeondodemo.filter.PointCuts.allController() && args(jwt, workspaceId, ..)" )
-    @Order(value = 3)
+    @Order(value = 4)
     public void updateEditDate(String jwt, Long workspaceId) throws  Throwable{
         log.info("Update workspaceId AOP");
         workspaceRepository.updateDate(workspaceId);
     }
     @Before("com.example.yeondodemo.filter.PointCuts.allController() && @annotation(ItemSetting) && args(jwt,workspaceId,paperId,paperItem,..)")
-    @Order(value = 2)
+    @Order(value = 3)
     public void settingItem(String jwt, Long workspaceId, String paperId, ItemAnnotation paperItem) throws Throwable {
         log.info("Aop: setting item");
         paperItem.setPaperId(paperId);
@@ -56,8 +56,7 @@ public class AspectController {
     }
 
     @Around("com.example.yeondodemo.filter.PointCuts.targetWorkspaceAdd() && args(jwt,workspaceId,..)")
-    @Order(value = 1)
-
+    @Order(value = 2)
     public Object doFilter3(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOP22");
         if(workspaceId==null){
