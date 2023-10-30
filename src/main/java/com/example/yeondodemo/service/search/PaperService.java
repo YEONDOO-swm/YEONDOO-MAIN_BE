@@ -349,6 +349,10 @@ public class PaperService {
         try {
 
             ObjectMetadata metadata = new ObjectMetadata();
+
+            // ContentType을 설정
+            metadata.setContentDisposition("inline");
+            metadata.setContentType("application/pdf");
             metadata.setContentLength(file.getSize());
 
             amazonS3.putObject(bucketName, key, file.getInputStream(), metadata);
