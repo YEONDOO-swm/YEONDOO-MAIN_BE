@@ -41,7 +41,7 @@ public class PDFReferenceExtractor {
 
     }
     public static void main(String[] args) {
-        String pdfUrl = "https://arxiv.org/pdf/1706.03762.pdf";
+        String pdfUrl = "https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com/9999.19.pdf";
 
         try {
             // PDF 파일 다운로드

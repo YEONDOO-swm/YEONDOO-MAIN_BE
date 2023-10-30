@@ -40,13 +40,13 @@ public class Cache {
     }
 
     @Transactional
-    public PaperPythonFirstResponseDTO checkPaperCanCached(String paperid, String fileName){
+    public PaperPythonFirstResponseDTO checkPaperCanCached(String paperid){
         if((!paperBufferRepository.isHit(paperid))){
             //goto python server and get data
             log.info("go to python server.... ");
 
             Paper paper = paperRepository.findById(paperid);
-            PaperPythonFirstResponseDTO pythonPaperInfoDTO = ConnectPythonServer.requestPaperInfo(paperid, pythonapi, paper.getUserPdf(), fileName);
+            PaperPythonFirstResponseDTO pythonPaperInfoDTO = ConnectPythonServer.requestPaperInfo(paperid, pythonapi, paper.getUserPdf());
             log.info("python return : {}", pythonPaperInfoDTO);
                             if(pythonPaperInfoDTO == null) {
                                 throw new RuntimeException("Get Null Data From python Server");

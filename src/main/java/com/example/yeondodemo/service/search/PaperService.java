@@ -289,7 +289,7 @@ public class PaperService {
     @ReadPaper
     public RetPaperInfoDTO getPaperInfo(String paperid, Long workspaceId) throws JsonProcessingException {
         log.info("getPaperInfo... ");
-        PaperPythonFirstResponseDTO paperPythonFirstResponseDTO = cacheService.checkPaperCanCached(paperid, "");
+        PaperPythonFirstResponseDTO paperPythonFirstResponseDTO = cacheService.checkPaperCanCached(paperid);
         if(paperPythonFirstResponseDTO!=null){
             updateInfoRepositoryV5(paperPythonFirstResponseDTO, paperid);
         }
@@ -336,7 +336,7 @@ public class PaperService {
 
 
     void storePaper(Long workspaceId, Paper paper){
-        String paperId = workspaceId.toString() + "/" + "9999."+ getNextId().toString();// workspaceId.toString() + "/" + "9999."+ getNextId().toString();
+        String paperId = "9999."+ getNextId().toString();// workspaceId.toString() + "/" + "9999."+ getNextId().toString();
         paper.setPaperId(paperId);
         paper.setUrl("https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com"+"/"+ paperId + ".pdf");
         paperRepository.save(paper);
@@ -366,7 +366,8 @@ public class PaperService {
         Paper paper = Paper.builder().title(title).authors(authors).categories(String.join(" ", subject)).userPdf(true).build();
         storePaper(workspaceId, paper);
         uploadPaper(file, paper.getPaperId());
-        cacheService.checkPaperCanCached(paper.getPaperId(), paper.getPaperId() + ".pdf");
+        PaperPythonFirstResponseDTO paperPythonFirstResponseDTO = cacheService.checkPaperCanCached(paper.getPaperId());
+        updateInfoRepositoryV5(paperPythonFirstResponseDTO, paper.getPaperId());
         return FileUploadResponse.builder().url(paper.getUrl()).paperId(paper.getPaperId()).build();
     }
 

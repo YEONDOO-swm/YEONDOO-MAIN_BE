@@ -36,11 +36,11 @@ public class ConnectPythonServer {
         System.out.println("pythonpythonpython"+ response.getBody());
         return response.getBody();
     }
-    public static PaperPythonFirstResponseDTO requestPaperInfo(String paperid, String pythonApiServer, Boolean userPdf, String fileName){
+    public static PaperPythonFirstResponseDTO requestPaperInfo(String paperid, String pythonApiServer, Boolean userPdf){
         RestTemplate restTemplate = new RestTemplate();
         try {
             ResponseEntity<PaperPythonFirstResponseDTO> response = restTemplate.exchange(
-                    pythonApiServer + "/chat?paperId=" + paperid + "&userPdf=" + userPdf + "&file=" + fileName
+                    pythonApiServer + "/chat?paperId=" + paperid + "&userPdf=" + userPdf
                     ,
                     HttpMethod.GET,
                     null,
