@@ -44,3 +44,6 @@ out/
 ##propeties
 **/src/test/**/*.properties
 **/src/main/**/*.properties
+
+#txt
+*.txt
