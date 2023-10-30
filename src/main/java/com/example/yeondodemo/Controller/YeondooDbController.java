@@ -74,14 +74,12 @@ public class YeondooDbController {
             @RequestHeader("Gauth") String jwt,
             @RequestParam("workspaceId") Long workspaceId,
             @RequestParam("title") String title,
-            @RequestParam("authors") List<String> authors,
-            @RequestParam("subject") List<String> subject,
             @RequestParam("file") MultipartFile file){
         if (file.isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity(paperService.fileUploadAndStore(workspaceId, title, authors, subject, file), HttpStatus.OK);
+        return new ResponseEntity(paperService.fileUploadAndStore(workspaceId, title,  file), HttpStatus.OK);
     }
 
     @GetMapping("/testReference")

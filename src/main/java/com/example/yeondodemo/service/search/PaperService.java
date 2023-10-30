@@ -359,11 +359,11 @@ public class PaperService {
 
 
     @Transactional
-    public FileUploadResponse fileUploadAndStore(Long workspaceId,String title,List<String> authors,List<String> subject,MultipartFile file){
+    public FileUploadResponse fileUploadAndStore(Long workspaceId,String title, MultipartFile file){
         //paperId규칙: 2017 -> 9999.00001
         //db에 index저장 필요.
         // .pdf
-        Paper paper = Paper.builder().title(title).authors(authors).categories(String.join(" ", subject)).userPdf(true).build();
+        Paper paper = Paper.builder().title(title).userPdf(true).build();
         storePaper(workspaceId, paper);
         uploadPaper(file, paper.getPaperId());
         PaperPythonFirstResponseDTO paperPythonFirstResponseDTO = cacheService.checkPaperCanCached(paper.getPaperId());
