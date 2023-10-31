@@ -215,7 +215,7 @@ public class PaperService {
     }
 
     @Transactional
-    public Flux<ServerSentEvent<String>> getPaperQuestionStream(String paperid, Long workspaceId, QuestionDTO query){
+    public Flux<String> getPaperQuestionStream(String paperid, Long workspaceId, QuestionDTO query){
         PythonQuestionDTO pythonQuestionDTO = getPythonQuestionDTO(paperid, workspaceId, query);
 
         List<String> answerList = new ArrayList<>();
@@ -244,7 +244,7 @@ public class PaperService {
                    int lastIndex = data.lastIndexOf("\n");
                    String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
                    answerList.add(trimmedData);
-                   return ServerSentEvent.builder(trimmedData).build();
+                   return trimmedData;
         }).doOnComplete(
                        () -> {
                            String answer = String.join("",answerList);
