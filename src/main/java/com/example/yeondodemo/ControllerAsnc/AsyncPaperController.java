@@ -8,8 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import reactor.core.publisher.Flux;
 
 @Controller
@@ -18,9 +16,9 @@ import reactor.core.publisher.Flux;
 public class AsyncPaperController {
 
     private final PaperService paperService;
-    @PostMapping(value = "/{paperid}",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/{paperid}")
     @ResponseBody @JwtValidation
-    public SseEmitter paperQuestionStream(@RequestHeader("Gauth") String jwt, @PathVariable("paperid") String paperid, @RequestParam("workspaceId")Long workspaceId, @RequestBody QuestionDTO question) {
+    public Flux<String> paperQuestionStream(@RequestHeader("Gauth") String jwt, @PathVariable("paperid") String paperid, @RequestParam("workspaceId")Long workspaceId, @RequestBody QuestionDTO question) {
         return paperService.getPaperQuestionStream(paperid, workspaceId, question);
     }
 }
