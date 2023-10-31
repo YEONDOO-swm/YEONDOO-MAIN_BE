@@ -23,11 +23,13 @@ import com.example.yeondodemo.utils.ConnectPythonServer;
 import com.example.yeondodemo.utils.PDFReferenceExtractor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.security.core.parameters.P;
@@ -38,6 +40,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -215,47 +219,50 @@ public class PaperService {
     }
 
     @Transactional
-    public Flux<String> getPaperQuestionStream(String paperid, Long workspaceId, QuestionDTO query){
+    public SseEmitter getPaperQuestionStream(String paperid, Long workspaceId, QuestionDTO query) {
+        SseEmitter emitter = new SseEmitter();
         PythonQuestionDTO pythonQuestionDTO = getPythonQuestionDTO(paperid, workspaceId, query);
-
         List<String> answerList = new ArrayList<>();
         Long lastIdx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
         final long idx = (lastIdx == null) ? 0L : lastIdx;
-        log.info("Python RequestBody: {}",pythonQuestionDTO);
-        //store.put(query.getKey(),new ExpiredPythonAnswerKey(idx, workspaceId, paperid, query));
-        Duration timeoutDuration = Duration.ofSeconds(50);
+        log.info("Python RequestBody: {}", pythonQuestionDTO);
         WebClient webClient = WebClient.builder()
                 .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)) // 설정은 선택사항
+                        .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
                         .build())
-                .baseUrl(pythonapi + "/chat")
+                .baseUrl(pythonapi)
                 .defaultHeader("Content-Type", "application/json")
                 .build();
-       return webClient
+
+        Flux<String> responseFlux = webClient
                 .post()
-                .uri(pythonapi + "/chat")
+                .uri("/chat")
+                .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(pythonQuestionDTO), PythonQuestionDTO.class)
                 .retrieve()
-                .bodyToFlux(String.class)
-               .timeout(timeoutDuration)
-               .map(data -> {
-                   log.info("data is .. {}", data);
+                .bodyToFlux(String.class);
 
-                   int lastIndex = data.lastIndexOf("\n");
-                   String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
-                   answerList.add(trimmedData);
-                   return trimmedData;
-        }).doOnComplete(
-                       () -> {
-                           String answer = String.join("",answerList);
-                           //store.get(query.getKey()).paperAnswerResponseDTO.setAnswer(answer);
-                           PaperAnswerResponseDTO paperAnswerResponseDTO = new PaperAnswerResponseDTO();
-                           paperAnswerResponseDTO.setAnswer(answer);
-                           queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, paperAnswerResponseDTO));
-                           queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
-                       }
-               );
+        responseFlux.subscribe(data -> {
+            try {
+                int lastIndex = data.lastIndexOf("\n");
+                String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
+                answerList.add(trimmedData);
+                emitter.send(SseEmitter.event().data(trimmedData));
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+            }
+        });
+
+        responseFlux.doOnComplete(() -> {
+            String answer = String.join("", answerList);
+            PaperAnswerResponseDTO paperAnswerResponseDTO = new PaperAnswerResponseDTO();
+            paperAnswerResponseDTO.setAnswer(answer);
+            queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx + 2, false, paperAnswerResponseDTO));
+            queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx + 1, true, query));
+        }).subscribe();
+        return emitter;
     }
+
     public void updateInfoRepository(PythonPaperInfoDTO pythonPaperInfoDTO, String paperid){
         for(String insight: pythonPaperInfoDTO.getInsights()){
             paperInfoRepository.save(new PaperInfo(paperid, "insight", insight));
