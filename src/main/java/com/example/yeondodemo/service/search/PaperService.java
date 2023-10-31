@@ -343,6 +343,7 @@ public class PaperService {
     void storePaper(Long workspaceId, Paper paper){
         String paperId = "9999."+ getNextId().toString();// workspaceId.toString() + "/" + "9999."+ getNextId().toString();
         paper.setPaperId(paperId);
+        log.info("try to store.. paperId: {}", paper.getPaperId());
         paper.setUrl("https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com"+"/"+ paperId + ".pdf");
         paperRepository.save(paper);
         if(paper.getAuthors()!=null && paper.getAuthors().size()!=0){authorRepository.saveAll(paperId, paper.getAuthors());}

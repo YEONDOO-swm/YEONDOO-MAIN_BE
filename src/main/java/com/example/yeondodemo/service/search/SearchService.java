@@ -81,6 +81,10 @@ public class SearchService {
         stopWatch.start("for ..");
         for (TestPython tPaper : papers) {
             //check and Save
+            if(!tPaper.getPaperId().matches("[0-9]{7}")){
+                log.info("change paperId to {}", tPaper.getCategories().get(0).toString()+"/"+tPaper.getPaperId());
+                tPaper.setPaperId(tPaper.getCategories().get(0).toString()+"/"+tPaper.getPaperId());
+            }
             Paper paper = paperRepository.findById(tPaper.getPaperId());
             if(paper == null){
                 log.info("new Paper.. save..");
