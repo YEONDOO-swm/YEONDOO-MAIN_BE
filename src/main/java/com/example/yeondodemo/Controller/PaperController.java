@@ -43,11 +43,11 @@ public class PaperController {
     public ResponseEntity puttPaperItem(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId,@RequestParam String paperId,  @RequestParam String itemId){
         return paperService.deletePaperItem(new DeleteItemDTO(itemId, workspaceId, paperId));
     }
-    @GetMapping("/{paperid}")
-    public ResponseEntity paperInfo(@RequestHeader("Gauth") String jwt,@RequestParam("workspaceId")Long workspaceId, @PathVariable String paperid) throws JsonProcessingException {
-        ResponseEntity<Object> BAD_REQUEST = inValidPaperUserRequest(paperid, workspaceId);
+    @GetMapping("/study")
+    public ResponseEntity paperInfo(@RequestHeader("Gauth") String jwt,@RequestParam("workspaceId")Long workspaceId, @RequestParam String paperId) throws JsonProcessingException {
+        ResponseEntity<Object> BAD_REQUEST = inValidPaperUserRequest(paperId, workspaceId);
         if (BAD_REQUEST != null) return BAD_REQUEST;
-        return new ResponseEntity<>(paperService.getPaperInfo(paperid, workspaceId), HttpStatus.OK);
+        return new ResponseEntity<>(paperService.getPaperInfo(paperId, workspaceId), HttpStatus.OK);
     }
     @GetMapping("/resultId")
     public ResponseEntity getAnswerResultId(@RequestHeader("Gaut") String jwt, @RequestParam Long key){

@@ -325,7 +325,7 @@ public class PaperService {
     public Long getNextId() {
         long nextId = lastPaperId.incrementAndGet();
         saveIdToFile(nextId);
-        return nextId;
+        return nextId+2000;
     }
 
     private void saveIdToFile(long id) {
