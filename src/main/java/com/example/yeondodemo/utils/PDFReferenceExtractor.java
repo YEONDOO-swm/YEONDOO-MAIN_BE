@@ -41,7 +41,7 @@ public class PDFReferenceExtractor {
 
     }
     public static void main(String[] args) {
-        String pdfUrl = "https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com/9999.19.pdf";
+        String pdfUrl = "https://arxiv.org/pdf/1706.03761.pdf";
 
         try {
             // PDF 파일 다운로드
@@ -52,7 +52,7 @@ public class PDFReferenceExtractor {
             PDFTextStripper pdfTextStripper = new PDFTextStripper();
             String pdfText = pdfTextStripper.getText(document);
 
-            Pattern referencePattern = Pattern.compile("(?i)(arXiv:([0-9]{4}[.][0-9]{4,6}|.*[.][0-9]{7}))|(?i)(CoRR, abs/([0-9]{4}[.][0-9]{4,6}|.*[.][0-9]{7}))");
+            Pattern referencePattern = Pattern.compile("(?i)(arXiv:([0-9]{4}[.][0-9]{4,6}|.*[/][0-9]{7}))|(?i)(CoRR, abs/([0-9]{4}[.][0-9]{4,6}|.*[/][0-9]{7}))");
             Matcher matcher = referencePattern.matcher(pdfText);
             while (matcher.find()) {
                 String reference = matcher.group(2);

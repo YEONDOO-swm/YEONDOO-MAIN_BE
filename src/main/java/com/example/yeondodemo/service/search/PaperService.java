@@ -217,7 +217,7 @@ public class PaperService {
     @Transactional
     public Flux<String> getPaperQuestionStream(String paperid, Long workspaceId, QuestionDTO query){
         PythonQuestionDTO pythonQuestionDTO = getPythonQuestionDTO(paperid, workspaceId, query);
-
+        log.info("python Question DTO: {} ", pythonQuestionDTO);
         List<String> answerList = new ArrayList<>();
         Long lastIdx = queryHistoryRepository.getLastIdx(workspaceId, paperid);
         final long idx = (lastIdx == null) ? 0L : lastIdx;

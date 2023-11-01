@@ -10,7 +10,7 @@
             JOIN LIKEPAPER AS lp ON p.paperId = lp.paperId
             JOIN Workspaces AS w ON lp.workspaceId = w.workspaceId
             JOIN WORKSPACE as ws ON ws.workspaceID = lp.workspaceId
-        WHERE w.email = #{username} AND w.valid = 1
+        WHERE w.email = #{username} AND w.valid = 1 AND lp.isValid = 1
         ORDER BY lp.editDateTime DESC;
     </select>
 </mapper>
