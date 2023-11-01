@@ -79,10 +79,14 @@ public class SearchService {
 
         stopWatch.start("for ..");
         for (TestPython tPaper : papers) {
-            //check and Save
-            if(tPaper.getPaperId().matches("^[0-9]{7}$")){
-                log.info("change paperId to {}", tPaper.getCategories().get(0).toString()+"/"+tPaper.getPaperId());
-                tPaper.setPaperId(tPaper.getCategories().get(0).toString()+"/"+tPaper.getPaperId());
+            if (tPaper.getPaperId().matches("^[0-9]{7}$")) {
+                String category = tPaper.getCategories().get(0).toString();
+                if (category.contains(".")) {
+                    String[] categoryParts = category.split("\\.");
+                    category = categoryParts[0]; // 앞의 부분만 사용
+                }
+                log.info("change paperId to {}", category + "/" + tPaper.getPaperId());
+                tPaper.setPaperId(category + "/" + tPaper.getPaperId());
             }
             Paper paper = paperRepository.findById(tPaper.getPaperId());
             if(paper == null){
