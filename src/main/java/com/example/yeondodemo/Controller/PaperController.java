@@ -43,7 +43,7 @@ public class PaperController {
     public ResponseEntity puttPaperItem(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId,@RequestParam String paperId,  @RequestParam String itemId){
         return paperService.deletePaperItem(new DeleteItemDTO(itemId, workspaceId, paperId));
     }
-    @GetMapping("/study")
+    @GetMapping
     public ResponseEntity paperInfo(@RequestHeader("Gauth") String jwt,@RequestParam("workspaceId")Long workspaceId, @RequestParam String paperId) throws JsonProcessingException {
         ResponseEntity<Object> BAD_REQUEST = inValidPaperUserRequest(paperId, workspaceId);
         if (BAD_REQUEST != null) return BAD_REQUEST;
