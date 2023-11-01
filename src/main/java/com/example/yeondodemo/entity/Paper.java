@@ -78,6 +78,7 @@ public class Paper extends PaperWithOutMeta{
         this.title = testPython.getTitle();
         this.authors = testPython.getAuthors();
         this.summary = testPython.getSummary();
+        this.abs = testPython.getSummary();
         this.url = testPython.getUrl();
         this.year = testPython.getYear();
         this.categories = String.join(" ", testPython.getCategories());
