@@ -343,7 +343,7 @@ public class PaperService {
     void storePaper(Long workspaceId, Paper paper){
         String paperId = "9999."+ getNextId().toString();// workspaceId.toString() + "/" + "9999."+ getNextId().toString();
         paper.setPaperId(paperId);
-        log.info("try to store.. paperId: {}", paper.getPaperId());
+        log.info("try to store.. paperId: {}", paper);
         paper.setUrl("https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com"+"/"+ paperId + ".pdf");
         paperRepository.save(paper);
         if(paper.getAuthors()!=null && paper.getAuthors().size()!=0){authorRepository.saveAll(paperId, paper.getAuthors());}
@@ -377,6 +377,7 @@ public class PaperService {
         //paperId규칙: 2017 -> 9999.00001
         //db에 index저장 필요.
         // .pdf
+        title = title.replaceAll("(.pdf)*$", "");
         Paper paper = Paper.builder().title(title).userPdf(true).build();
         storePaper(workspaceId, paper);
         uploadPaper(file, paper.getPaperId());
