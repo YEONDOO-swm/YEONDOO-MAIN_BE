@@ -26,8 +26,8 @@ public class Paper extends PaperWithOutMeta{
     private String conference;
     private int cites = 0;
     private String url;
-    private String abs = "Default Abastract";
-    private String summary = "Default Abastract";
+    private String abs;
+    private String summary;
     @Builder.Default
     private List<String> authors = new ArrayList<>();
     private int likes=0;

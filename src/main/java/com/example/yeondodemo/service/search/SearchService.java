@@ -66,7 +66,6 @@ public class SearchService {
         SearchResultDTO searchResultDTO = new SearchResultDTO(query);
         PythonResultDTO pythonResultDTO = checkSearchResultCanCached(query, workspaceId, searchType);
 
-
         stopWatch.start("Setting");
         searchResultDTO.setAnswer(pythonResultDTO.getAnswer());
         //List<String> papers = pythonResultDTO.getPapers();
