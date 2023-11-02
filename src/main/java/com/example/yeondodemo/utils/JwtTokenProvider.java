@@ -34,11 +34,10 @@ public class JwtTokenProvider {
     // 2. secret 값을 Base64로 디코딩해 Key변수에 할당
 
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
+        Claims claims = Jwts.parser()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseClaimsJws(token).getPayload();
 
         List<? extends SimpleGrantedAuthority> authorities = Arrays.stream(claims.get("Gauth").toString().split(","))
                 .map(SimpleGrantedAuthority::new)
@@ -50,7 +49,8 @@ public class JwtTokenProvider {
     }
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+
+            Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("잘못된 JWT 서명입니다.");
@@ -74,9 +74,7 @@ public class JwtTokenProvider {
         }else if(token ==TokenType.REFRESH){
             expired = REFRESH_TOKEN_VALID_MILLISECOND;
         }
-        Claims claims = Jwts.claims().setSubject(userPk); // sub
-        claims.setIssuedAt(new Date()); // iat
-        claims.setExpiration(new Date(System.currentTimeMillis() + expired)); // exp
+        Claims claims = Jwts.claims().setSubject(userPk).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + expired)).build(); // exp
 
         String jwt = Jwts.builder()
                 .setClaims(claims)
@@ -86,7 +84,7 @@ public class JwtTokenProvider {
     }
     private Claims parseClaims(String accessToken) {
         try {
-            return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
+            return Jwts.parser().setSigningKey(key).build().parseClaimsJws(accessToken).getPayload();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }

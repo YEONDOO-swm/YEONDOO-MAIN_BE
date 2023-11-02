@@ -12,9 +12,7 @@ public class LoginUtil {
     static Integer REFRESH_TOKEN_VALID_MILLISECOND = 3600000;
     public static String createJwt(String userPk, String keyBase64Encoded) {
         SecretKey secretKey = Keys.hmacShaKeyFor(keyBase64Encoded.getBytes());
-        Claims claims = Jwts.claims().setSubject(userPk); // sub
-        claims.setIssuedAt(new Date()); // iat
-        claims.setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALID_MILLISECOND)); // exp
+        Claims claims = Jwts.claims().setSubject(userPk).setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALID_MILLISECOND)).build(); // exp
 
         String jwt = Jwts.builder()
                 .setClaims(claims)
