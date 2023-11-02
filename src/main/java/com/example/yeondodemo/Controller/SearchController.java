@@ -40,6 +40,7 @@ public class SearchController {
     }
     @PostMapping("/paperlikeonoff") @JwtValidation
     public ResponseEntity likeOnOff(@RequestHeader("Gauth") String jwt,@Validated @RequestBody LikeOnOffDTO likeOnOffDTO, BindingResult bindingResult){
+        log.info("likepaperDTO: {}", likeOnOffDTO);
         if(bindingResult.hasErrors()){
             HttpStatus status = HttpStatus.UNAUTHORIZED;
             log.info("errors: {}", bindingResult);

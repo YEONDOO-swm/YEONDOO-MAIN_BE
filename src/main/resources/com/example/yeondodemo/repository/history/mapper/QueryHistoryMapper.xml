@@ -50,7 +50,7 @@
                  FROM QUERYHISTORY AS q
                  WHERE paperId = #{paperIsd} AND workspaceId= #{workspaceId}
                  ORDER BY idx DESC
-                     LIMIT 10
+                     LIMIT 2
              ) AS subquery
         ORDER BY idx ASC;
     </select>
