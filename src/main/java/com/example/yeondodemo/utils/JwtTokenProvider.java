@@ -4,7 +4,6 @@ import com.example.yeondodemo.service.login.TokenType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,7 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Arrays;
 import java.util.Base64;
@@ -26,12 +24,11 @@ public class JwtTokenProvider {
     public String secretKey;
     private Key key;
     static long REFRESH_TOKEN_VALID_MILLISECOND = 172800000;
-    static long ACCESS_TOKEN_VALID_MILLISECOND = 3600000;
+    static long ACCESS_TOKEN_VALID_MILLISECOND = 3600;
     public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
         this.secretKey = secretKey;
         this.key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
     }
-    // 2. secret 값을 Base64로 디코딩해 Key변수에 할당
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser()
@@ -49,7 +46,6 @@ public class JwtTokenProvider {
     }
     public boolean validateToken(String token) {
         try {
-
             Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
