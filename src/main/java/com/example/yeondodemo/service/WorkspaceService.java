@@ -76,12 +76,12 @@ public class WorkspaceService {
 
         paper = paperRepository.findById("1706.03761");
         PaperDTO paperDTO2 = new PaperDTO(paper);
-        isLike.check(paperDTO);
+        isLike.check(paperDTO2);
         reccommendPapers.add(paperDTO2);
 
         paper = paperRepository.findById("1706.03763");
         PaperDTO paperDTO3 = new PaperDTO(paper);
-        isLike.check(paperDTO);
+        isLike.check(paperDTO3);
         reccommendPapers.add(paperDTO3);
 
 
