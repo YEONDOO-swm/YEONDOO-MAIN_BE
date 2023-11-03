@@ -97,4 +97,19 @@ public class AspectController {
         }
     }
 
+
+    @Around("execution(* com.example.yeondodemo.ControllerAsnc..*(..)) && args(jwt,workspaceId,..)")
+    @Order(value = 1)
+    public Object doFilterAsync(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
+        log.info("AOPAOASYNC");
+        if(provider.validateToken(jwt) && WorkspaceValidator.isValid(jwt, workspaceId)){
+            return joinPoint.proceed();
+        }else{
+            if((!provider.validateToken(jwt))&& WorkspaceValidator.isValid(jwt, workspaceId)){
+                login.remove(jwt);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
 }
