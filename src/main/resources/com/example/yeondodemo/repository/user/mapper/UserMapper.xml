@@ -36,11 +36,12 @@
         FROM WORKSPACE
         WHERE 0
         <if test="workspaceIds != null and workspaceIds.size() > 0">
-            or
+            OR
+            workspaceId IN
             <foreach collection="workspaceIds" item="workspaceId" index="index" separator="," open="(" close=")">
                 #{workspaceId}
             </foreach>
-        </if> workspaceId IN
+        </if>
         ORDER BY editDateTime DESC
     </select>
 </mapper>
