@@ -16,6 +16,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
 
@@ -100,15 +102,15 @@ public class AspectController {
 
     @Around("execution(* com.example.yeondodemo.ControllerAsnc..*(..)) && args(jwt,workspaceId,..)")
     @Order(value = 1)
-    public Object doFilterAsync(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
+    public Flux<String> doFilterAsync(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOASYNC");
         if(provider.validateToken(jwt) && WorkspaceValidator.isValid(jwt, workspaceId)){
-            return joinPoint.proceed();
+            return (Flux<String>) joinPoint.proceed();
         }else{
             if((!provider.validateToken(jwt))&& WorkspaceValidator.isValid(jwt, workspaceId)){
                 login.remove(jwt);
             }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         }
     }
 

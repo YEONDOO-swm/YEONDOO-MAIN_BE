@@ -18,7 +18,7 @@ public class AsyncPaperController {
     private final PaperService paperService;
     @PostMapping
     @ResponseBody
-    public Object paperQuestionStream(@RequestHeader("Gauth") String jwt, @RequestParam("workspaceId")Long workspaceId,@RequestParam String paperId,  @RequestBody QuestionDTO question) {
+    public Flux<String> paperQuestionStream(@RequestHeader("Gauth") String jwt, @RequestParam("workspaceId")Long workspaceId,@RequestParam String paperId,  @RequestBody QuestionDTO question) {
         return paperService.getPaperQuestionStream(paperId, workspaceId, question);
     }
 }
