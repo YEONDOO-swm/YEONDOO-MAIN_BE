@@ -32,14 +32,14 @@
     </select>
 
     <select id="findById" resultType="com.example.yeondodemo.entity.Workspace">
-        SELECT *
-        FROM WORKSPACE
         <if test="workspaceIds != null and workspaceIds.size() > 0">
+            SELECT *
+            FROM WORKSPACE
             WHERE workspaceId IN
             <foreach collection="workspaceIds" item="workspaceId" index="index" separator="," open="(" close=")">
                 #{workspaceId}
             </foreach>
+            ORDER BY editDateTime DESC
         </if>
-        ORDER BY editDateTime DESC
     </select>
 </mapper>
