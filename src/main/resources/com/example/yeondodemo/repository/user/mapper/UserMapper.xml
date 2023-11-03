@@ -38,6 +38,6 @@
         <foreach collection="workspaceIds" item="workspaceId" index="index" separator="," open="(" close=")" >
             #{workspaceId}
         </foreach>
-        ORDER BY editDateTIme DESC
+        ORDER BY editDateTime DESC
     </select>
 </mapper>

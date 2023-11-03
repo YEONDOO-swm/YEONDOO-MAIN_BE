@@ -40,6 +40,10 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
     runtimeOnly "org.bouncycastle:bcprov-jdk15on:1.68"
 
+    //mail
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+
+
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.2'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
