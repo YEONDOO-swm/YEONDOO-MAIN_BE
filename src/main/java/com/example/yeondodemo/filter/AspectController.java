@@ -26,8 +26,7 @@ import java.util.Map;
 public class AspectController {
     private final JwtTokenProvider provider;
     private final UserRepository workspaceRepository;
-    private Map login = WorkspaceValidator.login;
-
+    private final WorkspaceValidator workspaceValidator;
     @AfterReturning("com.example.yeondodemo.filter.PointCuts.allController() && args(jwt, workspaceId, ..)" )
     @Order(value = 4)
     public void updateEditDate(String jwt, Long workspaceId) throws  Throwable{
@@ -47,11 +46,11 @@ public class AspectController {
     @Order(value = 1)
     public ResponseEntity<?> doFilter(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOP");
-        if(provider.validateToken(jwt) && WorkspaceValidator.isValid(jwt, workspaceId)){
+        if(provider.validateToken(jwt) && workspaceValidator.isValid(jwt, workspaceId)){
             return (ResponseEntity<?>) joinPoint.proceed();
         }else{
-            if((!provider.validateToken(jwt))&& WorkspaceValidator.isValid(jwt, workspaceId)){
-                login.remove(jwt);
+            if((!provider.validateToken(jwt))&& workspaceValidator.isValid(jwt, workspaceId)){
+                workspaceValidator.login.remove(jwt);
             }
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -68,11 +67,11 @@ public class AspectController {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }else{
-            if(provider.validateToken(jwt) && WorkspaceValidator.isValid(jwt, workspaceId)){
+            if(provider.validateToken(jwt) && workspaceValidator.isValid(jwt, workspaceId)){
                 return (ResponseEntity<?>) joinPoint.proceed();
             }else{
-                if((!provider.validateToken(jwt))&& WorkspaceValidator.isValid(jwt, workspaceId)){
-                    login.remove(jwt);
+                if((!provider.validateToken(jwt))&& workspaceValidator.isValid(jwt, workspaceId)){
+                    workspaceValidator.login.remove(jwt);
                 }
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
@@ -89,11 +88,11 @@ public class AspectController {
 
     @Around("@annotation(JwtValidation) && args(jwt,..)" )
     public Object doFilter1(ProceedingJoinPoint joinPoint, String jwt) throws Throwable {
-        if(provider.validateToken(jwt)&&(WorkspaceValidator.login.get(jwt)!=null)){
+        if(provider.validateToken(jwt)&&(workspaceValidator.login.get(jwt)!=null)){
             return joinPoint.proceed();
         }else{
-            if((!provider.validateToken(jwt))&& (WorkspaceValidator.login.get(jwt)!=null)){
-                login.remove(jwt);
+            if((!provider.validateToken(jwt))&& (workspaceValidator.login.get(jwt)!=null)){
+                workspaceValidator.login.remove(jwt);
             }
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -104,11 +103,11 @@ public class AspectController {
     @Order(value = 1)
     public Flux<String> doFilterAsync(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOASYNC");
-        if(provider.validateToken(jwt) && WorkspaceValidator.isValid(jwt, workspaceId)){
+        if(provider.validateToken(jwt) && workspaceValidator.isValid(jwt, workspaceId)){
             return (Flux<String>) joinPoint.proceed();
         }else{
-            if((!provider.validateToken(jwt))&& WorkspaceValidator.isValid(jwt, workspaceId)){
-                login.remove(jwt);
+            if((!provider.validateToken(jwt))&& workspaceValidator.isValid(jwt, workspaceId)){
+                workspaceValidator.login.remove(jwt);
             }
             return Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         }

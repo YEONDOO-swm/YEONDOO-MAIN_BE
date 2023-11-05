@@ -36,16 +36,14 @@ public class LoginController {
     private final RealUserRepository realUserRepository;
     private final LoginService loginService;
     private final JwtTokenProvider provider;
+    private final WorkspaceValidator workspaceValidator;
     @Value("${jwt.secret}")
     String jwtSecret;
 
     @GetMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Gauth") String jwt){
-        if(WorkspaceValidator.logout(jwt)){
-            return new ResponseEntity(HttpStatus.OK);
-        }else{
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
+        workspaceValidator.logout(jwt);
+        return new ResponseEntity(HttpStatus.OK);
     }
     @PostMapping("/login/google")
     public ResponseEntity getGoogleInfo(@RequestBody Map<String,String> M){
@@ -60,7 +58,7 @@ public class LoginController {
     @GetMapping("/test/login")
     public ResponseEntity testLogin(@RequestHeader("Gauth") String jwt, @RequestParam String email){
         Set<Long> userWorkspace = realUserRepository.findByName(email);
-        WorkspaceValidator.login.put(jwt, userWorkspace);
+        workspaceValidator.login.put(jwt, userWorkspace);
         return new ResponseEntity(HttpStatus.OK);
     }
 

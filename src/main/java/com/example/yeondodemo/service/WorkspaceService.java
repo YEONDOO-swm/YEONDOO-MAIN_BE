@@ -6,6 +6,7 @@ import com.example.yeondodemo.dto.workspace.*;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.etc.KeywordRepository;
+import com.example.yeondodemo.repository.etc.LoginRedisRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisRecentlyRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
@@ -39,6 +40,8 @@ public class WorkspaceService {
     private final BatisRecentlyRepository recentlyRepository;
     private final PaperRepository paperRepository;
     private final LikePaperRepository likePaperRepository;
+    private final LoginRedisRepository loginRedisRepository;
+    private final WorkspaceValidator workspaceValidator;
     private Long MASK = 9007199254740991l;
     @Transactional
     public void updateWorkspace(WorkspacePutDTO workspace){
@@ -92,7 +95,8 @@ public class WorkspaceService {
         return UUID.randomUUID().getMostSignificantBits() & MASK;
     }
     public UserSpaceResponseDTO getUserSpaces(String jwt){
-        Set<Long> workspaceList = WorkspaceValidator.login.get(jwt);
+        workspaceValidator.login.get(jwt);
+        Set<Long> workspaceList = loginRedisRepository.findById(jwt).get().getLoginInfo();
         List<UserSpaceDTO> workspaces = new ArrayList<>();
 
         for(Workspace workspace: userRepository.findById(new ArrayList<>(workspaceList))){
@@ -130,13 +134,13 @@ public class WorkspaceService {
         String formatted = df.format(new Date());
         ret.put("editDate", formatted);
 
-        WorkspaceValidator.login.get(jwt).add(key);
-        log.info("long sate: {}", WorkspaceValidator.login.get(jwt).toString());
+        workspaceValidator.login.get(jwt).add(key);
+        log.info("long sate: {}", workspaceValidator.login.get(jwt).toString());
         return ret;
     }
     @Transactional
     public void updateWorkspaceValidity(String jwt, Long workspaceId){
         realUserRepository.updateWorkspaceValidity(workspaceId);
-        WorkspaceValidator.login.get(jwt).remove(workspaceId);
+        workspaceValidator.login.get(jwt).remove(workspaceId);
     }
 }

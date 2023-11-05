@@ -28,6 +28,7 @@ public class ValidationService {
     private final JwtTokenProvider provider;
     @Autowired
     private final RefreshRedisRepository refreshRedisRepository;
+    private final WorkspaceValidator workspaceValidator;
     @Value("${spring.google.client_id}")
     String clientId;
     @Value("${spring.google.client_secret}")
@@ -79,7 +80,7 @@ public class ValidationService {
         String accessToken = provider.createJwt(email, TokenType.ACCESS);
         Set<Long> userWorkspace = realUserRepository.findByName(email);
 
-        WorkspaceValidator.addLogin(accessToken, userWorkspace);
+        workspaceValidator.addLogin(accessToken, userWorkspace);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Gauth", accessToken);
         headers.add("RefreshToken", refreshToken);

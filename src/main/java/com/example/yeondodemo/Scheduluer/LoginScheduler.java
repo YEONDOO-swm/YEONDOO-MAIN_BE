@@ -15,18 +15,5 @@ import java.util.List;
 public class LoginScheduler {
     private final JwtTokenProvider provider;
     private final PaperService paperService;
-    @Scheduled(fixedDelay = 10000)
-    public void loginGarbageCollector(){
-        List<String> garbageList = new ArrayList<>();
-        for(String key: WorkspaceValidator.login.keySet()){
-            if(!provider.validateToken(key)){
-                log.info("delete in login... {}", key);
-                garbageList.add(key);
-            }
-        }
-        for(String key:garbageList){
-            WorkspaceValidator.login.remove(key);
-        }
-        paperService.timeout();
-    }
+    private final WorkspaceValidator workspaceValidator;
 }

@@ -21,7 +21,6 @@ public class YeondoDemoApplication {
     }
     @PostConstruct
     public void init(){
-        WorkspaceValidator.init(context);
         PaperValidator.init(context);
     }
 
