@@ -31,8 +31,18 @@ public class WorkspaceValidator {
             log.info("Login.. {}", jwt);
             loginRedisRepository.save(new LoginEntity(jwt, loginInfo));
         }
-        public void remove(String jwt){
+        public void remove(String jwt, Long workspaceId){
+            Set<Long> workspaceIds = get(jwt);
+            workspaceIds.remove(workspaceId);
+            loginRedisRepository.save(new LoginEntity(jwt, workspaceIds));
+        }
+        public void delete(String jwt){
             loginRedisRepository.deleteById(jwt);
+        }
+        public void add(String jwt, Long key){
+            Set<Long> workspaceIds = get(jwt);
+            workspaceIds.add(key);
+            loginRedisRepository.save(new LoginEntity(jwt, workspaceIds));
         }
     }
     public void addLogin(String jwt, Set<Long> workspaceList) {
@@ -48,7 +58,7 @@ public class WorkspaceValidator {
     }
 
     public void logout(String jwt) {
-        login.remove(jwt);
+        login.delete(jwt);
     }
 
 }

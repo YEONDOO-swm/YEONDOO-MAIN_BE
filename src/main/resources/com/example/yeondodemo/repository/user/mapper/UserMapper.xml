@@ -4,8 +4,8 @@
 <mapper namespace="com.example.yeondodemo.repository.user.mapper.UserMapper">
 
     <insert id="save">
-        insert into WORKSPACE (workspaceId,description, title, studyField, editDate)
-        values (#{saveParam.workspaceId}, #{saveParam.description}, #{saveParam.title}, #{saveParam.studyField},  CURRENT_TIME)
+        insert into WORKSPACE (workspaceId,description, title, studyField, editDate, editDateTime)
+        values (#{saveParam.workspaceId}, #{saveParam.description}, #{saveParam.title}, #{saveParam.studyField},  CURRENT_TIME, CURRENT_TIME)
     </insert>
     <update id="updateDate">
         update WORKSPACE

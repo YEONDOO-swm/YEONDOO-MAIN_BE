@@ -84,6 +84,8 @@ public class HttpPaperTest {
     BatisAuthorRepository authorRepository;
     @Autowired
     Updater updater;
+    @Autowired
+    WorkspaceValidator workspaceValidator;
 
     @Autowired
     RealUserRepository realUserRepository;
@@ -127,9 +129,9 @@ public class HttpPaperTest {
         realUserRepository.saveWorkspace(email, user1);
         realUserRepository.saveWorkspace(email, user2);
         jwt = provider.createJwt(email, TokenType.ACCESS);
-        WorkspaceValidator.login.put(jwt, new HashSet<Long>());
-        WorkspaceValidator.login.get(jwt).add(0L);
-        WorkspaceValidator.login.get(jwt).add(1L);
+        workspaceValidator.login.put(jwt, new HashSet<Long>());
+        workspaceValidator.login.get(jwt).add(0L);
+        workspaceValidator.login.get(jwt).add(1L);
         studyFieldRepository.save("1234");
         studyFieldRepository.save("12345");
         studyFieldRepository.save("12346");
@@ -206,7 +208,7 @@ public class HttpPaperTest {
         String email="test@test.com";
         Long workspaceId = 0L;
         System.out.println("jwt = " + jwt);
-        System.out.println("WorkspaceValidator.login = " + WorkspaceValidator.login);
+        System.out.println("workspaceValidator.login = " + workspaceValidator.login);
         mockMvc.perform(
                         get("http://localhost:8080/api/paper/1706.03762?workspaceId={workspaceId}",workspaceId)
                                 .header("Gauth", jwt)

@@ -49,9 +49,6 @@ public class AspectController {
         if(provider.validateToken(jwt) && workspaceValidator.isValid(jwt, workspaceId)){
             return (ResponseEntity<?>) joinPoint.proceed();
         }else{
-            if((!provider.validateToken(jwt))&& workspaceValidator.isValid(jwt, workspaceId)){
-                workspaceValidator.login.remove(jwt);
-            }
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
@@ -70,9 +67,6 @@ public class AspectController {
             if(provider.validateToken(jwt) && workspaceValidator.isValid(jwt, workspaceId)){
                 return (ResponseEntity<?>) joinPoint.proceed();
             }else{
-                if((!provider.validateToken(jwt))&& workspaceValidator.isValid(jwt, workspaceId)){
-                    workspaceValidator.login.remove(jwt);
-                }
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
@@ -91,9 +85,6 @@ public class AspectController {
         if(provider.validateToken(jwt)&&(workspaceValidator.login.get(jwt)!=null)){
             return joinPoint.proceed();
         }else{
-            if((!provider.validateToken(jwt))&& (workspaceValidator.login.get(jwt)!=null)){
-                workspaceValidator.login.remove(jwt);
-            }
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
@@ -106,9 +97,6 @@ public class AspectController {
         if(provider.validateToken(jwt) && workspaceValidator.isValid(jwt, workspaceId)){
             return (Flux<String>) joinPoint.proceed();
         }else{
-            if((!provider.validateToken(jwt))&& workspaceValidator.isValid(jwt, workspaceId)){
-                workspaceValidator.login.remove(jwt);
-            }
             return Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         }
     }

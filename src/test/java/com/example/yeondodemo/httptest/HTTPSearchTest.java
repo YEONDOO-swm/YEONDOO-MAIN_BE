@@ -27,6 +27,7 @@ import com.example.yeondodemo.service.search.SearchService;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.Updater;
 import com.example.yeondodemo.validation.WorkspaceValidator;
+import com.example.yeondodemo.validation.workspaceValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -68,6 +69,8 @@ import static util.utils.isFastApiInstalled;
 public class HTTPSearchTest {
     @InjectMocks
     private SearchService searchService;
+    @Autowired
+    WorkspaceValidator workspaceValidator;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -136,9 +139,9 @@ public class HTTPSearchTest {
         studyFieldRepository.save("12345");
         studyFieldRepository.save("12346");
         studyFieldRepository.save("12347");
-        WorkspaceValidator.login.put(jwt, new HashSet<Long>());
-        WorkspaceValidator.login.get(jwt).add(0L);
-        WorkspaceValidator.login.get(jwt).add(1L);
+        workspaceValidator.login.put(jwt, new HashSet<Long>());
+        workspaceValidator.login.get(jwt).add(0L);
+        workspaceValidator.login.get(jwt).add(1L);
     }
     @AfterEach
     public void afterEach(){

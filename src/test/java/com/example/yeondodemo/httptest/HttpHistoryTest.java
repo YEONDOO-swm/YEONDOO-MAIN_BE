@@ -100,6 +100,8 @@ public class HttpHistoryTest{
     JwtTokenProvider provider;
     @Autowired
     WebTestClient webTestClient;
+    @Autowired
+    WorkspaceValidator workspaceValidator;
     TransactionStatus status;
     String jwt;
     private static Process process;
@@ -137,9 +139,9 @@ public class HttpHistoryTest{
         realUserRepository.saveWorkspace(email, user1);
         realUserRepository.saveWorkspace(email, user2);
         jwt = provider.createJwt(email, TokenType.ACCESS);
-        WorkspaceValidator.login.put(jwt, new HashSet<Long>());
-        WorkspaceValidator.login.get(jwt).add(0L);
-        WorkspaceValidator.login.get(jwt).add(1L);
+        workspaceValidator.login.put(jwt, new HashSet<Long>());
+        workspaceValidator.login.get(jwt).add(0L);
+        workspaceValidator.login.get(jwt).add(1L);
     }
 
     @AfterEach

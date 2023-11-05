@@ -95,8 +95,7 @@ public class WorkspaceService {
         return UUID.randomUUID().getMostSignificantBits() & MASK;
     }
     public UserSpaceResponseDTO getUserSpaces(String jwt){
-        workspaceValidator.login.get(jwt);
-        Set<Long> workspaceList = loginRedisRepository.findById(jwt).get().getLoginInfo();
+        Set<Long> workspaceList = workspaceValidator.login.get(jwt);
         List<UserSpaceDTO> workspaces = new ArrayList<>();
 
         for(Workspace workspace: userRepository.findById(new ArrayList<>(workspaceList))){
@@ -134,13 +133,12 @@ public class WorkspaceService {
         String formatted = df.format(new Date());
         ret.put("editDate", formatted);
 
-        workspaceValidator.login.get(jwt).add(key);
-        log.info("long sate: {}", workspaceValidator.login.get(jwt).toString());
+        workspaceValidator.login.add(jwt, key);
         return ret;
     }
     @Transactional
     public void updateWorkspaceValidity(String jwt, Long workspaceId){
         realUserRepository.updateWorkspaceValidity(workspaceId);
-        workspaceValidator.login.get(jwt).remove(workspaceId);
+        workspaceValidator.login.remove(jwt, workspaceId);
     }
 }
