@@ -45,10 +45,16 @@ public class AspectController {
     @Order(value = 1)
     public ResponseEntity<?> doFilter(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOP");
-        if(provider.validateToken(jwt) && workspaceValidator.isValid(jwt, workspaceId)){
-            return (ResponseEntity<?>) joinPoint.proceed();
-        }else{
+        return getResponseEntity(joinPoint, jwt, workspaceId);
+    }
+
+    private ResponseEntity<?> getResponseEntity(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
+        if (!provider.validateToken(jwt)){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }else if(!workspaceValidator.isValid(jwt, workspaceId)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }else{
+            return (ResponseEntity<?>) joinPoint.proceed();
         }
     }
 
@@ -63,11 +69,7 @@ public class AspectController {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }else{
-            if(provider.validateToken(jwt) && workspaceValidator.isValid(jwt, workspaceId)){
-                return (ResponseEntity<?>) joinPoint.proceed();
-            }else{
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
+            return getResponseEntity(joinPoint, jwt, workspaceId);
         }
     }
     @Around("@annotation(RefreshJwtValidation) && args(jwt,..)")
@@ -93,10 +95,12 @@ public class AspectController {
     @Order(value = 1)
     public Flux<String> doFilterAsync(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOASYNC");
-        if(provider.validateToken(jwt) && workspaceValidator.isValid(jwt, workspaceId)){
-            return (Flux<String>) joinPoint.proceed();
+        if (!provider.validateToken(jwt)){
+            return  Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        }else if(!workspaceValidator.isValid(jwt, workspaceId)){
+            return  Flux.error(new ResponseStatusException(HttpStatus.BAD_REQUEST));
         }else{
-            return Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+            return (Flux<String>) joinPoint.proceed();
         }
     }
 
