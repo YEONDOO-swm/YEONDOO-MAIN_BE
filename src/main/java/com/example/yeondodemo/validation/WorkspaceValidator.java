@@ -34,8 +34,8 @@ public class WorkspaceValidator {
             loginRedisRepository.save(new LoginEntity(jwt, loginInfo));
         }
         public void remove(String jwt, Long workspaceId){
-            jwt = getEmail(jwt);
             Set<Long> workspaceIds = get(jwt);
+            jwt = getEmail(jwt);
             workspaceIds.remove(workspaceId);
             loginRedisRepository.save(new LoginEntity(jwt, workspaceIds));
         }
