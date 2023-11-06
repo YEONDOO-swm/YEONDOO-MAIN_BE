@@ -1,6 +1,5 @@
 package com.example.yeondodemo.Controller;
 
-import com.example.yeondodemo.filter.JwtValidation;
 import com.example.yeondodemo.filter.RefreshJwtValidation;
 import com.example.yeondodemo.service.login.LoginService;
 import lombok.RequiredArgsConstructor;

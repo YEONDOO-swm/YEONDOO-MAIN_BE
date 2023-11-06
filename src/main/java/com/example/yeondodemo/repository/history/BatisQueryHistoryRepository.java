@@ -1,10 +1,9 @@
 package com.example.yeondodemo.repository.history;
 
-import com.example.yeondodemo.dto.PaperHistory;
-import com.example.yeondodemo.dto.QueryHistory;
+import com.example.yeondodemo.dto.paper.PaperHistory;
+import com.example.yeondodemo.dto.history.QueryHistory;
 import com.example.yeondodemo.dto.history.PaperHistoryDTO;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
-import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
 import com.example.yeondodemo.dto.paper.item.ItemPosition;
 import com.example.yeondodemo.dto.python.Token;
 import com.example.yeondodemo.entity.Paper;
@@ -15,7 +14,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

@@ -1,6 +1,5 @@
-package com.example.yeondodemo.dto;
+package com.example.yeondodemo.dto.paper;
 
-import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.dto.paper.item.ItemPosition;
 import lombok.Getter;
 import lombok.Setter;

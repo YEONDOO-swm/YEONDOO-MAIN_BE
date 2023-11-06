@@ -1,4 +1,4 @@
-package com.example.yeondodemo.dto;
+package com.example.yeondodemo.dto.paper;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package com.example.yeondodemo.httptest;
 
 import com.example.yeondodemo.Controller.PaperController;
-import com.example.yeondodemo.ControllerAsnc.AsyncPaperController;
+import com.example.yeondodemo.Controller.ControllerAsnc.AsyncPaperController;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.filter.AspectController;

@@ -19,9 +19,8 @@ public class UserSpaceDTO {
     private String title;
     private String studyField;
     private String editDate;
-    private List<String> keywords=new ArrayList<>();
-    private List<Paper> likePapers=new ArrayList<>();
-    //
+    private List<String> keywords;
+    private List<Paper> likePapers;
     public UserSpaceDTO(Workspace workspace){
         this.workspaceId = workspace.getWorkspaceId();
         this.description = workspace.getDescription();

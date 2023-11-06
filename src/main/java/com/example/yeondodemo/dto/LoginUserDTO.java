@@ -1,5 +1,4 @@
 package com.example.yeondodemo.dto;
-import com.example.yeondodemo.validation.WorkspaceValidator;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;

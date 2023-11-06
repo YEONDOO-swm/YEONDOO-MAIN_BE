@@ -1,7 +1,6 @@
 package com.example.yeondodemo.repository.user.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.Set;
 

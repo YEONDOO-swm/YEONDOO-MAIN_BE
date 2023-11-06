@@ -1,17 +1,14 @@
 package com.example.yeondodemo.repository.history;
 
-import com.example.yeondodemo.dto.TestPython;
 import com.example.yeondodemo.dto.history.SearchHistoryResponseDTO;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.entity.SearchHistory;
 import com.example.yeondodemo.repository.history.mapper.SearchHistoryMapper;
-import com.example.yeondodemo.utils.ConnectPythonServer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository @RequiredArgsConstructor

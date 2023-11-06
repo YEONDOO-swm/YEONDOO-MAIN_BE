@@ -1,6 +1,6 @@
 package com.example.yeondodemo.repository.paper.batis;
 
-import com.example.yeondodemo.dto.PaperInfo;
+import com.example.yeondodemo.dto.paper.PaperInfo;
 import com.example.yeondodemo.repository.paper.mapper.PaperInfoMapper;
 import com.example.yeondodemo.repository.paper.PaperInfoRepository;
 import lombok.RequiredArgsConstructor;

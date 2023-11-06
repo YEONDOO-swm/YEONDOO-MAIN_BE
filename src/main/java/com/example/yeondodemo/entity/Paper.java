@@ -3,18 +3,13 @@ package com.example.yeondodemo.entity;
 import com.example.yeondodemo.dto.ScholarDTO;
 import com.example.yeondodemo.dto.TestPython;
 import com.example.yeondodemo.dto.arxiv.ArxivEntryDTO;
-import com.example.yeondodemo.dto.arxiv.ArxivResponseDTO;
 import com.example.yeondodemo.dto.arxiv.AuthorDTO;
 import com.example.yeondodemo.dto.arxiv.CategoryDTO;
-import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import lombok.*;
 import org.joda.time.DateTime;
-import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

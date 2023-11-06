@@ -1,7 +1,5 @@
 package com.example.yeondodemo.dto.arxiv;
 
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import javax.xml.bind.annotation.*;

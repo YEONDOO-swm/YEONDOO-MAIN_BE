@@ -1,6 +1,6 @@
 package com.example.yeondodemo.repository;
 
-import com.example.yeondodemo.dto.PaperHistory;
+import com.example.yeondodemo.dto.paper.PaperHistory;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperBufferRepository;
 import com.example.yeondodemo.repository.paper.batis.BatisPaperInfoRepository;
 import com.example.yeondodemo.repository.history.BatisQueryHistoryRepository;

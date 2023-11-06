@@ -6,7 +6,6 @@ import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.validation.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Around;
@@ -90,7 +89,7 @@ public class AspectController {
     }
 
 
-    @Around("execution(* com.example.yeondodemo.ControllerAsnc..*(..)) && args(jwt,workspaceId,..)")
+    @Around("execution(* com.example.yeondodemo.Controller.ControllerAsnc..*(..)) && args(jwt,workspaceId,..)")
     @Order(value = 1)
     public Flux<String> doFilterAsync(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOASYNC");

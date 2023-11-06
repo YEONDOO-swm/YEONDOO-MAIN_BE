@@ -1,6 +1,7 @@
 package com.example.yeondodemo.dto;
 
 import com.example.yeondodemo.dto.paper.DetailPaperInfo;
+import com.example.yeondodemo.dto.paper.PaperHistory;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
 import com.example.yeondodemo.entity.Paper;

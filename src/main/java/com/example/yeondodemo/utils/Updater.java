@@ -1,19 +1,16 @@
 package com.example.yeondodemo.utils;
 
 import com.example.yeondodemo.Controller.YeondooDbController;
-import com.example.yeondodemo.dto.PaperBuffer;
+import com.example.yeondodemo.dto.paper.PaperBuffer;
 import com.example.yeondodemo.dto.ScholarDTO;
 import com.example.yeondodemo.dto.arxiv.ArxivEntryDTO;
 import com.example.yeondodemo.dto.arxiv.ArxivResponseDTO;
 import com.example.yeondodemo.entity.Paper;
-import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.paper.mapper.PaperBufferMapper;
 import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +20,6 @@ import javax.xml.transform.Source;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Component @RequiredArgsConstructor

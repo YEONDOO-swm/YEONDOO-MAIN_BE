@@ -1,6 +1,5 @@
 package com.example.yeondodemo.dto.paper;
 
-import com.example.yeondodemo.dto.PaperDTO;
 import com.example.yeondodemo.dto.TestPython;
 import com.example.yeondodemo.entity.Paper;
 import lombok.Getter;

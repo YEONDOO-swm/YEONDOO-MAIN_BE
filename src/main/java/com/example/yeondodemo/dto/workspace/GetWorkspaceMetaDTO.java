@@ -1,8 +1,6 @@
 package com.example.yeondodemo.dto.workspace;
 
-import com.example.yeondodemo.entity.Keywords;
 import com.example.yeondodemo.entity.Workspace;
-import com.example.yeondodemo.service.WorkspaceService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

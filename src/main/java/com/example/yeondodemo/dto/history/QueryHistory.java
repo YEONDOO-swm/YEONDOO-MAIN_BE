@@ -1,5 +1,6 @@
-package com.example.yeondodemo.dto;
+package com.example.yeondodemo.dto.history;
 
+import com.example.yeondodemo.dto.QuestionDTO;
 import com.example.yeondodemo.dto.paper.PaperAnswerResponseDTO;
 import com.example.yeondodemo.dto.paper.item.ItemPosition;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;

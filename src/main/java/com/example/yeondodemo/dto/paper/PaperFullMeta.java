@@ -1,8 +1,6 @@
 package com.example.yeondodemo.dto.paper;
 
-import com.example.yeondodemo.entity.Paper;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

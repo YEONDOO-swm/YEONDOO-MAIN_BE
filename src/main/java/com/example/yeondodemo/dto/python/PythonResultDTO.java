@@ -1,5 +1,6 @@
-package com.example.yeondodemo.dto;
+package com.example.yeondodemo.dto.python;
 
+import com.example.yeondodemo.dto.TestPython;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,6 @@ import java.util.List;
 public class PythonResultDTO {
     @Size(max = 1000)
     private String answer;
-    //private List<String> papers;
     private  List<TestPython> papers;
     public PythonResultDTO(){
 

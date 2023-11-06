@@ -1,7 +1,7 @@
 package com.example.yeondodemo.repository.history.mapper;
 
-import com.example.yeondodemo.dto.PaperHistory;
-import com.example.yeondodemo.dto.QueryHistory;
+import com.example.yeondodemo.dto.paper.PaperHistory;
+import com.example.yeondodemo.dto.history.QueryHistory;
 import com.example.yeondodemo.dto.history.PaperHistoryDTO;
 import com.example.yeondodemo.dto.python.Token;
 import org.apache.ibatis.annotations.Mapper;

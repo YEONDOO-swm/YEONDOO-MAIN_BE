@@ -2,7 +2,6 @@ package com.example.yeondodemo.repository.user.batis;
 
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.repository.user.RealUserRepository;
-import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.repository.user.mapper.RealUserMapper;
 import com.example.yeondodemo.repository.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;

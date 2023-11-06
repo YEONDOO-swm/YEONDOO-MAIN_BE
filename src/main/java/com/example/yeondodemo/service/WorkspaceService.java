@@ -1,6 +1,6 @@
 package com.example.yeondodemo.service;
 
-import com.example.yeondodemo.dto.PaperDTO;
+import com.example.yeondodemo.dto.paper.PaperDTO;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
 import com.example.yeondodemo.dto.workspace.*;
 import com.example.yeondodemo.entity.Paper;

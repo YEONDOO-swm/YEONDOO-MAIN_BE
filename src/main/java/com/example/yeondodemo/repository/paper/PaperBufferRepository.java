@@ -1,7 +1,7 @@
 package com.example.yeondodemo.repository.paper;
 
 import com.example.yeondodemo.dto.BufferUpdateDTO;
-import com.example.yeondodemo.dto.PaperBuffer;
+import com.example.yeondodemo.dto.paper.PaperBuffer;
 
 public interface PaperBufferRepository {
 

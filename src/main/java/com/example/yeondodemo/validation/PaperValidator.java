@@ -8,15 +8,11 @@ import com.example.yeondodemo.repository.history.SearchHistoryRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
-import com.example.yeondodemo.entity.PaperWithOutMeta;
-import com.example.yeondodemo.service.search.HistoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
 @Slf4j
 public class PaperValidator {
     private static PaperRepository paperRepository;

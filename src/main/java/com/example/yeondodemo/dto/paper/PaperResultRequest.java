@@ -1,6 +1,5 @@
 package com.example.yeondodemo.dto.paper;
 
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;

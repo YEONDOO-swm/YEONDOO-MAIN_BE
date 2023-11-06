@@ -1,8 +1,7 @@
 package com.example.yeondodemo.utils;
 
-import com.example.yeondodemo.dto.PythonPaperInfoDTO;
-import com.example.yeondodemo.dto.PythonQuestionDTO;
-import com.example.yeondodemo.dto.PythonResultDTO;
+import com.example.yeondodemo.dto.python.PythonQuestionDTO;
+import com.example.yeondodemo.dto.python.PythonResultDTO;
 import com.example.yeondodemo.dto.TestPython;
 import com.example.yeondodemo.dto.python.PaperPythonFirstResponseDTO;
 import com.example.yeondodemo.dto.python.PythonQuestionResponse;
@@ -19,11 +18,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
-import java.util.Map;
-
 @Getter @Setter @RequiredArgsConstructor
 public class ConnectPythonServer {
-    //static String pythonApiServer = "http://10.0.128.161:80"; //파이썬 서버 주소 알아내고 수정하기
     public static PythonResultDTO request(String query,Integer searchType, String pythonApiServer){
         HttpHeaders httpHeaders = new HttpHeaders();
         RestTemplate restTemplate = new RestTemplate();

@@ -3,7 +3,7 @@ package com.example.yeondodemo.httptest;
 import com.example.yeondodemo.Controller.HistoryController;
 import com.example.yeondodemo.Controller.PaperController;
 import com.example.yeondodemo.Controller.SearchController;
-import com.example.yeondodemo.ControllerAsnc.AsyncPaperController;
+import com.example.yeondodemo.Controller.ControllerAsnc.AsyncPaperController;
 import com.example.yeondodemo.dto.QuestionDTO;
 import com.example.yeondodemo.entity.Workspace;
 import com.example.yeondodemo.filter.AspectController;

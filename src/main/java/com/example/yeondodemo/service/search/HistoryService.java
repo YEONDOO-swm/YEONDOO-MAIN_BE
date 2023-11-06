@@ -1,8 +1,7 @@
 package com.example.yeondodemo.service.search;
 
-import com.example.yeondodemo.dto.PaperDTO;
+import com.example.yeondodemo.dto.paper.PaperDTO;
 import com.example.yeondodemo.dto.SearchResultDTO;
-import com.example.yeondodemo.dto.history.HistorySearchDTO;
 import com.example.yeondodemo.dto.history.PaperHistoryDTO;
 import com.example.yeondodemo.dto.history.SearchHistoryResponseDTO;
 import com.example.yeondodemo.dto.history.TrashContainerDTO;

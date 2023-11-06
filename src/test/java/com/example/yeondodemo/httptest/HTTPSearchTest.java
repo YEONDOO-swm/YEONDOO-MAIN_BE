@@ -2,7 +2,7 @@ package com.example.yeondodemo.httptest;
 
 
 import com.example.yeondodemo.Controller.SearchController;
-import com.example.yeondodemo.dto.PaperBuffer;
+import com.example.yeondodemo.dto.paper.PaperBuffer;
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.dto.paper.Version;
 import com.example.yeondodemo.entity.Workspace;
@@ -17,7 +17,7 @@ import com.example.yeondodemo.repository.history.BatisQueryHistoryRepository;
 import com.example.yeondodemo.repository.studyfield.BatisStudyFieldRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.repository.user.*;
-import com.example.yeondodemo.dto.LikeOnOffDTO;
+import com.example.yeondodemo.dto.paper.LikeOnOffDTO;
 import com.example.yeondodemo.dto.TestPython;
 import com.example.yeondodemo.repository.user.batis.BatisLikePaperRepository;
 import com.example.yeondodemo.repository.user.batis.BatisRealUserRepository;
@@ -27,7 +27,6 @@ import com.example.yeondodemo.service.search.SearchService;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.Updater;
 import com.example.yeondodemo.validation.WorkspaceValidator;
-import com.example.yeondodemo.validation.workspaceValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

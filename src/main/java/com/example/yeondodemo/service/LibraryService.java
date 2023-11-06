@@ -2,7 +2,6 @@ package com.example.yeondodemo.service;
 
 import com.example.yeondodemo.dto.LibraryDTO;
 import com.example.yeondodemo.repository.etc.batis.BatisLibraryRepository;
-import com.example.yeondodemo.repository.etc.mapper.LibraryMapper;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

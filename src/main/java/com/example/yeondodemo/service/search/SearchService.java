@@ -1,9 +1,7 @@
 package com.example.yeondodemo.service.search;
 
-import com.example.yeondodemo.dto.paper.Paper4Container;
-import com.example.yeondodemo.dto.paper.PaperContainerDTO;
-import com.example.yeondodemo.dto.paper.PaperResultRequest;
-import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
+import com.example.yeondodemo.dto.paper.*;
+import com.example.yeondodemo.dto.python.PythonResultDTO;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.entity.SearchHistory;
 import com.example.yeondodemo.entity.Workspace;
@@ -23,7 +21,6 @@ import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service @Slf4j @RequiredArgsConstructor
 public class SearchService {

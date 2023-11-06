@@ -4,7 +4,6 @@ import com.example.yeondodemo.dto.LibraryDTO;
 import com.example.yeondodemo.repository.etc.mapper.AuthorMapper;
 import com.example.yeondodemo.repository.etc.mapper.LibraryMapper;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

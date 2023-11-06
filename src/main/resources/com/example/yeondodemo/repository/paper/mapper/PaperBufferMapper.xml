@@ -15,7 +15,7 @@
         where paperId = #{id}
     </update>
 
-    <select id="findById" resultType="PaperBuffer">
+    <select id="findById" resultType="com.example.yeondodemo.dto.paper.PaperBuffer">
         select paperId, ishit, uddate
         from PAPERBUFFER
         where paperId = #{id}

@@ -1,6 +1,6 @@
 package com.example.yeondodemo.Controller;
 
-import com.example.yeondodemo.dto.PaperBuffer;
+import com.example.yeondodemo.dto.paper.PaperBuffer;
 import com.example.yeondodemo.dto.arxiv.ArxivResponseDTO;
 import com.example.yeondodemo.dto.dbcontroll.AddAuthorDTO;
 import com.example.yeondodemo.dto.dbcontroll.AddStudyFieldDTO;
@@ -21,10 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import jakarta.annotation.PostConstruct;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -42,8 +39,6 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import org.springframework.xml.transform.StringSource;
 import reactor.core.publisher.Flux;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.transform.Source;
 import java.io.*;
 import java.util.ArrayList;

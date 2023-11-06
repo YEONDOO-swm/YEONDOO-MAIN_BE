@@ -1,6 +1,6 @@
 package com.example.yeondodemo.repository.paper;
 
-import com.example.yeondodemo.dto.PaperInfo;
+import com.example.yeondodemo.dto.paper.PaperInfo;
 
 import java.util.List;
 

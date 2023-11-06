@@ -1,8 +1,6 @@
 package com.example.yeondodemo.repository.paper.mapper;
 
-import com.example.yeondodemo.dto.BufferUpdateDTO;
-import com.example.yeondodemo.dto.PaperBuffer;
-import com.example.yeondodemo.dto.PaperInfo;
+import com.example.yeondodemo.dto.paper.PaperInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

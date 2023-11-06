@@ -1,11 +1,11 @@
-package com.example.yeondodemo.dto;
+package com.example.yeondodemo.dto.python;
 
-import com.example.yeondodemo.dto.paper.item.ItemPosition;
+import com.example.yeondodemo.dto.QuestionDTO;
+import com.example.yeondodemo.dto.paper.PaperHistory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;

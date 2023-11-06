@@ -1,7 +1,6 @@
 package com.example.yeondodemo.dto;
 
-import com.example.yeondodemo.entity.Paper;
-import com.example.yeondodemo.repository.history.SearchHistoryRepository;
+import com.example.yeondodemo.dto.paper.PaperDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

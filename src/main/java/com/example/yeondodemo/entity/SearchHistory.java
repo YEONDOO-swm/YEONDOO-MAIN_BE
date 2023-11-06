@@ -1,7 +1,6 @@
 package com.example.yeondodemo.entity;
 
 import com.example.yeondodemo.dto.SearchResultDTO;
-import com.example.yeondodemo.repository.history.SearchHistoryRepository;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

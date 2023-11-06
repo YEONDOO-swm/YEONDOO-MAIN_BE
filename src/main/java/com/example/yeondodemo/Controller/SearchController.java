@@ -1,6 +1,6 @@
 package com.example.yeondodemo.Controller;
 
-import com.example.yeondodemo.dto.LikeOnOffDTO;
+import com.example.yeondodemo.dto.paper.LikeOnOffDTO;
 import com.example.yeondodemo.dto.SearchResultDTO;
 import com.example.yeondodemo.dto.paper.PaperResultRequest;
 import com.example.yeondodemo.filter.JwtValidation;
@@ -16,9 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
-
-import static com.example.yeondodemo.validation.IntegrationValidator.inValidPaperUserRequest;
-
 @RestController @Slf4j @RequiredArgsConstructor @RequestMapping("/api")
 public class SearchController {
     private final SearchService searchService;

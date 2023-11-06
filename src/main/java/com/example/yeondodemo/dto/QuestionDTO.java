@@ -1,9 +1,7 @@
 package com.example.yeondodemo.dto;
 
-import com.example.yeondodemo.dto.paper.item.ItemPosition;
 import com.example.yeondodemo.validation.PaperValidator;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;

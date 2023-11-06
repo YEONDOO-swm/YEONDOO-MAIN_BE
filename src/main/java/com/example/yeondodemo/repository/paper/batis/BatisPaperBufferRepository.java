@@ -2,7 +2,7 @@ package com.example.yeondodemo.repository.paper.batis;
 
 
 import com.example.yeondodemo.dto.BufferUpdateDTO;
-import com.example.yeondodemo.dto.PaperBuffer;
+import com.example.yeondodemo.dto.paper.PaperBuffer;
 import com.example.yeondodemo.repository.paper.mapper.PaperBufferMapper;
 import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import lombok.RequiredArgsConstructor;

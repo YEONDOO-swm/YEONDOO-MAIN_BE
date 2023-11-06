@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.yeondodemo.repository.history.mapper.QueryHistoryMapper">
 
-    <insert id="save" parameterType="com.example.yeondodemo.dto.QueryHistory">
+    <insert id="save" parameterType="com.example.yeondodemo.dto.history.QueryHistory">
         insert into QUERYHISTORY (workspaceId,paperId, idx, content, who,  editDate, positionString, context, extraPaperId)
         values (#{workspaceId}, #{paperid}, #{idx}, #{content}, #{who}, CURRENT_DATE, #{positionString},#{context}, #{extraPaperId});
         <selectKey keyProperty="id" resultType="Long">
@@ -11,7 +11,7 @@
         </selectKey>
     </insert>
 
-    <select id="findByUsernameAndPaperid" resultType="com.example.yeondodemo.dto.PaperHistory">
+    <select id="findByUsernameAndPaperid" resultType="com.example.yeondodemo.dto.paper.PaperHistory">
         select content, who, id, score,positionString, context, extraPaperId
         from QUERYHISTORY
         where paperId = #{paperIsd} and workspaceId= #{workspaceId}
@@ -36,14 +36,14 @@
     </select>
 
 
-    <select id="findByUsernameAndPaperIdOrderQA" resultType="com.example.yeondodemo.dto.PaperHistory">
+    <select id="findByUsernameAndPaperIdOrderQA" resultType="com.example.yeondodemo.dto.paper.PaperHistory">
         select content, who, id, score, positionString, context, extraPaperId
         from QUERYHISTORY
         where paperId = #{paperIsd} and workspaceId= #{workspaceId}
         order by idx ASC
     </select>
 
-    <select id="findByUserAndIdOrderQA4Python" resultType="com.example.yeondodemo.dto.PaperHistory">
+    <select id="findByUserAndIdOrderQA4Python" resultType="com.example.yeondodemo.dto.paper.PaperHistory">
         SELECT content, who, id, score, positionString, context, extraPaperId
         FROM (
                  SELECT content, who, id, idx, score, positionString, context, extraPaperId
@@ -55,7 +55,7 @@
         ORDER BY idx ASC;
     </select>
 
-    <select id="findByUsernameAndId" resultType="com.example.yeondodemo.dto.PaperHistory">
+    <select id="findByUsernameAndId" resultType="com.example.yeondodemo.dto.paper.PaperHistory">
         SELECT content, who, id, score, positionString, context, extraPaperId
         FROM QUERYHISTORY
         WHERE id = #{id} AND workspaceId = #{workspaceId};

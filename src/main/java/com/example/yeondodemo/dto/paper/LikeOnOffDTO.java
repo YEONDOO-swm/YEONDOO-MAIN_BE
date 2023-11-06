@@ -1,4 +1,4 @@
-package com.example.yeondodemo.dto;
+package com.example.yeondodemo.dto.paper;
 
 import com.example.yeondodemo.validation.PaperValidator;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 
 @Getter @Setter @ToString @Slf4j @JsonAutoDetect
 public class LikeOnOffDTO {
