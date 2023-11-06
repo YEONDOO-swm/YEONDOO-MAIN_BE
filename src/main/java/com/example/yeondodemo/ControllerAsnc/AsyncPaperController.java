@@ -1,4 +1,4 @@
-package com.example.yeondodemo.Controller.ControllerAsnc;
+package com.example.yeondodemo.ControllerAsnc;
 
 import com.example.yeondodemo.dto.QuestionDTO;
 import com.example.yeondodemo.service.search.PaperService;

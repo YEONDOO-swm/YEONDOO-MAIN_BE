@@ -91,7 +91,7 @@ public class AspectController {
     }
 
 
-    @Around("execution(* com.example.yeondodemo.Controller.ControllerAsnc..*(..)) && args(jwt,workspaceId,..)")
+    @Around("execution(* com.example.yeondodemo.ControllerAsnc..*(..)) && args(jwt,workspaceId,..)")
     @Order(value = 1)
     public Flux<String> doFilterAsync(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
         log.info("AOPAOASYNC");
