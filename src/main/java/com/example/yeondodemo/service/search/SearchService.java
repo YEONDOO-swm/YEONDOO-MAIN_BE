@@ -29,6 +29,7 @@ public class SearchService {
     private final UserRepository userRepository;
     private final BatisAuthorRepository authorRepository;
     private final SearchHistoryRepository searchHistoryRepository;
+    private final PaperBufferRepository paperBufferRepository;
     @Value("${python.address}")
     private String pythonapi;
     @Transactional
@@ -90,7 +91,7 @@ public class SearchService {
                 log.info("new Paper.. save..");
                 paper = new Paper(tPaper);
                 paperRepository.save(paper);
-
+                paperBufferRepository.save(new PaperBuffer(paper.getPaperId(), false));
                 //set Author
                 for (String author : paper.getAuthors()) {
                     authorRepository.save(paper.getPaperId(), author);

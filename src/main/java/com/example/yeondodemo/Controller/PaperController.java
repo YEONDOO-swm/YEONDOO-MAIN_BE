@@ -50,7 +50,7 @@ public class PaperController {
         return new ResponseEntity<>(paperService.getPaperInfo(paperId, workspaceId), HttpStatus.OK);
     }
     @GetMapping("/resultId")
-    public ResponseEntity getAnswerResultId(@RequestHeader("Gaut") String jwt, @RequestParam Long key){
+    public ResponseEntity getAnswerResultId(@RequestHeader("Gauth") String jwt, @RequestParam Long key){
         try{
             return new ResponseEntity<>(paperService.getResultId(key), HttpStatus.OK);
         }catch (IllegalAccessError e){

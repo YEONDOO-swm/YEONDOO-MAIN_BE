@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/workspace")
 public class WorkspaceController {
     private final WorkspaceService workspaceService;
-
     @GetMapping("/workspaceEnter")
     public ResponseEntity getWorkspaceHome(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId){
        return new ResponseEntity(workspaceService.getWorkspaceHome(workspaceId), HttpStatus.OK);
