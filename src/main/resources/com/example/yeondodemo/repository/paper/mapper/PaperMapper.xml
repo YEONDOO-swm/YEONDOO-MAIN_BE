@@ -80,16 +80,17 @@
     </insert>
 
     <select id="findReferenceById" resultType="PaperSimpleIdTitleDTO">
-        SELECT PAPER.paperId as paperId, PAPER.title as title,
+        SELECT PAPER.paperId as paperId , PAPER.title as title,
                CASE
-                   WHEN LIKEPAPER.paperId IS NOT NULL AND LIKEPAPER.workspaceId = #{workspaceId} AND LIKEPAPER.isValid = 1 THEN TRUE
-                   ELSE FALSE
+                   WHEN LIKEPAPER.paperId IS NOT NULL AND LIKEPAPER.workspaceId = #{workspaceId} AND LIKEPAPER.isValid = 1 THEN 1
+                   ELSE 0
                    END AS isLike
-        FROM PAPER
-                 LEFT JOIN LIKEPAPER ON PAPER.paperId = LIKEPAPER.paperId
-        WHERE PAPER.paperId IN (SELECT referenceId FROM REFERENCE WHERE paperId = #{paperid});
-
-
+        FROM (
+                 SELECT paperId, title
+                 FROM PAPER
+                 WHERE paperId IN (SELECT referenceId FROM REFERENCE WHERE paperId = #{paperid})
+             ) PAPER
+                 LEFT JOIN LIKEPAPER ON PAPER.paperId = LIKEPAPER.paperId;
     </select>
 
 </mapper>
