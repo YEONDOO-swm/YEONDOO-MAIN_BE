@@ -15,6 +15,7 @@ public interface PaperMapper {
     public void clearStore();
     public void update(@Param("id") String id, @Param("updateParam") Paper paper);
     public void save(Paper paper);
+    Paper selectRandomReferenceIds(String paperId);
     public void updateSummary(String id, String summary);
     String findSummaryById(String id);
     void add(String id);

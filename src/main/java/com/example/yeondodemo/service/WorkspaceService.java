@@ -54,7 +54,6 @@ public class WorkspaceService {
         List<TrendResponseDTO> recentlyTrends = new ArrayList<>();
 
 
-
         TrendResponseDTO trendResponseDTO1 = new TrendResponseDTO("forTest",LocalDate.of(1999,8,22), "test.test1");
         TrendResponseDTO trendResponseDTO2 = new TrendResponseDTO("forTest",LocalDate.of(2023,10,03), "test.test2");
         TrendResponseDTO trendResponseDTO3 = new TrendResponseDTO("forTest",LocalDate.of(2029,10,22), "test.test3");
@@ -70,22 +69,16 @@ public class WorkspaceService {
             }
         };
 
-
-
-        Paper paper = paperRepository.findById("1706.03762");
-        PaperDTO paperDTO = new PaperDTO(paper);
-        isLike.check(paperDTO);
-        reccommendPapers.add(paperDTO);
-
-        paper = paperRepository.findById("1706.03761");
-        PaperDTO paperDTO2 = new PaperDTO(paper);
-        isLike.check(paperDTO2);
-        reccommendPapers.add(paperDTO2);
-
-        paper = paperRepository.findById("1706.03763");
-        PaperDTO paperDTO3 = new PaperDTO(paper);
-        isLike.check(paperDTO3);
-        reccommendPapers.add(paperDTO3);
+        for (PaperSimpleIdTitleDTO paperSimpleIdTitleDTO : paperSimpleIdTitleDTOS) {
+            String paperId = paperSimpleIdTitleDTO.getPaperId();
+            Paper paper = paperRepository.selectRandomReferenceIds(paperId);
+            if(paper==null){
+                continue;
+            }
+            PaperDTO paperDTO = new PaperDTO(paper);
+            isLike.check(paperDTO);
+            reccommendPapers.add(paperDTO);
+             }
 
 
         WorkspaceEnterDTO workspaceEnterDTO = new WorkspaceEnterDTO(paperSimpleIdTitleDTOS, reccommendPapers, recentlyTrends);

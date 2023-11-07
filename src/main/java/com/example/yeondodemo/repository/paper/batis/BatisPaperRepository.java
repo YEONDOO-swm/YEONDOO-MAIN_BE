@@ -68,6 +68,11 @@ public class BatisPaperRepository implements PaperRepository {
     }
 
     @Override
+    public Paper selectRandomReferenceIds(String paperId) {
+        return paperMapper.selectRandomReferenceIds(paperId);
+    }
+
+    @Override
     public void add(String id) {
         paperMapper.add(id);
     }

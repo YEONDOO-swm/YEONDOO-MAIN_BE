@@ -13,6 +13,8 @@ public interface PaperRepository {
     public void clearStore();
     public void update(String id, Paper paper);
     public void save(Paper paper);
+
+    Paper selectRandomReferenceIds(String paperId);
     void add(String id);
     void sub(String id);
     void saveF(PaperFullMeta paperFullMeta);

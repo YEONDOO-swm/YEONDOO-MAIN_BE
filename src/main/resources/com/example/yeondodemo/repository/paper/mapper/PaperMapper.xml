@@ -27,6 +27,19 @@
             year = #{updateParam.year}
         where paperId = #{id}
     </update>
+    <select id="selectRandomReferenceIds" resultType="com.example.yeondodemo.entity.Paper">
+        SELECT P.*
+        FROM PAPER AS P
+                 JOIN (
+            SELECT referenceId
+            FROM REFERENCE
+            WHERE paperId = #{paperId}
+            ORDER BY RAND()
+                LIMIT 1
+        ) AS R ON P.paperId = R.referenceId;
+
+    </select>
+
 
     <select id="findById" resultType="com.example.yeondodemo.entity.Paper">
         select *

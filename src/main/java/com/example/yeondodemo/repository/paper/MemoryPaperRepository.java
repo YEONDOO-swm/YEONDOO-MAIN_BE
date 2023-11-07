@@ -59,6 +59,11 @@ public class MemoryPaperRepository implements PaperRepository {
     }
 
     @Override
+    public Paper selectRandomReferenceIds(String paperId) {
+        return null;
+    }
+
+    @Override
     public void add(String id) {
 
     }

@@ -49,7 +49,6 @@ public class BatisQueryHistoryRepository implements QueryHistoryRepository {
     }
     public void setPosition(PaperHistory history, String paperId){
         try {
-            log.info("PositonString: {}", history.getPositionString());
             if(history.getPositionString()!=null)history.setPositions(objectMapper.readValue(history.getPositionString(), new TypeReference<List<ItemPosition>>(){}));
             history.setPaperDetailList(new ArrayList<PaperSimpleIdTitleDTO>());
             Paper paper = paperMapper.findById(paperId);
