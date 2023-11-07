@@ -33,7 +33,7 @@ public class MemoryPaperRepository implements PaperRepository {
     }
 
     @Override
-    public List<PaperSimpleIdTitleDTO> findReferenceById(String paperid) {
+    public List<PaperSimpleIdTitleDTO> findReferenceById(String paperid, Long workspaceId) {
         return null;
     }
 

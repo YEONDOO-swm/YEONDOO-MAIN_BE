@@ -80,11 +80,16 @@
     </insert>
 
     <select id="findReferenceById" resultType="PaperSimpleIdTitleDTO">
-        SELECT paperId, title
+        SELECT PAPER.paperId as paperId, PAPER.title as title,
+               CASE
+                   WHEN LIKEPAPER.paperId IS NOT NULL AND LIKEPAPER.workspaceId = #{workspaceId} AND LIKEPAPER.isValid = 1 THEN TRUE
+                   ELSE FALSE
+                   END AS isLike
         FROM PAPER
-        WHERE paperId in (select referenceId
-                          from REFERENCE
-                          where paperId = #{paperid})
+                 LEFT JOIN LIKEPAPER ON PAPER.paperId = LIKEPAPER.paperId
+        WHERE PAPER.paperId IN (SELECT referenceId FROM REFERENCE WHERE paperId = #{paperid});
+
+
     </select>
 
 </mapper>

@@ -24,5 +24,5 @@ public interface PaperMapper {
     List<String> findAllNullPaperId();
     void saveReferences(List<String> references, String paperid);
     void saveReference(String reference, String paperid);
-    List<PaperSimpleIdTitleDTO> findReferenceById(String paperid);
+    List<PaperSimpleIdTitleDTO> findReferenceById(String paperid, Long workspaceId);
 }

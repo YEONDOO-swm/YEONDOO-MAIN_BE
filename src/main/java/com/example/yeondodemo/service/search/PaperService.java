@@ -301,7 +301,7 @@ public class PaperService {
         List<ItemAnnotation> paperItems = itemAnnotationRepository.findByPaperIdAndWorkspaceId(paperid, workspaceId);
         Boolean isLike = likePaperRepository.isLike(workspaceId, paperid);
         List<PaperHistory> paperHistories = queryHistoryRepository.findByUsernameAndPaperIdOrderQA(workspaceId, paperid);
-        List<PaperSimpleIdTitleDTO> references = paperRepository.findReferenceById(paperid);
+        List<PaperSimpleIdTitleDTO> references = paperRepository.findReferenceById(paperid, workspaceId);
         return new RetPaperInfoDTO(paper, pythonPaperInfoDTO, questions, paperHistories, paperItems, isLike, references);
 
     }

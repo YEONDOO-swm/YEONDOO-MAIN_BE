@@ -111,8 +111,8 @@ public class BatisPaperRepository implements PaperRepository {
     }
 
     @Override
-    public List<PaperSimpleIdTitleDTO> findReferenceById(String paperid) {
-        return paperMapper.findReferenceById(paperid);
+    public List<PaperSimpleIdTitleDTO> findReferenceById(String paperid,Long workspaceId) {
+        return paperMapper.findReferenceById(paperid, workspaceId);
     }
 
 

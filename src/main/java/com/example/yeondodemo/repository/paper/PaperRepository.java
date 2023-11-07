@@ -21,6 +21,6 @@ public interface PaperRepository {
     Paper findByIdForValid(String id);
     List<String> findAllNullPaperId();
     void saveReferences(List<String> references, String paperid);
-    List<PaperSimpleIdTitleDTO> findReferenceById(String paperid);
+    List<PaperSimpleIdTitleDTO> findReferenceById(String paperid, Long workspaceId);
 
 }
