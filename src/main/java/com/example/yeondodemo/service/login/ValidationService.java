@@ -50,6 +50,9 @@ public class ValidationService {
         return restTemplate.postForEntity("https://oauth2.googleapis.com/tokeninfo",
                 map, GoogleInfoResponse.class);
     }
+    public void deleteRedisRepository(String key){
+        refreshRedisRepository.deleteById(key);
+    }
     @Timer("Checking RefreshToken")
     public boolean checkRefreshToken(String jwt,String key){
         Optional<RefreshEntity> refreshEntity = refreshRedisRepository.findById(key);
@@ -57,7 +60,6 @@ public class ValidationService {
             log.info("refresh Token data... {}", refreshEntity.get().toString());
             RefreshEntity data = refreshEntity.get();
             if(!data.getRefreshToken().equals(jwt) || data.getExpired() > System.currentTimeMillis()){
-                refreshRedisRepository.deleteById(key);
                 return false;
             }
             return true;
@@ -79,9 +81,13 @@ public class ValidationService {
         Set<Long> userWorkspace = realUserRepository.findByName(email);
         if(userWorkspace==null){userWorkspace = new HashSet<>();}
         workspaceValidator.addLogin(accessToken, userWorkspace);
+        return makeJwtHeaders(accessToken, refreshToken);
+    }
+
+    public HttpHeaders makeJwtHeaders(String Gauth, String refresh){
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Gauth", accessToken);
-        headers.add("RefreshToken", refreshToken);
+        headers.add("Gauth", Gauth);
+        headers.add("RefreshToken", refresh);
         return headers;
     }
 }

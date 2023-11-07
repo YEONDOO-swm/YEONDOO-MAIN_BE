@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.RedisHash;
 import java.util.Set;
 
 @Getter
-@RedisHash(value ="login", timeToLive = 3600000) @ToString
+@RedisHash(value ="login", timeToLive = 3600) @ToString
 public class LoginEntity {
     @Id
     private String jwt;

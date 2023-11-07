@@ -5,7 +5,7 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
-@Getter @RedisHash(value ="refresh", timeToLive = 172800000) @ToString
+@Getter @RedisHash(value ="refresh", timeToLive = 172800) @ToString
 public class RefreshEntity {
     @Id
     private String id;

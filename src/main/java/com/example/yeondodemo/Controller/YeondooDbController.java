@@ -16,11 +16,14 @@ import com.example.yeondodemo.repository.paper.PaperBufferRepository;
 import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.studyfield.StudyFieldRepository;
 import com.example.yeondodemo.service.WorkspaceService;
+import com.example.yeondodemo.service.login.LoginService;
+import com.example.yeondodemo.service.login.ValidationService;
 import com.example.yeondodemo.service.search.PaperService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,8 @@ public class YeondooDbController {
     private final BatisAuthorRepository authorRepository;
     private final PaperBufferRepository paperBufferRepository;
     private final PaperService paperService;
+    private final ValidationService validationService;
+    private final LoginService loginService;
     @Autowired
     private RefreshRedisRepository repository;
 
@@ -388,6 +393,10 @@ public class YeondooDbController {
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("short")
+    public ResponseEntity testshort(@RequestHeader("Gauth") String jwt){
+        return loginService.testShort(jwt);
     }
 
     public class AtomXmlParser {

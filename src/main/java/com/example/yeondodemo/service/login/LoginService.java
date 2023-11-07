@@ -1,6 +1,8 @@
 package com.example.yeondodemo.service.login;
 
 import com.example.yeondodemo.dto.login.GoogleInfoResponse;
+import com.example.yeondodemo.entity.RefreshShort;
+import com.example.yeondodemo.repository.etc.RefreshShortRedisRepository;
 import com.example.yeondodemo.repository.user.RealUserRepository;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.ReturnUtils;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Optional;
+
 
 @Service @Slf4j  @RequiredArgsConstructor
 public class LoginService {
@@ -24,6 +28,17 @@ public class LoginService {
     private final JwtTokenProvider provider;
     private final ValidationService validationService;
     private final WorkspaceValidator workspaceValidator;
+    private final RefreshShortRedisRepository refreshShortRedisRepository;
+    public ResponseEntity testShort(String jwt){
+        if(refreshShortRedisRepository.findById(jwt).isEmpty()){
+            log.info("not here");
+            refreshShortRedisRepository.save(new RefreshShort(jwt,"1", "1"));
+        }else{
+            log.info("{}", refreshShortRedisRepository.findById(jwt));
+            log.info("here");
+        }
+        return new ResponseEntity(HttpStatus.OK);
+    }
     @Transactional
     public ResponseEntity updateRefreshToken(String jwt){
         String email = provider.getUserName(jwt);
@@ -32,8 +47,15 @@ public class LoginService {
         if(validationService.checkRefreshToken(jwt, email)){
             log.info("Valid Expried Token.., email: {}", email);
             String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
-            return new ResponseEntity<>(validationService.getJwtHeaders(email, refresh), HttpStatus.OK);
+            HttpHeaders jwtHeaders = validationService.getJwtHeaders(email, refresh);
+            refreshShortRedisRepository.save(new RefreshShort(jwt, refresh, jwtHeaders.getFirst("Gauth")));
+            return new ResponseEntity<>(jwtHeaders, HttpStatus.OK);
         }else{
+            Optional<RefreshShort> byId = refreshShortRedisRepository.findById(jwt);
+            if(byId.isPresent()){
+                return new ResponseEntity<>(validationService.makeJwtHeaders(byId.get().getAccess(), byId.get().getNewRefresh()), HttpStatus.OK);
+            }
+            validationService.deleteRedisRepository(email);
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
     }
