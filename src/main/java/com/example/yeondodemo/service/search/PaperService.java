@@ -231,8 +231,6 @@ public class PaperService {
                 .bodyToFlux(String.class)
                 .timeout(timeoutDuration)
                 .map(data -> {
-                    log.info("data is .. {}", data);
-
                     int lastIndex = data.lastIndexOf("\n");
                     String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
                     answerList.add(trimmedData);

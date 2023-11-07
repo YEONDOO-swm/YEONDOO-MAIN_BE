@@ -37,6 +37,12 @@ public class LoginController {
         HttpHeaders headers = loginService.test("syleelsw@snu.ac.kr");
         return new ResponseEntity(headers,HttpStatus.OK);
     }
+    @GetMapping("/test2")
+    public ResponseEntity testJoin2(){
+        HttpHeaders headers = loginService.test("syleelsw@gmail.com");
+        return new ResponseEntity(headers,HttpStatus.OK);
+    }
+
 
     @GetMapping("/test/login")
     public ResponseEntity testLogin(@RequestHeader("Gauth") String jwt, @RequestParam String email){

@@ -18,10 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
 @Service @RequiredArgsConstructor @Slf4j
 public class ValidationService {
     private final RealUserRepository realUserRepository;
@@ -79,7 +77,7 @@ public class ValidationService {
      public HttpHeaders getJwtHeaders(String email, String refreshToken){
         String accessToken = provider.createJwt(email, TokenType.ACCESS);
         Set<Long> userWorkspace = realUserRepository.findByName(email);
-
+        if(userWorkspace==null){userWorkspace = new HashSet<>();}
         workspaceValidator.addLogin(accessToken, userWorkspace);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Gauth", accessToken);

@@ -4,6 +4,7 @@ import com.example.yeondodemo.dto.login.GoogleInfoResponse;
 import com.example.yeondodemo.repository.user.RealUserRepository;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.ReturnUtils;
+import com.example.yeondodemo.validation.WorkspaceValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ public class LoginService {
     private final RealUserRepository realUserRepository;
     private final JwtTokenProvider provider;
     private final ValidationService validationService;
+    private final WorkspaceValidator workspaceValidator;
     @Transactional
     public ResponseEntity updateRefreshToken(String jwt){
         String email = provider.getUserName(jwt);
@@ -57,6 +59,7 @@ public class LoginService {
     }
 
     public void join(String email){
+        log.info("Join {}", email);
         realUserRepository.save(email);
     }
 }

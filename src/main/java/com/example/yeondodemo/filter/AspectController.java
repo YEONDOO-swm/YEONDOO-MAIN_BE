@@ -84,8 +84,10 @@ public class AspectController {
     @Around("@annotation(JwtValidation) && args(jwt,..)" )
     public Object doFilter1(ProceedingJoinPoint joinPoint, String jwt) throws Throwable {
         if(provider.validateToken(jwt)&&(workspaceValidator.login.get(jwt)!=null)){
+            log.info("workspace.login: {}", workspaceValidator.login.get(jwt));
             return joinPoint.proceed();
         }else{
+            log.info("workspace.login: {}", workspaceValidator.login.get(jwt));
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }

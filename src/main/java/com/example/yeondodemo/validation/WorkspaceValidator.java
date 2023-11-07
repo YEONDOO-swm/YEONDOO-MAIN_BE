@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,9 @@ public class WorkspaceValidator {
         }
         public Set<Long> get(String jwt){
             jwt = getEmail(jwt);
-            return loginRedisRepository.findById(jwt).get().getLoginInfo();
+            Set<Long> loginInfo = loginRedisRepository.findById(jwt).get().getLoginInfo();
+            if(loginInfo==null){loginInfo = new HashSet<>();}
+            return loginInfo;
         }
         public void put(String jwt, Set<Long> loginInfo){
             jwt = getEmail(jwt);

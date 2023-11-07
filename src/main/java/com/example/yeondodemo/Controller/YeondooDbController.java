@@ -77,12 +77,12 @@ public class YeondooDbController {
         return new ResponseEntity(paperService.fileUploadAndStore(workspaceId, title,  file), HttpStatus.OK);
     }
 
-    @GetMapping("/testReference")
+    //@GetMapping("/testReference")
     public ResponseEntity testReference(@RequestParam String p1, @RequestParam String p2,@RequestParam String p3){
         paperRepository.saveReferences(List.of(p2,p3), p1);
         return new ResponseEntity(HttpStatus.OK);
     }
-    @GetMapping("api/test/arxiv")
+    //@GetMapping("api/test/arxiv")
     public ResponseEntity testArxiv(){
         RestTemplate restTemplate = new RestTemplate();
         String xmlUrl = "http://export.arxiv.org/api/query?id_list=1706.03762,1705.03122"; // 실제 Atom 피드 URL로 대체해야 합니다.
@@ -96,16 +96,16 @@ public class YeondooDbController {
         paperService.setBasis(pythonQuestionResponse, key);
         return new ResponseEntity(HttpStatus.OK);
     }
-    @GetMapping("/api/python/test")
+    //@GetMapping("/api/python/test")
     public ResponseEntity pythonTest(){
         return new ResponseEntity(HttpStatus.OK);
     }
-    @GetMapping("/db/getNullPaper")
+    //@GetMapping("/db/getNullPaper")
     public ResponseEntity getNullPaper(){
         return new ResponseEntity(store, HttpStatus.OK);
     }
 
-    @PostMapping("/api/python/token")
+    //@PostMapping("/api/python/token")
     public ResponseEntity storePythonToken(@RequestParam String key,@RequestParam long historyId, @RequestBody Token track){
         return paperService.storePythonToken(key, historyId, track);
     }
@@ -115,7 +115,7 @@ public class YeondooDbController {
         return new ResponseEntity(workspaceService.getWorkspaceHome(workspaceId), HttpStatus.OK);
     }
 
-    @GetMapping("/test/redis")
+    //@GetMapping("/test/redis")
     public ResponseEntity testRedis(){
         String key = UUID.randomUUID().toString();
         RefreshEntity refreshEntity = new RefreshEntity(key, "abcd1234");
@@ -124,7 +124,7 @@ public class YeondooDbController {
         repository.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping(value = "/getStreamFromFastAPI",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    //@GetMapping(value = "/getStreamFromFastAPI",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
     public Flux<ServerSentEvent<String>>  streamData() {
         // Replace this with the actual FastAPI endpoint URL where data is streamed
@@ -137,7 +137,7 @@ public class YeondooDbController {
                 .map(data -> ServerSentEvent.builder(data).build());
     }
     private final RestTemplate restTemplate =  new RestTemplate(new HttpComponentsClientHttpRequestFactory());
-    @GetMapping(value = "/getStreamFromFastAPI2",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    //@GetMapping(value = "/getStreamFromFastAPI2",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @ResponseBody
     public ResponseEntity<StreamingResponseBody> getStream() {
         HttpHeaders headers = new HttpHeaders();
@@ -160,7 +160,7 @@ public class YeondooDbController {
                 .body(responseBody);
     }
 
-    @GetMapping("/addLocal")
+    //@GetMapping("/addLocal")
     public ResponseEntity addPapers() throws InterruptedException {
         Gson gson = new Gson();
         int n = 0;
@@ -234,7 +234,7 @@ public class YeondooDbController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/addauthor")
+    //@PostMapping("/addauthor")
     public ResponseEntity addAuthor(@Validated @RequestBody AddAuthorDTO addAuthorDTO, BindingResult bindingResult){
         if(bindingResult.hasErrors()){return new ResponseEntity(HttpStatus.BAD_REQUEST);}
         batisAuthorRepository.saveAll(addAuthorDTO.getPaperId(), addAuthorDTO.getAuthors());
@@ -245,7 +245,7 @@ public class YeondooDbController {
         studyFieldRepository.saveAll(studyFieldDTO.getStudyFields());
         return new ResponseEntity<>(studyFieldDTO.getStudyFields(), HttpStatus.OK);
     }
-    @PostMapping("/upload")
+    //@PostMapping("/upload")
     public ResponseEntity addPapers(@RequestBody List<PaperFullMeta> data) throws InterruptedException {
         if(paperRepository.findById(data.get(0).getPaperId(), false) == null){
             PaperFullMeta paper = data.get(0);
@@ -302,7 +302,7 @@ public class YeondooDbController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/update")
+    //@PostMapping("/update")
     public ResponseEntity updatePapers(@RequestBody List<PaperFullMeta> data) throws InterruptedException {
 
         List<Version> versions = data.get(0).getVersions();
@@ -368,7 +368,7 @@ public class YeondooDbController {
     }
 
 
-    @PostMapping("/uploadAuthor")
+    //@PostMapping("/uploadAuthor")
     public ResponseEntity addAuthors(@RequestBody List<PaperFullMeta> data) throws InterruptedException {
         if(paperRepository.findById(data.get(0).getPaperId(), false) != null){
             PaperFullMeta paper = data.get(0);
