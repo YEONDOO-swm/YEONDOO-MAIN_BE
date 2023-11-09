@@ -40,10 +40,13 @@ public class Cache {
 
             Paper paper = paperRepository.findById(paperid);
             PaperPythonFirstResponseDTO pythonPaperInfoDTO = ConnectPythonServer.requestPaperInfo(paperid, pythonapi, paper.getUserPdf());
+
+            Set<String> uniqueReferences = new HashSet<>(pythonPaperInfoDTO.getReferences());
+            pythonPaperInfoDTO.setReferences(new ArrayList<>(uniqueReferences));
             log.info("python return : {}", pythonPaperInfoDTO);
-                            if(pythonPaperInfoDTO == null) {
-                                throw new RuntimeException("Get Null Data From python Server");
-                            }
+            if(pythonPaperInfoDTO == null) {
+                throw new RuntimeException("Get Null Data From python Server");
+            }
             return pythonPaperInfoDTO;
         }
         return null;

@@ -103,9 +103,13 @@ public class BatisPaperRepository implements PaperRepository {
         if(!notInList.isEmpty()){
             log.info("There is None - Registered Paper.., {}", notInList);
             List<Paper> paperMeta = updater.getPaperMeta(notInList);
-            for (Paper paper : paperMeta) {
-                authorMapper.saveAll(paper.getPaperId(), paper.getAuthors());
-                paperMapper.saveReference(paper.getPaperId(), paperid);
+            try{
+                for (Paper paper : paperMeta) {
+                    authorMapper.saveAll(paper.getPaperId(), paper.getAuthors());
+                    paperMapper.saveReference(paper.getPaperId(), paperid);
+                }
+            }catch(Exception e){
+                log.warn(e.getMessage());
             }
         }
     }

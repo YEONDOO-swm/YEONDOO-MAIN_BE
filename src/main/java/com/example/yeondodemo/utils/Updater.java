@@ -55,7 +55,7 @@ public class Updater {
 
     public List<Paper> getPaperMeta(List<String> paperList){
         RestTemplate restTemplate = new RestTemplate();
-        String xmlUrl = "http://export.arxiv.org/api/query?id_list="; // 실제 Atom 피드 URL로 대체해야 합니다.
+        String xmlUrl = "http://export.arxiv.org/api/query?id_list=";
         xmlUrl += String.join(",", paperList);
         String xmlResponse = restTemplate.getForObject(xmlUrl, String.class);
         // Atom XML을 DTO로 파싱
