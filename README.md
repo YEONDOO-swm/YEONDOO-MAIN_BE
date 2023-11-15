@@ -21,7 +21,76 @@
 연두는 연구원들이 pdf를 통해 논문을 공부할때 도움을 주는 서비스입니다. 
 연두 워크스페이스 생성이 가능하며, 각 워크 스페이스 별로
 arXiv 논문검색, 논문 질의, pdf 노팅 및 하이라이팅이 가능합니다. 
+## 시작 가이드
+### Requirements
+For building and running the application you need:
 
+- [Node.js 14.19.3](https://nodejs.org/ca/blog/release/v14.19.3/)
+- [Npm 9.2.0](https://www.npmjs.com/package/npm/v/9.2.0)
+- [Strapi 3.6.6](https://www.npmjs.com/package/strapi/v/3.6.6)
 
+### Installation
+``` bash
+$ git clone https://github.com/YEONDOO-swm/YEONDOO-MAIN_BE
+$ cd YEONDOO-MAIN_BE
 ```
--->
+
+### application.properties 작성
+달러표시($)는 상황에 맞게 추가
+``` bash
+$ vi src/main/resources/application.properties
+```
+
+#main
+spring.profiles.active=local
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
+spring.datasource.url=jdbc:mariadb:${db_url}
+spring.datasource.username=${db_name}
+spring.datasource.password=${db_pw}
+
+spring.google.client_id=${spring.google.client_id}
+spring.google.client_secret=${spring.google.client_secret}
+#redis:
+spring.data.redis.host: ${redis_host}
+spring.data.redis.port: 6379
+#jwt
+jwt.secret=${jwt_secret}
+#MyBatis
+mybatis.type-aliases-package=com.example.yeondodemo.dto
+mybatis.configuration.map-underscore-to-camel-case=true
+logging.level.com.example.yeondodemo.repository=trace
+
+#spring.config.activate.on-profile:local
+#spring.config.activate.on-profile:production
+
+#Python
+python.address = ${ai_server_address}
+python.key = ${ai_server_address}
+
+
+serpapi.key = 
+
+#pdf ??
+spring.servlet.multipart.maxFileSize=10MB
+spring.servlet.multipart.maxRequestSize=10MB
+
+#S3
+aws.accessKey=${s3_access_key}
+aws.secretKey=${s3_sceret_key}
+
+
+#### Backend
+```
+$ cd strapi-backend
+$ nvm use v.14.19.3
+$ npm install
+$ npm run develop
+```
+
+#### Frontend
+https://github.com/YEONDOO-swm/YEONDOO-fe
+
+#### AI
+https://github.com/YEONDOO-swm/yeondoo-fastapi
+---
+
