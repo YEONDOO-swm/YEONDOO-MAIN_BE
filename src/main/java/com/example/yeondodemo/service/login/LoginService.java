@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -78,9 +79,10 @@ public class LoginService {
         String name = infoResponse.getBody().getName();
 
         if(realUserRepository.exist(email)==null) {join(email);}
+        int leftQuestionsById = paperRepository.findLeftQuestionsById(email);
 
         String refresh = validationService.makeRefreshTokenAndSaveToRedis(email);
-        return new ResponseEntity<>(ReturnUtils.mapReturn("username", name), validationService.getJwtHeaders(email, refresh), HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("username", name, "leftQuestions", leftQuestionsById), validationService.getJwtHeaders(email, refresh), HttpStatus.OK);
     }
 
     public void join(String email){
