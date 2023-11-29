@@ -59,8 +59,7 @@ public class YeondooDbController {
     private final PaperService paperService;
     private final ValidationService validationService;
     private final LoginService loginService;
-    @Autowired
-    private RefreshRedisRepository repository;
+    private final RefreshRedisRepository repository;
     @Value("${token.password}")
     private String tokenPassword;
 
