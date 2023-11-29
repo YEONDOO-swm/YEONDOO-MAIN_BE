@@ -93,6 +93,6 @@ public class LoginService {
     public ResponseEntity setLimit(Integer token) {
         log.info("Setting tokenLimit to {}", token);
         paperRepository.setToken(token);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
