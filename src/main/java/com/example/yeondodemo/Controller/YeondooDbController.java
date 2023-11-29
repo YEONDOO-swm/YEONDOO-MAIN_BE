@@ -75,7 +75,7 @@ public class YeondooDbController {
         if(password.equals(tokenPassword)){
             return loginService.setLimit(token);
         }else{
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
     @PostMapping("api/file/upload")
