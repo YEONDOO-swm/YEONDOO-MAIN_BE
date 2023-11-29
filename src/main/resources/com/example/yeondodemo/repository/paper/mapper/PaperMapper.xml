@@ -2,6 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.yeondodemo.repository.paper.mapper.PaperMapper">
+
+    <insert id="setToken">
+        insert into setting (token)
+        values (#{token})
+    </insert>
+
+    <select id="getToken" resultType="Integer">
+        SELECT token
+        FROM setting
+        order by id DESC limit 1
+    </select>
+
+    <insert id="saveUsage">
+        insert into usaged (email, used_date)
+        values (#{email}, #{usedDate})
+    </insert>
+    <select id="getUsageByEmail" resultType="com.example.yeondodemo.dto.token.TokenUsageDTO">
+        SELECT *
+        FROM usaged
+        WHERE email = #{email}
+    </select>
+    <select id="findLeftQuestionsById" resultType="Integer">
+        SELECT
+            (SELECT token
+             FROM setting
+             ORDER BY id DESC LIMIT 1)
+             -
+             (SELECT COUNT(*)
+                 FROM usaged
+                 WHERE email = #{email} AND used_date = CURRENT_DATE)
+                 AS difference;
+    </select>
+
+
     <insert id="save">
         insert into PAPER (paperId, conference, cites, likes, lastUpdate, title, url, year, categories, summary, userPdf)
         values (#{paperId}, #{conference},#{cites}, #{likes}, #{lastUpdate}, #{title}, #{url}, #{year}, #{categories}, #{abs}, #{userPdf})

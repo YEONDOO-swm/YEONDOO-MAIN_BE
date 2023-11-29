@@ -2,12 +2,16 @@ package com.example.yeondodemo.repository.paper;
 
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
+import com.example.yeondodemo.dto.token.TokenUsageDTO;
 import com.example.yeondodemo.entity.Paper;
-import com.example.yeondodemo.entity.PaperWithOutMeta;
 
 import java.util.List;
 
 public interface PaperRepository {
+    void setToken(Integer token);
+    int getToken();
+    int findLeftQuestionsById(String email);
+    void saveUsage(TokenUsageDTO tokenDTO);
     public Paper findById(String id);
     public Paper findById(String id,Boolean update);
     public void clearStore();

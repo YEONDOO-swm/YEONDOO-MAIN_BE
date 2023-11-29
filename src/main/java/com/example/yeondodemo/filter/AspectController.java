@@ -1,6 +1,7 @@
 package com.example.yeondodemo.filter;
 
 import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
+import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.user.UserRepository;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.validation.WorkspaceValidator;
@@ -26,6 +27,7 @@ public class AspectController {
     private final JwtTokenProvider provider;
     private final UserRepository workspaceRepository;
     private final WorkspaceValidator workspaceValidator;
+    private final PaperRepository paperRepository;
     @AfterReturning("com.example.yeondodemo.filter.PointCuts.allController() && args(jwt, workspaceId, ..)" )
     @Order(value = 4)
     public void updateEditDate(String jwt, Long workspaceId) throws  Throwable{
@@ -41,6 +43,7 @@ public class AspectController {
         paperItem.setPositionString(paperItem.getPosition().toString());
         log.info("Item complete: {}", paperItem);
     }
+
     @Around("com.example.yeondodemo.filter.PointCuts.allController() && args(jwt,workspaceId,..)")
     @Order(value = 1)
     public ResponseEntity<?> doFilter(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
@@ -96,14 +99,22 @@ public class AspectController {
     @Around("execution(* com.example.yeondodemo.ControllerAsnc..*(..)) && args(jwt,workspaceId,..)")
     @Order(value = 1)
     public Flux<String> doFilterAsync(ProceedingJoinPoint joinPoint, String jwt, Long workspaceId) throws Throwable {
-        log.info("AOPAOASYNC");
+        log.info("AOPAOASYNC validation");
         if (!provider.validateToken(jwt)){
             return  Flux.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         }else if(!workspaceValidator.isValid(jwt, workspaceId)){
             return  Flux.error(new ResponseStatusException(HttpStatus.BAD_REQUEST));
         }else{
-            return (Flux<String>) joinPoint.proceed();
+            String email = provider.getUserName(jwt);
+            int leftQuestionsById = paperRepository.findLeftQuestionsById(email);
+            log.info("Query Left Token Validation.. {}, left: {}", email, leftQuestionsById);
+            if(leftQuestionsById>0){
+                return (Flux<String>) joinPoint.proceed();
+            }else{
+                return Flux.error(new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED));
+            }
         }
     }
+
 
 }
