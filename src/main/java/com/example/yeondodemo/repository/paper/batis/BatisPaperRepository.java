@@ -2,6 +2,7 @@ package com.example.yeondodemo.repository.paper.batis;
 
 import com.example.yeondodemo.dto.paper.PaperFullMeta;
 import com.example.yeondodemo.dto.paper.PaperSimpleIdTitleDTO;
+import com.example.yeondodemo.dto.token.TokenUsageDTO;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.repository.etc.mapper.AuthorMapper;
 import com.example.yeondodemo.repository.paper.mapper.PaperMapper;
@@ -29,6 +30,26 @@ public class BatisPaperRepository implements PaperRepository {
     @Override
     public List<String> findAllNullPaperId() {
         return paperMapper.findAllNullPaperId();
+    }
+
+    @Override
+    public void setToken(Integer token) {
+        paperMapper.setToken(token);
+    }
+
+    @Override
+    public int getToken() {
+        return paperMapper.getToken();
+    }
+
+    @Override
+    public int findLeftQuestionsById(String email) {
+        return paperMapper.findLeftQuestionsById(email);
+    }
+
+    @Override
+    public void saveUsage(TokenUsageDTO tokenDTO) {
+        paperMapper.saveUsage(tokenDTO);
     }
 
     @Override

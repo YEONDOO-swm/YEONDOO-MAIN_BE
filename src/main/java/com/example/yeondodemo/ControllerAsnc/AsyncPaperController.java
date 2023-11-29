@@ -1,6 +1,7 @@
 package com.example.yeondodemo.ControllerAsnc;
 
 import com.example.yeondodemo.dto.QuestionDTO;
+import com.example.yeondodemo.filter.QueryValidation;
 import com.example.yeondodemo.service.search.PaperService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,8 @@ public class AsyncPaperController {
     private final PaperService paperService;
     @PostMapping
     @ResponseBody
+    @QueryValidation
     public Flux<String> paperQuestionStream(@RequestHeader("Gauth") String jwt, @RequestParam("workspaceId")Long workspaceId,@RequestParam String paperId,  @RequestBody QuestionDTO question) {
-        return paperService.getPaperQuestionStream(paperId, workspaceId, question);
+        return paperService.getPaperQuestionStream(paperId, workspaceId, question, jwt);
     }
 }

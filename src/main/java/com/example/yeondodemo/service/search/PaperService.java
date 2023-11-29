@@ -7,6 +7,7 @@ import com.example.yeondodemo.dto.history.QueryHistory;
 import com.example.yeondodemo.dto.paper.*;
 import com.example.yeondodemo.dto.paper.item.*;
 import com.example.yeondodemo.dto.python.*;
+import com.example.yeondodemo.dto.token.TokenUsageDTO;
 import com.example.yeondodemo.entity.Paper;
 import com.example.yeondodemo.exceptions.PythonServerException;
 import com.example.yeondodemo.filter.ReadPaper;
@@ -18,12 +19,14 @@ import com.example.yeondodemo.repository.history.QueryHistoryRepository;
 import com.example.yeondodemo.repository.paper.item.BatisItemAnnotationRepository;
 import com.example.yeondodemo.repository.user.LikePaperRepository;
 import com.example.yeondodemo.utils.ConnectPythonServer;
+import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,7 @@ import reactor.core.publisher.Mono;
 
 import java.io.*;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -51,6 +55,7 @@ public class PaperService {
     private final Cache cacheService;
     private final BatisAuthorRepository authorRepository;
     private final AmazonS3 amazonS3;
+    private final JwtTokenProvider jwtTokenProvider;
     private Map<Long, ExpiredKeyDTO> answerIdMap;
     @Value("${python.address}")
     private String pythonapi;
@@ -59,6 +64,13 @@ public class PaperService {
 
     private AtomicLong lastPaperId;
     public static Map<String,ExpiredPythonAnswerKey> store;
+
+    public ResponseEntity getToken(String jwt) {
+        int token = paperRepository.findLeftQuestionsById(jwtTokenProvider.getUserName(jwt));
+        Map<String, Integer> leftQuestions = Map.of("leftQuestions", token);
+        return new ResponseEntity(leftQuestions, HttpStatus.OK);
+    }
+
     @ToString
     class ExpiredPythonAnswerKey{
         public PaperAnswerResponseDTO paperAnswerResponseDTO;
@@ -207,7 +219,8 @@ public class PaperService {
     }
 
     @Transactional
-    public Flux<String> getPaperQuestionStream(String paperid, Long workspaceId, QuestionDTO query){
+    public Flux<String> getPaperQuestionStream(String paperid, Long workspaceId, QuestionDTO query, String jwt){
+        String email = jwtTokenProvider.getUserName(jwt);
         PythonQuestionDTO pythonQuestionDTO = getPythonQuestionDTO(paperid, workspaceId, query);
         log.info("python Question DTO: {} ", pythonQuestionDTO);
         List<String> answerList = new ArrayList<>();
@@ -230,21 +243,34 @@ public class PaperService {
                 .retrieve()
                 .bodyToFlux(String.class)
                 .timeout(timeoutDuration)
-                .map(data -> {
-                    int lastIndex = data.lastIndexOf("\n");
-                    String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
-                    answerList.add(trimmedData);
-                    return trimmedData;
-                }).doOnComplete(
+                .flatMap(data -> processData(data))
+                .doOnNext(answerList::add)
+                .doOnComplete(
                         () -> {
                             String answer = String.join("",answerList);
+                            answer = answer.trim();
                             //store.get(query.getKey()).paperAnswerResponseDTO.setAnswer(answer);
                             PaperAnswerResponseDTO paperAnswerResponseDTO = new PaperAnswerResponseDTO();
                             paperAnswerResponseDTO.setAnswer(answer);
                             queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+2, false, paperAnswerResponseDTO));
                             queryHistoryRepository.save(new QueryHistory(workspaceId, paperid, idx+1, true, query));
+                            paperRepository.saveUsage(TokenUsageDTO.builder()
+                                    .email(email)
+                                    .usedDate(LocalDateTime.now())
+                                    .build());
                         }
                 );
+    }
+
+    private Mono<String> processData(String data) {
+        return Mono.fromCallable(() -> {
+            int lastIndex = data.lastIndexOf("\n");
+            String trimmedData = lastIndex != -1 ? data.substring(0, lastIndex) : data;
+            if(trimmedData.equals("")){
+                trimmedData = "\n\n";
+            }
+            return trimmedData;
+        });
     }
     public void updateInfoRepository(PythonPaperInfoDTO pythonPaperInfoDTO, String paperid){
         for(String insight: pythonPaperInfoDTO.getInsights()){

@@ -25,6 +25,10 @@ import static com.example.yeondodemo.validation.IntegrationValidator.inValidPape
 @RequiredArgsConstructor @RequestMapping("/api/paper")
 public class PaperController {
     private final PaperService paperService;
+    @GetMapping("/token")
+    public ResponseEntity getToken(@RequestHeader("Gauth") String jwt){
+        return paperService.getToken(jwt);
+    }
     @PostMapping("/export")
     public ResponseEntity exportPaper(@RequestHeader("Gauth") String jwt, @RequestParam Long workspaceId, @RequestBody ExportItemDTO exportItemDTO){
         return paperService.exportPaper(exportItemDTO);

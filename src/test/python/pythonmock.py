@@ -3,16 +3,15 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import time
 import os
+from typing import List
+
 
 import asyncio
 
 app = FastAPI()
 
 async def generate_chunks_default():
-    for i in range(1, 10):
-        yield f"Message {i}\n"
-        await asyncio.sleep(0.1)
-    yield "event: close\ndata: \n"
+    yield "answeranswer"
 
 @app.get("/test/stream")
 async def post_chat():
@@ -53,18 +52,21 @@ def getpaperinfo(paperId:str):
             ]
     }
 
-
 class PythonQuestionDTO(BaseModel):
     paperId: str
-    query: str
+    question: str
     history: list
+    extraPaperId: str
+    underline: str
+
+
 #@app.post("/question")
 async def process_question(data: PythonQuestionDTO):
     print(data)
     return {"answer": 'answer ' + data.query, "track":{"totalTokens":1200.0,"promptTokens":1000.0,"completionTokens":200.0,"totalCost":0.0248}}
 
-@app.post("/question")
-async def post_chat(data: PythonQuestionDTO):
+@app.post("/chat")
+async def post_chat():
     return StreamingResponse(
         content=generate_chunks_default(),
         media_type="text/plain;charset=utf-8"

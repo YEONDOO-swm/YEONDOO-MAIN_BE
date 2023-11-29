@@ -3,6 +3,7 @@ package com.example.yeondodemo.service.login;
 import com.example.yeondodemo.dto.login.GoogleInfoResponse;
 import com.example.yeondodemo.entity.RefreshShort;
 import com.example.yeondodemo.repository.etc.RefreshShortRedisRepository;
+import com.example.yeondodemo.repository.paper.PaperRepository;
 import com.example.yeondodemo.repository.user.RealUserRepository;
 import com.example.yeondodemo.utils.JwtTokenProvider;
 import com.example.yeondodemo.utils.ReturnUtils;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -29,6 +31,7 @@ public class LoginService {
     private final ValidationService validationService;
     private final WorkspaceValidator workspaceValidator;
     private final RefreshShortRedisRepository refreshShortRedisRepository;
+    private final PaperRepository paperRepository;
     public ResponseEntity testShort(String jwt){
         if(refreshShortRedisRepository.findById(jwt).isEmpty()){
             log.info("not here");
@@ -83,5 +86,11 @@ public class LoginService {
     public void join(String email){
         log.info("Join {}", email);
         realUserRepository.save(email);
+    }
+
+    public ResponseEntity setLimit(Integer token) {
+        log.info("Setting tokenLimit to {}", token);
+        paperRepository.setToken(token);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

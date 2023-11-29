@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.codec.ServerSentEvent;
@@ -60,7 +61,8 @@ public class YeondooDbController {
     private final LoginService loginService;
     @Autowired
     private RefreshRedisRepository repository;
-
+    @Value("${token.password}")
+    private String tokenPassword;
 
     private final WorkspaceService workspaceService;
 
@@ -68,6 +70,14 @@ public class YeondooDbController {
     @PostConstruct
     public void makeStore(){
         //store = paperRepository.findAllNullPaperId();
+    }
+    @PutMapping("/api/token/limit")
+    public ResponseEntity setToken(@RequestParam String password, @RequestParam Integer token){
+        if(password.equals(tokenPassword)){
+            return loginService.setLimit(token);
+        }else{
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        }
     }
     @PostMapping("api/file/upload")
     public ResponseEntity uploadFile(
