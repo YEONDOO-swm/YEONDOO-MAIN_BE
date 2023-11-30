@@ -33,8 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
    //implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
-    runtimeOnly 'mysql:mysql-connector-java'
-
+    runtimeOnly 'com.mysql:mysql-connector-j'
     //JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
     implementation "io.jsonwebtoken:jjwt-jackson:0.12.3", {exclude group:'io.jsonwebtoken', module:'jjwt-api'}
