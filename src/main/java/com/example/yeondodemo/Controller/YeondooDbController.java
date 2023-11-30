@@ -70,6 +70,10 @@ public class YeondooDbController {
     public void makeStore(){
         //store = paperRepository.findAllNullPaperId();
     }
+    @GetMapping("/")
+    public ResponseEntity health(){
+        return new ResponseEntity(HttpStatus.OK);
+    }
     @PutMapping("/api/token/limit")
     public ResponseEntity setToken(@RequestParam String password, @RequestParam Integer token){
         if(password.equals(tokenPassword)){
