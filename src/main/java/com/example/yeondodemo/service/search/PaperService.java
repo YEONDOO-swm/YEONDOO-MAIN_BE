@@ -89,7 +89,7 @@ public class PaperService {
         }
     }
     private long loadIdFromFile(String idFilePath) {
-        long id = 1L; // 기본값
+        long id = 3L; // 기본값
 
         File file = new File(idFilePath);
 
