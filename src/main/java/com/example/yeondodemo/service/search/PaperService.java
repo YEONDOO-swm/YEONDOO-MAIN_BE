@@ -360,13 +360,13 @@ public class PaperService {
         String paperId = "9999."+ getNextId().toString();// workspaceId.toString() + "/" + "9999."+ getNextId().toString();
         paper.setPaperId(paperId);
         log.info("try to store.. paperId: {}", paper);
-        paper.setUrl("https://yeondoo-upload-pdf.s3.ap-northeast-2.amazonaws.com"+"/"+ paperId + ".pdf");
+        paper.setUrl("https://yeondoo-be-upload-pdf.s3.ap-northeast-2.amazonaws.com"+"/"+ paperId + ".pdf");
         paperRepository.save(paper);
         if(paper.getAuthors()!=null && paper.getAuthors().size()!=0){authorRepository.saveAll(paperId, paper.getAuthors());}
         paperBufferRepository.save(new PaperBuffer(paperId));
     }
     void uploadPaper(MultipartFile file, String paperId){
-        String bucketName = "yeondoo-upload-pdf";
+        String bucketName = "yeondoo-be-upload-pdf";
         String key = paperId + ".pdf";
         try {
 
