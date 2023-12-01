@@ -17,10 +17,10 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         String origin = request.getHeader("Origin");
-        if (origin != null && origin.equals("https://reader.yeondoo.net")) {
-            response.setHeader("Access-Control-Allow-Origin", "https://reader.yeondoo.net");
+        if (origin != null && origin.equals("https://reader.yeon-doo.com")) {
+            response.setHeader("Access-Control-Allow-Origin", "https://reader.yeon-doo.com");
         } else {
-            response.setHeader("Access-Control-Allow-Origin", "https://yeondoo.net");
+            response.setHeader("Access-Control-Allow-Origin", "https://yeon-doo.com");
         }
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods","*");
