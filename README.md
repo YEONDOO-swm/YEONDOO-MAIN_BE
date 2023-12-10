@@ -8,7 +8,7 @@
 > **SW Maestro 14기 팀 Federation** <br/> **개발기간: 2023.06 ~ 2023.11**
 
 ## 배포 주소
- https://yeondoo.net
+ https://yeon-doo.com
 
 ## 개발팀 소개
 
