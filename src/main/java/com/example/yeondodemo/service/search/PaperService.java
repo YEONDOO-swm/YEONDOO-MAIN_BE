@@ -269,6 +269,7 @@ public class PaperService {
             if(trimmedData.equals("")){
                 trimmedData = "\n\n";
             }
+	    log.info("data: {}",trimmedData);
             return trimmedData;
         });
     }
