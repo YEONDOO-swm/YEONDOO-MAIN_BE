@@ -26,9 +26,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +36,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -70,6 +70,42 @@ public class PaperService {
         Map<String, Integer> leftQuestions = Map.of("leftQuestions", token);
         return new ResponseEntity(leftQuestions, HttpStatus.OK);
     }
+
+    public ResponseEntity<byte[]> getPaperFile(String paperId) {
+
+        try {
+            // ArXiv PDF 파일 URL 생성
+            String pdfUrl = "https://browse.arxiv.org/pdf/" + paperId;
+
+            // PDF 파일 다운로드
+            URL url = new URL(pdfUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            // PDF 파일 응답을 바이트 배열로 읽기
+            InputStream inputStream = connection.getInputStream();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            byte[] pdfBytes = outputStream.toByteArray();
+
+            // 응답 헤더 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentLength(pdfBytes.length);
+            headers.setContentDispositionFormData("filename", paperId + ".pdf");
+
+            // PDF 파일 응답 반환
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @ToString
     class ExpiredPythonAnswerKey{
