@@ -90,7 +90,6 @@ public class AspectController {
             log.info("workspace.login: {}", workspaceValidator.login.get(jwt));
             return joinPoint.proceed();
         }else{
-            log.info("workspace.login: {}", workspaceValidator.login.get(jwt));
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
@@ -107,7 +106,6 @@ public class AspectController {
         }else{
             String email = provider.getUserName(jwt);
             int leftQuestionsById = paperRepository.findLeftQuestionsById(email);
-            log.info("Query Left Token Validation.. {}, left: {}", email, leftQuestionsById);
             if(leftQuestionsById>0){
                 return (Flux<String>) joinPoint.proceed();
             }else{

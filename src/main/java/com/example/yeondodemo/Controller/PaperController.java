@@ -6,6 +6,7 @@ import com.example.yeondodemo.dto.paper.item.ExportItemDTO;
 import com.example.yeondodemo.dto.paper.item.ItemAnnotation;
 import com.example.yeondodemo.dto.paper.item.DeleteItemDTO;
 import com.example.yeondodemo.filter.ItemSetting;
+import com.example.yeondodemo.filter.JwtValidation;
 import com.example.yeondodemo.service.search.PaperService;
 import com.example.yeondodemo.validation.PaperValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -80,6 +81,11 @@ public class PaperController {
     @GetMapping("/result/chat")
     public ResponseEntity getChatResult(@RequestHeader("Gauth") String jwt,  @RequestParam String paperId, @RequestParam Long workspaceId, @RequestParam String key){
         return new ResponseEntity(Map.of("positions", paperService.getBasis(workspaceId, paperId, key)), HttpStatus.OK);
+    }
+
+    @GetMapping("/file/{paperId}") @JwtValidation
+    public ResponseEntity<byte[]> getPaperFile(@RequestHeader("Gauth") String jwt, @PathVariable String paperId){
+        return paperService.getPaperFile(paperId);
     }
 
 }
