@@ -83,8 +83,8 @@ public class PaperController {
         return new ResponseEntity(Map.of("positions", paperService.getBasis(workspaceId, paperId, key)), HttpStatus.OK);
     }
 
-    @GetMapping("/file/{paperId}") @JwtValidation
-    public ResponseEntity<byte[]> getPaperFile(@RequestHeader("Gauth") String jwt, @PathVariable String paperId){
+    @GetMapping("/file/{paperId}")
+    public ResponseEntity<byte[]> getPaperFile( @PathVariable String paperId){
         return paperService.getPaperFile(paperId);
     }
 
